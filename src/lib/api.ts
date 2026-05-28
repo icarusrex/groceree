@@ -13,4 +13,8 @@ export const api = {
   savePlan: (p: any) => fetch("/api/plan", { method: "POST", body: JSON.stringify(p) }).then(j),
   parseFlyer: (images: any[]) =>
     fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
+  remix: (recipe: any, instruction: string) =>
+    fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
+  createRecipe: (recipe: any) =>
+    fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
 };

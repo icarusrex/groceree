@@ -239,6 +239,14 @@ def main(src, outdir):
         seed.append(enrich_record(fixed, seen, source=src))
         counts[src] += 1
 
+    # Cuisine cleanup: keep only meaningful, well-represented cuisines; null the
+    # vague/source-artifact ones (british, modern) and the rare tail. "Not every
+    # recipe needs a label."
+    KEEP_CUISINES = {"mediterranean", "american", "mexican", "asian", "italian"}
+    for r in seed:
+        if r.get("cuisine") not in KEEP_CUISINES:
+            r["cuisine"] = None
+
     json.dump(seed, open(os.path.join(outdir, "recipes.seed.json"), "w",
               encoding="utf-8"), ensure_ascii=False, indent=2)
 

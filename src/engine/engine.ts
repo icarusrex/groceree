@@ -227,3 +227,23 @@ export function buildShoppingList(plan: PlanItem[], recipes: Recipe[],
   return [...agg.values()].sort((a, b) =>
     a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
 }
+
+// ---- human-sensible shopping amounts ---------------------------------------
+// "1.5 tbsp peanut butter" is nonsense on a shopping list. Pantry staples and
+// tiny seasoning amounts are shown without a quantity (you buy a jar/pack);
+// real buy-items round to sensible increments.
+export function tidyAmount(item: ShoppingItem): { text: string; staple: boolean } {
+  const u = (item.unit || "").toLowerCase();
+  const q = item.quantity;
+  const tiny = ["tsp", "tbsp", "pinch", "clove"].includes(u);
+  // pantry condiments/spices, or anything measured in tiny units → staple, no qty
+  if (item.category === "pantry" || tiny) return { text: "", staple: true };
+  if (q == null) return { text: "", staple: false };
+  let n = q, unit = u;
+  if (u === "g") { n = Math.max(50, Math.ceil(q / 50) * 50); }
+  else if (u === "kg") { n = Math.ceil(q * 4) / 4; }
+  else if (u === "cup" || u === "cups") { n = Math.max(0.5, Math.round(q * 2) / 2); unit = "cup"; }
+  else { n = Math.ceil(q); unit = u; } // counts / un
+  const num = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/0+$/, "");
+  return { text: `${num}${unit ? " " + unit : ""}`, staple: false };
+}

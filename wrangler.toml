@@ -6,4 +6,4 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "groceree"
-database_id = "ab903ed8-b5b1-436d-a9eb-1d6ab83b40fb"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

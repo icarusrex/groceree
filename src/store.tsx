@@ -18,6 +18,9 @@ interface Store {
   delPantry: (id: number) => void;
   setDeals: (d: Record<string, number>) => void;
   savePlan: () => void;
+  assignSlot: (day: number, slot: string, recipeId: string) => void;
+  clearSlot: (day: number, slot: string) => void;
+  refreshRecipes: () => void;
 }
 
 const Ctx = createContext<Store>(null as any);
@@ -81,6 +84,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         recipe_id: p.recipe_id, is_leftover: p.is_leftover, servings: p.servings }));
       api.savePlan({ week_start: mondayOf(), status: "saved", items });
     },
+    assignSlot: (day, slot, recipeId) => {
+      const next = plan.filter((p) => !(p.day_of_week === day && p.slot === slot));
+      next.push({ day_of_week: day, slot: slot as any, recipe_id: recipeId,
+        is_leftover: false, leftover_of: null, servings: settings.household_size });
+      persist(next);
+    },
+    clearSlot: (day, slot) => {
+      persist(plan.filter((p) => !(p.day_of_week === day && p.slot === slot)));
+    },
+    refreshRecipes: () => { api.recipes().then(setRecipes); },
   };
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;
 }

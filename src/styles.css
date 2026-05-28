@@ -73,3 +73,25 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .field { display: block; margin: 18px 0; }
 .field > span { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
 .field input, .field select { padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; min-width: 220px; }
+
+/* drag/drop + slot actions */
+.slot-head { display: flex; justify-content: space-between; align-items: center; }
+.slot-actions { display: flex; gap: 2px; }
+.slot-actions .icon { font-size: 13px; padding: 2px 4px; }
+.drop-hint { font-size: 12px; border: 1px dashed var(--line); border-radius: 6px; padding: 8px; text-align: center; }
+.slot { transition: border-color .1s; }
+.rail-item { cursor: grab; }
+.rail-item:active { cursor: grabbing; }
+.link { cursor: pointer; }
+.link:hover { text-decoration: underline; }
+
+/* recipe / remix modal */
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45);
+  display: flex; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; z-index: 50; }
+.modal { background: #fff; border-radius: 14px; padding: 24px 28px; max-width: 620px; width: 100%; position: relative; }
+.modal-x { position: absolute; top: 14px; right: 16px; border: 0; background: none; font-size: 16px; cursor: pointer; color: var(--muted); }
+.modal h2 { margin: 0 0 2px; }
+.ing-list { margin: 6px 0 16px; padding-left: 20px; }
+.ing-list li { margin: 3px 0; }
+.steps { padding-left: 20px; } .steps li { margin: 6px 0; }
+.remix-box { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }

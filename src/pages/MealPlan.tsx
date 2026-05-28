@@ -1,31 +1,29 @@
 import React, { useMemo, useState } from "react";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
-import type { PlanItem, Slot } from "../engine/types.ts";
+import RecipeModal from "../components/RecipeModal.tsx";
+import type { Slot, Recipe } from "../engine/types.ts";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const PROTEINS = ["chicken", "beef", "pork", "fish", "none"];
 
 export default function MealPlan() {
   const s = useStore();
-  const [sel, setSel] = useState<{ day: number; slot: Slot } | null>(null);
   const [search, setSearch] = useState("");
-  const [protein, setProtein] = useState<string>("");
+  const [protein, setProtein] = useState("");
   const [flyerMsg, setFlyerMsg] = useState("");
+  const [open, setOpen] = useState<Recipe | null>(null);
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
 
   if (s.loading) return <p>Loading recipes…</p>;
 
-  const cell = (day: number, slot: Slot): PlanItem | undefined =>
+  const cell = (day: number, slot: Slot) =>
     s.plan.find((p) => p.day_of_week === day && p.slot === slot);
 
-  const assign = (recipeId: string) => {
-    if (!sel) return;
-    const next = s.plan.filter((p) => !(p.day_of_week === sel.day && p.slot === sel.slot));
-    next.push({ day_of_week: sel.day, slot: sel.slot, recipe_id: recipeId,
-      is_leftover: false, leftover_of: null, servings: s.settings.household_size });
-    localStorage.setItem("plan", JSON.stringify(next));
-    location.reload(); // simple; store re-reads plan from localStorage
+  const onDrop = (day: number, slot: Slot, e: React.DragEvent) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("recipe");
+    if (id) s.assignSlot(day, slot, id);
   };
 
   const filtered = s.recipes.filter((r) => {
@@ -33,20 +31,20 @@ export default function MealPlan() {
     if (protein && r.primary_protein !== protein) return false;
     if (search && !r.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
-  }).slice(0, 60);
+  }).slice(0, 80);
 
   const onFlyer = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
     setFlyerMsg("Reading flyer…");
     const images = await Promise.all(files.map(async (f) => ({
-      mime: f.type,
-      data: btoa(String.fromCharCode(...new Uint8Array(await f.arrayBuffer()))),
+      mime: f.type || "application/pdf",
+      data: btoa(new Uint8Array(await f.arrayBuffer()).reduce((a, b) => a + String.fromCharCode(b), "")),
     })));
     try {
       const res = await api.parseFlyer(images);
-      if (res.deals) { s.setDeals(res.deals); setFlyerMsg(
-        `${res.store}: ${Object.keys(res.deals).length} good-value deals added. Regenerate to use them.`); }
+      if (res.deals) { s.setDeals(res.deals);
+        setFlyerMsg(`${res.store}: ${Object.keys(res.deals).length} good-value deals added. Regenerate to use them.`); }
       else setFlyerMsg(res.error || "Could not parse flyer.");
     } catch { setFlyerMsg("Flyer parsing failed."); }
   };
@@ -58,7 +56,7 @@ export default function MealPlan() {
           <h1>Meal Planner</h1>
           <div className="actions">
             <label className="btn ghost">From flyer
-              <input type="file" accept="image/*" multiple hidden onChange={onFlyer} />
+              <input type="file" accept="image/*,application/pdf" multiple hidden onChange={onFlyer} />
             </label>
             <button className="btn" onClick={s.generate}>Generate plan</button>
             <button className="btn dark" onClick={s.savePlan}>Save</button>
@@ -67,8 +65,8 @@ export default function MealPlan() {
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
         {Object.keys(s.deals).length > 0 &&
           <div className="banner ok">Using {Object.keys(s.deals).length} flyer deals + seasonality.</div>}
-        {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”. It optimises for
-          cost, seasonality (Portugal), ease, what’s in your pantry, and your favourites.</p>}
+        {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or drag recipes
+          from the right into any slot. Optimises for cost, Portugal seasonality, ease, your pantry, and favourites.</p>}
 
         {s.plan.length > 0 && DAYS.map((d, i) => {
           const day = i + 1;
@@ -79,19 +77,25 @@ export default function MealPlan() {
                 {(["lunch", "dinner"] as Slot[]).map((slot) => {
                   const it = cell(day, slot);
                   const r = it?.recipe_id ? byId.get(it.recipe_id) : null;
-                  const active = sel?.day === day && sel?.slot === slot;
                   return (
                     <div key={slot}
-                      className={"slot" + (active ? " active" : "") + (it?.is_leftover ? " leftover" : "")}
-                      onClick={() => setSel({ day, slot })}>
-                      <div className="slot-type">{slot}</div>
+                      className={"slot" + (it?.is_leftover ? " leftover" : "")}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => onDrop(day, slot, e)}>
+                      <div className="slot-head">
+                        <span className="slot-type">{slot}</span>
+                        {r && <span className="slot-actions">
+                          <button title="favourite" className={s.states[r.id]?.is_favorite ? "icon on" : "icon"}
+                            onClick={() => s.signal(r.id, s.states[r.id]?.is_favorite ? "unfavorite" : "favorite")}>★</button>
+                          <button title="remove" className="icon"
+                            onClick={() => s.clearSlot(day, slot)}>✕</button>
+                        </span>}
+                      </div>
                       {r ? <>
-                        <div className="recipe-name">{r.name}</div>
-                        <div className="meta">
-                          {it?.is_leftover ? "leftovers" : `${r.total_time} min`}
-                          {r.cuisine ? ` · ${r.cuisine}` : ""}
-                        </div>
-                      </> : <div className="muted">click, then pick a recipe →</div>}
+                        <div className="recipe-name link" onClick={() => setOpen(r)}>{r.name}</div>
+                        <div className="meta">{it?.is_leftover ? "leftovers" : `${r.total_time} min`}
+                          {r.cuisine ? ` · ${r.cuisine}` : ""}</div>
+                      </> : <div className="muted drop-hint">drop a recipe here</div>}
                     </div>
                   );
                 })}
@@ -103,36 +107,36 @@ export default function MealPlan() {
 
       <aside className="recipe-rail">
         <h3>Recipes</h3>
-        <input placeholder="Search recipes…" value={search}
-          onChange={(e) => setSearch(e.target.value)} />
+        <input placeholder="Search recipes…" value={search} onChange={(e) => setSearch(e.target.value)} />
         <div className="chips">
           {PROTEINS.map((p) => (
             <button key={p} className={protein === p ? "chip on" : "chip"}
-              onClick={() => setProtein(protein === p ? "" : p)}>
-              {p === "none" ? "veg" : p}</button>
+              onClick={() => setProtein(protein === p ? "" : p)}>{p === "none" ? "veg" : p}</button>
           ))}
         </div>
-        <p className="muted small">{sel ? `Assigning to ${DAYS[sel.day - 1]} ${sel.slot}` : "Tap a meal slot to assign"}</p>
+        <p className="muted small">Drag a recipe onto a slot, or tap its name to view / remix.</p>
         <div className="rail-list">
           {filtered.map((r) => {
             const fav = s.states[r.id]?.is_favorite;
             return (
-              <div className="rail-item" key={r.id}>
-                <div className="ri-main" onClick={() => assign(r.id)}>
-                  <div className="recipe-name">{r.name}</div>
-                  <div className="meta">{r.total_time}m · {r.primary_protein} · {r.cuisine}</div>
+              <div className="rail-item" key={r.id} draggable
+                onDragStart={(e) => e.dataTransfer.setData("recipe", r.id)}>
+                <div className="ri-main">
+                  <div className="recipe-name link" onClick={() => setOpen(r)}>{r.name}</div>
+                  <div className="meta">{r.total_time}m · {r.primary_protein}{r.cuisine ? ` · ${r.cuisine}` : ""}</div>
                 </div>
                 <div className="ri-actions">
                   <button title="favourite" className={fav ? "icon on" : "icon"}
                     onClick={() => s.signal(r.id, fav ? "unfavorite" : "favorite")}>★</button>
-                  <button title="hide" className="icon"
-                    onClick={() => s.signal(r.id, "hide")}>✕</button>
+                  <button title="hide" className="icon" onClick={() => s.signal(r.id, "hide")}>✕</button>
                 </div>
               </div>
             );
           })}
         </div>
       </aside>
+
+      {open && <RecipeModal recipe={open} onClose={() => setOpen(null)} />}
     </div>
   );
 }
