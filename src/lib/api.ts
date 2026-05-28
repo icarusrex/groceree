@@ -1,0 +1,16 @@
+const j = (r: Response) => r.json();
+export const api = {
+  recipes: () => fetch("/api/recipes").then(j),
+  settings: () => fetch("/api/settings").then(j),
+  saveSettings: (s: any) => fetch("/api/settings", { method: "PUT", body: JSON.stringify(s) }).then(j),
+  states: () => fetch("/api/state").then(j),
+  signal: (recipe_id: string, signal: string) =>
+    fetch("/api/state", { method: "POST", body: JSON.stringify({ recipe_id, signal }) }).then(j),
+  pantry: () => fetch("/api/pantry").then(j),
+  addPantry: (raw_text: string, source = "manual") =>
+    fetch("/api/pantry", { method: "POST", body: JSON.stringify({ raw_text, source }) }).then(j),
+  delPantry: (id: number) => fetch(`/api/pantry?id=${id}`, { method: "DELETE" }).then(j),
+  savePlan: (p: any) => fetch("/api/plan", { method: "POST", body: JSON.stringify(p) }).then(j),
+  parseFlyer: (images: any[]) =>
+    fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
+};

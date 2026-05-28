@@ -1,0 +1,75 @@
+:root {
+  --bg: #f7f8fa; --surface: #fff; --line: #e7e9ee; --text: #1a1d24;
+  --muted: #6b7280; --accent: #16a34a; --dark: #111827;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+h1 { font-size: 26px; margin: 0 0 4px; }
+h3 { font-size: 15px; margin: 18px 0 8px; }
+.muted { color: var(--muted); } .small { font-size: 13px; }
+.meta { color: var(--muted); font-size: 12px; }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--line); padding: 18px 12px; }
+.brand { font-weight: 700; font-size: 18px; padding: 8px 10px 18px; }
+.nav { display: block; width: 100%; text-align: left; border: 0; background: none;
+  padding: 10px 12px; border-radius: 8px; font-size: 15px; color: var(--text); cursor: pointer; }
+.nav:hover { background: var(--bg); }
+.nav.active { background: var(--dark); color: #fff; }
+.content { flex: 1; padding: 28px 32px; max-width: 1200px; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 8px 14px;
+  border-radius: 8px; cursor: pointer; font-size: 14px; }
+.btn:hover { background: var(--bg); }
+.btn.dark { background: var(--dark); color: #fff; border-color: var(--dark); }
+.btn.ghost { display: inline-flex; align-items: center; }
+.header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.actions { display: flex; gap: 8px; }
+.banner { background: #eef2ff; border: 1px solid #c7d2fe; padding: 10px 14px;
+  border-radius: 8px; margin-bottom: 12px; font-size: 14px; }
+.banner.ok { background: #ecfdf5; border-color: #a7f3d0; }
+
+.plan-wrap { display: flex; gap: 24px; align-items: flex-start; }
+.plan-main { flex: 1; min-width: 0; }
+.day { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 12px; }
+.day-label { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 12px; margin-bottom: 8px; }
+.slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.slot { border: 1px solid var(--line); border-radius: 10px; padding: 12px; cursor: pointer; min-height: 64px; }
+.slot:hover { border-color: #cbd5e1; }
+.slot.active { border-color: var(--dark); box-shadow: 0 0 0 2px rgba(17,24,39,.08); }
+.slot.leftover { background: #fafafa; border-style: dashed; }
+.slot-type { font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.recipe-name { font-weight: 600; font-size: 14px; }
+
+.recipe-rail { width: 320px; flex-shrink: 0; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 12px; padding: 16px; position: sticky; top: 20px; }
+.recipe-rail input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+  padding: 4px 12px; font-size: 13px; cursor: pointer; }
+.chip.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+.rail-list { max-height: 70vh; overflow-y: auto; margin-top: 8px; }
+.rail-item { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; }
+.rail-item:hover { background: var(--bg); }
+.ri-main { flex: 1; cursor: pointer; min-width: 0; }
+.ri-actions { display: flex; gap: 4px; }
+.icon { border: 0; background: none; cursor: pointer; font-size: 15px; color: var(--muted); padding: 4px; }
+.icon.on { color: #f59e0b; }
+
+.shop-group { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 8px 16px 16px; margin-bottom: 12px; }
+.shop-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--bg); }
+.shop-row .meta { margin-left: auto; }
+.struck { text-decoration: line-through; color: var(--muted); }
+
+.add-row { display: flex; gap: 8px; margin: 12px 0; }
+.add-row input { flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.pantry-row { display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+
+.settings { max-width: 560px; }
+.field { display: block; margin: 18px 0; }
+.field > span { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+.field input, .field select { padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; min-width: 220px; }

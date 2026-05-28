@@ -1,0 +1,9 @@
+name = "groceree"
+compatibility_date = "2026-05-01"
+pages_build_output_dir = "dist"
+
+# D1 binding — replace database_id with the id printed by `wrangler d1 create groceree`
+[[d1_databases]]
+binding = "DB"
+database_name = "groceree"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
