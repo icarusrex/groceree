@@ -35,6 +35,10 @@ export default function Shop() {
                 <span className={checked[key] ? "struck" : ""}>
                   {i.name}{i.amt.text && <em> · {i.amt.text}</em>}</span>
                 <span className="meta">{i.recipes.length} recipe{i.recipes.length > 1 ? "s" : ""}</span>
+                <button className="icon to-pantry" title="move to pantry"
+                  onClick={(e) => { e.preventDefault();
+                    s.addPantry(`${i.amt.text ? i.amt.text + " " : ""}${i.name}`);
+                    setChecked({ ...checked, [key]: true }); }}>→🥫</button>
               </label>
             );
           })}

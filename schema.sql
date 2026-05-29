@@ -129,3 +129,18 @@ CREATE TABLE IF NOT EXISTS store_prices (
 );
 CREATE INDEX IF NOT EXISTS idx_prices_item  on store_prices(item_name);
 CREATE INDEX IF NOT EXISTS idx_prices_valid on store_prices(valid_from, valid_to);
+
+-- Uploaded flyers (one row per flyer upload), with validity window + summary.
+CREATE TABLE IF NOT EXISTS flyers (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     TEXT NOT NULL DEFAULT 'me',
+  store_id    TEXT,
+  store_name  TEXT,
+  valid_from  TEXT,
+  valid_to    TEXT,
+  summary     TEXT,          -- short overview of notable deals / theme
+  item_count  INTEGER,
+  deals       TEXT,          -- JSON: {itemName: discount} good-value only
+  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_flyers_user on flyers(user_id);

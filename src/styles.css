@@ -115,3 +115,27 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .cook-nav { display: flex; gap: 12px; }
 .cook-nav .btn { font-size: 18px; padding: 14px 28px; }
 @media (max-width: 700px) { .cook-body { grid-template-columns: 1fr; } .cook-ings { border-right: 0; border-bottom: 1px solid var(--line); max-height: 30vh; } .cook-step-text { font-size: 24px; } }
+
+/* fullscreen card + timers (replaces step-walker) */
+.fs-btn { position: absolute; top: 14px; right: 48px; border: 0; background: none; cursor: pointer; font-size: 15px; color: var(--muted); }
+.cook-full-body { max-width: 900px; margin: 0 auto; padding: 24px 32px; overflow-y: auto; height: 100%; }
+.cook-cols { display: grid; grid-template-columns: 1fr 1.4fr; gap: 28px; }
+@media (max-width: 700px) { .cook-cols { grid-template-columns: 1fr; } }
+.timer-btn { border: 1px solid var(--accent); color: var(--accent); background: #f0fdf4; border-radius: 999px;
+  padding: 2px 10px; font-size: 13px; cursor: pointer; margin-left: 6px; }
+.timer-btn.running { background: var(--accent); color: #fff; font-variant-numeric: tabular-nums; }
+.steps li { margin: 10px 0; }
+
+/* flyers strip */
+.flyers-strip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+.flyers-head { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.flyer-cards { display: flex; gap: 12px; flex-wrap: wrap; }
+.flyer-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 240px; }
+.flyer-card.expired { opacity: .55; }
+.flyer-store { font-weight: 600; }
+.flyer-exp { color: var(--muted); font-weight: 400; font-size: 12px; }
+.flyer-dates { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+.flyer-sum { font-size: 13px; margin-bottom: 8px; }
+.flyer-actions { display: flex; align-items: center; justify-content: space-between; }
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.to-pantry { font-size: 14px; }

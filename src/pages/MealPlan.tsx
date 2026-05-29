@@ -14,7 +14,10 @@ export default function MealPlan() {
   const [flyerMsg, setFlyerMsg] = useState("");
   const [open, setOpen] = useState<Recipe | null>(null);
   const [saveMsg, setSaveMsg] = useState("");
+  const [flyers, setFlyers] = useState<any[]>([]);
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
+
+  React.useEffect(() => { api.flyers().then(setFlyers).catch(() => {}); }, []);
 
   if (s.loading) return <p>Loading recipes…</p>;
 
@@ -45,7 +48,8 @@ export default function MealPlan() {
     try {
       const res = await api.parseFlyer(images);
       if (res.deals) { s.setDeals(res.deals);
-        setFlyerMsg(`${res.store}: ${Object.keys(res.deals).length} good-value deals added. Regenerate to use them.`); }
+        setFlyerMsg(`${res.store}: ${Object.keys(res.deals).length} good-value deals added.${res.summary ? " " + res.summary : ""}`);
+        api.flyers().then(setFlyers); }
       else setFlyerMsg(res.error || "Could not parse flyer.");
     } catch { setFlyerMsg("Flyer parsing failed."); }
   };
@@ -72,6 +76,31 @@ export default function MealPlan() {
         {saveMsg && <div className="banner ok">{saveMsg}</div>}
         {Object.keys(s.deals).length > 0 &&
           <div className="banner ok">Using {Object.keys(s.deals).length} flyer deals + seasonality.</div>}
+
+        {flyers.length > 0 && (
+          <div className="flyers-strip">
+            <div className="flyers-head">Your flyers — generate a plan favouring one store's deals:</div>
+            <div className="flyer-cards">
+              {flyers.map((f) => (
+                <div className={"flyer-card" + (f.active ? "" : " expired")} key={f.id}>
+                  <div className="flyer-store">{f.store_name}
+                    {!f.active && <span className="flyer-exp"> · expired</span>}</div>
+                  <div className="flyer-dates">
+                    {f.valid_from || "?"} → {f.valid_to || "?"} · {f.item_count} items</div>
+                  {f.summary && <div className="flyer-sum">{f.summary}</div>}
+                  <div className="flyer-actions">
+                    <button className="btn small" onClick={() => {
+                      s.setDeals(f.deals); s.generate();
+                      setFlyerMsg(`Plan generated favouring ${f.store_name} deals.`);
+                    }}>Plan from this</button>
+                    <button className="icon" title="remove"
+                      onClick={() => api.delFlyer(f.id).then(() => api.flyers().then(setFlyers))}>🗑</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or drag recipes
           from the right into any slot. Optimises for cost, Portugal seasonality, ease, your pantry, and favourites.</p>}
 

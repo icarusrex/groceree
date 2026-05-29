@@ -1,7 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
 import type { Recipe } from "../engine/types.ts";
+
+// pull "10 minutes" / "1 hour" durations out of a step → seconds
+function stepTimer(text: string): number | null {
+  const m = text.match(/(\d+)\s*(?:-\s*\d+\s*)?(hour|hr|minute|min)/i);
+  if (!m) return null;
+  const n = parseInt(m[1], 10);
+  return /h/i.test(m[2]) ? n * 3600 : n * 60;
+}
+const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+function Timer({ seconds, label }: { seconds: number; label: string }) {
+  const [left, setLeft] = useState<number | null>(null);
+  const ref = useRef<any>(null);
+  useEffect(() => () => clearInterval(ref.current), []);
+  const start = () => {
+    setLeft(seconds);
+    clearInterval(ref.current);
+    ref.current = setInterval(() => setLeft((v) => {
+      if (v == null) return v;
+      if (v <= 1) {
+        clearInterval(ref.current);
+        try { new AudioContext(); } catch {}
+        // simple beep
+        try {
+          const ac = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const o = ac.createOscillator(); o.connect(ac.destination); o.frequency.value = 880;
+          o.start(); setTimeout(() => o.stop(), 700);
+        } catch {}
+        return 0;
+      }
+      return v - 1;
+    }), 1000);
+  };
+  return (
+    <button className={"timer-btn" + (left != null ? " running" : "")} onClick={start}>
+      ⏱ {left != null ? fmt(left) : label}
+    </button>
+  );
+}
 
 export default function RecipeModal({ recipe, onClose }:
   { recipe: Recipe; onClose: () => void }) {
@@ -10,9 +49,8 @@ export default function RecipeModal({ recipe, onClose }:
   const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState<any>(null);
   const [msg, setMsg] = useState("");
-  const [cooking, setCooking] = useState(false);
+  const [full, setFull] = useState(false);
   const [img, setImg] = useState<string | null>((recipe as any).image_url || null);
-  const [step, setStep] = useState(0);
 
   const view = draft || recipe;
   const steps: string[] = view.instructions || [];
@@ -27,14 +65,12 @@ export default function RecipeModal({ recipe, onClose }:
     } catch { setMsg("Remix failed (Gemini key set?)."); }
     setBusy(false);
   };
-
   const save = async () => {
     setBusy(true);
     const res = await api.createRecipe({ ...draft, image_url: img });
     setBusy(false);
     if (res.ok) { s.refreshRecipes(); setMsg("Saved to your recipes."); }
   };
-
   const genImage = async () => {
     setBusy(true); setMsg("Generating image…");
     try {
@@ -45,29 +81,64 @@ export default function RecipeModal({ recipe, onClose }:
     setBusy(false);
   };
 
-  if (cooking) {
+  const card = (
+    <>
+      {img && <img className="recipe-img" src={img} alt={view.name} />}
+      <h2>{view.name}</h2>
+      <p className="meta">{view.total_time} min · serves {view.servings}
+        {view.primary_protein && view.primary_protein !== "none" ? ` · ${view.primary_protein}` : ""}
+        {draft ? " · remixed (unsaved)" : ""}</p>
+
+      <div className="actions" style={{ margin: "10px 0", flexWrap: "wrap" }}>
+        <button className="btn" disabled={busy} onClick={genImage}>{img ? "Regenerate image" : "🖼 Generate image"}</button>
+        {img && !draft && <button className="btn ghost" disabled={busy} onClick={async () => {
+          setBusy(true); await api.createRecipe({ ...view, image_url: img }); s.refreshRecipes();
+          setBusy(false); setMsg("Saved with image."); }}>Save image</button>}
+      </div>
+
+      <div className="cook-cols">
+        <div>
+          <h3>Ingredients</h3>
+          <ul className="ing-list">
+            {(view.ingredients || []).map((i: any, k: number) => (
+              <li key={k}>{i.quantity ? `${i.quantity} ${i.unit || ""} ` : ""}{i.name}</li>))}
+          </ul>
+        </div>
+        {steps.length > 0 && (
+          <div>
+            <h3>Method</h3>
+            <ol className="steps">
+              {steps.map((st, k) => {
+                const t = stepTimer(st);
+                return <li key={k}>{st}{t ? <> <Timer seconds={t} label={fmt(t)} /></> : null}</li>;
+              })}
+            </ol>
+          </div>
+        )}
+      </div>
+
+      <div className="remix-box">
+        <h3>Remix this recipe</h3>
+        <div className="add-row">
+          <input placeholder='e.g. "make it dairy-free", "halve it", "swap chicken for tofu"'
+            value={instruction} onChange={(e) => setInstruction(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") remix(); }} />
+          <button className="btn" disabled={busy} onClick={remix}>{busy ? "…" : "Remix"}</button>
+        </div>
+        {msg && <p className="muted small">{msg}</p>}
+        {draft && <button className="btn dark" disabled={busy} onClick={save}>Save as new recipe</button>}
+      </div>
+    </>
+  );
+
+  if (full) {
     return (
       <div className="cook-mode">
         <div className="cook-top">
-          <button className="btn ghost" onClick={() => setCooking(false)}>← Back</button>
-          <h2>{view.name}</h2>
+          <button className="btn ghost" onClick={() => setFull(false)}>← Exit fullscreen</button>
           <button className="btn" onClick={onClose}>Close</button>
         </div>
-        <div className="cook-body">
-          <div className="cook-ings">
-            <h3>Ingredients</h3>
-            <ul>{(view.ingredients || []).map((i: any, k: number) => (
-              <li key={k}>{i.quantity ? `${i.quantity} ${i.unit || ""} ` : ""}{i.name}</li>))}</ul>
-          </div>
-          <div className="cook-steps">
-            <div className="cook-step-num">Step {step + 1} of {steps.length}</div>
-            <div className="cook-step-text">{steps[step] || "No steps recorded for this recipe."}</div>
-            <div className="cook-nav">
-              <button className="btn" disabled={step === 0} onClick={() => setStep(step - 1)}>Previous</button>
-              <button className="btn dark" disabled={step >= steps.length - 1} onClick={() => setStep(step + 1)}>Next step</button>
-            </div>
-          </div>
-        </div>
+        <div className="cook-full-body">{card}</div>
       </div>
     );
   }
@@ -76,41 +147,8 @@ export default function RecipeModal({ recipe, onClose }:
     <div className="modal-bg" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-x" onClick={onClose}>✕</button>
-        {img && <img className="recipe-img" src={img} alt={view.name} />}
-        <h2>{view.name}</h2>
-        <p className="meta">{view.total_time} min · serves {view.servings}
-          {view.primary_protein && view.primary_protein !== "none" ? ` · ${view.primary_protein}` : ""}
-          {draft ? " · remixed (unsaved)" : ""}</p>
-
-        <div className="actions" style={{ margin: "10px 0", flexWrap: "wrap" }}>
-          {steps.length > 0 && <button className="btn dark" onClick={() => { setStep(0); setCooking(true); }}>👨‍🍳 Cooking mode</button>}
-          <button className="btn" disabled={busy} onClick={genImage}>{img ? "Regenerate image" : "🖼 Generate image"}</button>
-          {img && !draft && <button className="btn ghost" disabled={busy} onClick={async () => {
-            setBusy(true); await api.createRecipe({ ...view, image_url: img }); s.refreshRecipes();
-            setBusy(false); setMsg("Saved with image."); }}>Save image</button>}
-        </div>
-
-        <h3>Ingredients</h3>
-        <ul className="ing-list">
-          {(view.ingredients || []).map((i: any, k: number) => (
-            <li key={k}>{i.quantity ? `${i.quantity} ${i.unit || ""} ` : ""}{i.name}</li>))}
-        </ul>
-        {steps.length > 0 && <>
-          <h3>Method</h3>
-          <ol className="steps">{steps.map((st, k) => <li key={k}>{st}</li>)}</ol>
-        </>}
-
-        <div className="remix-box">
-          <h3>Remix this recipe</h3>
-          <div className="add-row">
-            <input placeholder='e.g. "make it dairy-free", "halve it", "swap chicken for tofu"'
-              value={instruction} onChange={(e) => setInstruction(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") remix(); }} />
-            <button className="btn" disabled={busy} onClick={remix}>{busy ? "…" : "Remix"}</button>
-          </div>
-          {msg && <p className="muted small">{msg}</p>}
-          {draft && <button className="btn dark" disabled={busy} onClick={save}>Save as new recipe</button>}
-        </div>
+        <button className="fs-btn" onClick={() => setFull(true)}>⛶ Fullscreen</button>
+        {card}
       </div>
     </div>
   );

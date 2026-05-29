@@ -12,6 +12,7 @@ const PROMPT = `You are reading a supermarket flyer image (Portugal). Extract th
 discounted grocery items. ${COST_RULE}
 Return ONLY JSON, no prose, shaped:
 {"store": "<name>", "valid_from": "YYYY-MM-DD|null", "valid_to": "YYYY-MM-DD|null",
+ "summary": "<one short sentence: notable cheap items / any theme, e.g. 'Strong on pork and winter veg this week'>",
  "items": [{"name": "<english grocery name>", "name_pt": "<portuguese>",
             "price": <number>, "normal_price": <number|null>, "unit": "<e.g. kg|un>",
             "discount": <0..1>, "good_value": <true|false>}]}
@@ -66,6 +67,15 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     // only genuinely good-value discounts feed the planner
     if (it.good_value && it.discount) deals[it.name.toLowerCase()] = it.discount;
   }
+  // store a flyer record so it persists with its validity window + summary
+  await ctx.env.DB.prepare(
+    `INSERT INTO flyers (user_id, store_id, store_name, valid_from, valid_to,
+       summary, item_count, deals) VALUES (?,?,?,?,?,?,?,?)`,
+  ).bind(uid(ctx), storeId, storeName, parsed.valid_from ?? null,
+         parsed.valid_to ?? null, parsed.summary ?? null,
+         (parsed.items || []).length, JSON.stringify(deals)).run();
+
   return json({ store: storeName, valid_from: parsed.valid_from,
-                valid_to: parsed.valid_to, items: parsed.items, deals });
+                valid_to: parsed.valid_to, summary: parsed.summary,
+                items: parsed.items, deals });
 };
