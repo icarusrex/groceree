@@ -13,6 +13,7 @@ export default function MealPlan() {
   const [protein, setProtein] = useState("");
   const [flyerMsg, setFlyerMsg] = useState("");
   const [open, setOpen] = useState<Recipe | null>(null);
+  const [saveMsg, setSaveMsg] = useState("");
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
 
   if (s.loading) return <p>Loading recipes…</p>;
@@ -59,10 +60,16 @@ export default function MealPlan() {
               <input type="file" accept="image/*,application/pdf" multiple hidden onChange={onFlyer} />
             </label>
             <button className="btn" onClick={s.generate}>Generate plan</button>
-            <button className="btn dark" onClick={s.savePlan}>Save</button>
+            <button className="btn dark" onClick={async () => {
+              setSaveMsg("Saving…");
+              try { await s.savePlan(); setSaveMsg("Plan saved ✓ — shopping list is on the Shop tab."); }
+              catch { setSaveMsg("Save failed."); }
+              setTimeout(() => setSaveMsg(""), 4000);
+            }}>Save</button>
           </div>
         </div>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
+        {saveMsg && <div className="banner ok">{saveMsg}</div>}
         {Object.keys(s.deals).length > 0 &&
           <div className="banner ok">Using {Object.keys(s.deals).length} flyer deals + seasonality.</div>}
         {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or drag recipes

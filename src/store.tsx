@@ -17,7 +17,7 @@ interface Store {
   addPantry: (t: string) => void;
   delPantry: (id: number) => void;
   setDeals: (d: Record<string, number>) => void;
-  savePlan: () => void;
+  savePlan: () => Promise<void>;
   assignSlot: (day: number, slot: string, recipeId: string) => void;
   clearSlot: (day: number, slot: string) => void;
   refreshRecipes: () => void;
@@ -82,7 +82,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     savePlan: () => {
       const items = plan.map((p) => ({ day_of_week: p.day_of_week, slot: p.slot,
         recipe_id: p.recipe_id, is_leftover: p.is_leftover, servings: p.servings }));
-      api.savePlan({ week_start: mondayOf(), status: "saved", items });
+      return api.savePlan({ week_start: mondayOf(), status: "saved", items });
     },
     assignSlot: (day, slot, recipeId) => {
       const next = plan.filter((p) => !(p.day_of_week === day && p.slot === slot));

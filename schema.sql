@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS recipes (
   is_one_pot           INTEGER NOT NULL DEFAULT 0,
   ingredients          TEXT NOT NULL DEFAULT '[]',   -- JSON
   instructions         TEXT NOT NULL DEFAULT '[]',   -- JSON
-  source               TEXT
+  source               TEXT,
+  image_url            TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_recipes_cuisine on recipes(cuisine);
 CREATE INDEX IF NOT EXISTS idx_recipes_protein on recipes(primary_protein);

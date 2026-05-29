@@ -13,6 +13,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     is_dairy_free: !!r.is_dairy_free,
     contains_dairy: !!r.contains_dairy,
     is_one_pot: !!r.is_one_pot,
+    image_url: r.image_url || null,
     ingredients: JSON.parse(r.ingredients || "[]"),
     instructions: JSON.parse(r.instructions || "[]"),
   }));

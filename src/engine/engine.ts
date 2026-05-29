@@ -196,31 +196,50 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
 
 // ---- shopping list ----------------------------------------------------------
 export interface ShoppingItem {
-  name: string; category: string; unit: string; quantity: number | null; recipes: string[];
+  name: string; category: string; unit: string; quantity: number | null;
+  recipes: string[]; staple: boolean;
 }
 
+import { toBuyItem } from "./normalise.ts";
+
 export function buildShoppingList(plan: PlanItem[], recipes: Recipe[],
-                                  household: number): ShoppingItem[] {
+                                  household: number, pantry: string[] = []): ShoppingItem[] {
   const byId = new Map(recipes.map((r) => [r.id, r]));
+  const pantryKeys = pantry.map((p) => toBuyItem(p, null, "", "pantry").name).filter(Boolean);
   const agg = new Map<string, ShoppingItem>();
   for (const item of plan) {
-    if (item.is_leftover || !item.recipe_id) continue; // leftovers cook nothing new
+    if (item.is_leftover || !item.recipe_id) continue;
     const r = byId.get(item.recipe_id);
     if (!r) continue;
     const scale = (item.servings || household) / (r.servings || household);
     for (const ing of r.ingredients) {
-      const unit = ing.unit_norm ?? ing.unit ?? "";
-      const key = `${ing.name.toLowerCase()}|${unit}`;
+      const buy = toBuyItem(ing.name, ing.quantity != null ? ing.quantity * scale : null,
+                            ing.unit ?? "", ing.category);
+      if (!buy.name) continue;
+      // pantry exclusion: already have it → skip
+      if (pantryKeys.some((p) => buy.name.includes(p) || p.includes(buy.name))) continue;
+      // dedup: staples merge on name; weight(g/kg) merge as weight; counts merge as counts
+      const isWeight = buy.unit === "g" || buy.unit === "kg";
+      const key = buy.staple ? buy.name : `${buy.name}|${isWeight ? "w" : buy.unit}`;
       const ex = agg.get(key);
-      const q = ing.quantity != null ? ing.quantity * scale : null;
       if (ex) {
-        if (q != null) ex.quantity = (ex.quantity ?? 0) + q;
+        if (buy.quantity != null && ex.quantity != null) {
+          if (isWeight) {
+            const addG = buy.unit === "kg" ? buy.quantity * 1000 : buy.quantity;
+            const exG = ex.unit === "kg" ? ex.quantity * 1000 : ex.quantity;
+            const total = exG + addG;
+            if (total >= 1000) { ex.quantity = Math.round(total / 250) / 4; ex.unit = "kg"; }
+            else { ex.quantity = total; ex.unit = "g"; }
+          } else {
+            ex.quantity += buy.quantity; // counts
+          }
+        } else if (buy.quantity != null && ex.quantity == null) {
+          ex.quantity = buy.quantity; ex.unit = buy.unit;
+        }
         if (!ex.recipes.includes(r.name)) ex.recipes.push(r.name);
       } else {
-        agg.set(key, {
-          name: ing.name, category: ing.category, unit,
-          quantity: q != null ? q : null, recipes: [r.name],
-        });
+        agg.set(key, { name: buy.display, category: buy.category, unit: buy.unit,
+          quantity: buy.quantity, recipes: [r.name], staple: buy.staple });
       }
     }
   }
@@ -228,22 +247,12 @@ export function buildShoppingList(plan: PlanItem[], recipes: Recipe[],
     a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
 }
 
-// ---- human-sensible shopping amounts ---------------------------------------
-// "1.5 tbsp peanut butter" is nonsense on a shopping list. Pantry staples and
-// tiny seasoning amounts are shown without a quantity (you buy a jar/pack);
-// real buy-items round to sensible increments.
+// amount text for display; staple flag now comes from the buy-item
 export function tidyAmount(item: ShoppingItem): { text: string; staple: boolean } {
-  const u = (item.unit || "").toLowerCase();
-  const q = item.quantity;
-  const tiny = ["tsp", "tbsp", "pinch", "clove"].includes(u);
-  // pantry condiments/spices, or anything measured in tiny units → staple, no qty
-  if (item.category === "pantry" || tiny) return { text: "", staple: true };
-  if (q == null) return { text: "", staple: false };
-  let n = q, unit = u;
-  if (u === "g") { n = Math.max(50, Math.ceil(q / 50) * 50); }
-  else if (u === "kg") { n = Math.ceil(q * 4) / 4; }
-  else if (u === "cup" || u === "cups") { n = Math.max(0.5, Math.round(q * 2) / 2); unit = "cup"; }
-  else { n = Math.ceil(q); unit = u; } // counts / un
-  const num = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/0+$/, "");
-  return { text: `${num}${unit ? " " + unit : ""}`, staple: false };
+  if (item.staple || item.quantity == null) return { text: "", staple: item.staple };
+  const num = Number.isInteger(item.quantity) ? String(item.quantity)
+    : item.quantity.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+  return { text: `${num}${item.unit ? " " + item.unit : item.unit === "" && item.category !== "pantry" ? " un" : ""}`, staple: false };
 }
+
+// ---- human-sensible shopping amounts ---------------------------------------

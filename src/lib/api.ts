@@ -17,4 +17,8 @@ export const api = {
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
+  prices: () => fetch("/api/prices").then(j),
+  generateImage: (recipe_id: string, name: string, description: string) =>
+    fetch("/api/generate-image", { method: "POST", body: JSON.stringify({ recipe_id, name, description }) }).then(j),
+  pantryRecipes: () => fetch("/api/pantry-recipes", { method: "POST", body: "{}" }).then(j),
 };

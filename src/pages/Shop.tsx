@@ -6,8 +6,9 @@ export default function Shop() {
   const s = useStore();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const list = useMemo(
-    () => buildShoppingList(s.plan, s.recipes, s.settings.household_size),
-    [s.plan, s.recipes, s.settings.household_size]);
+    () => buildShoppingList(s.plan, s.recipes, s.settings.household_size,
+      s.pantry.map((p: any) => p.name || p.raw_text)),
+    [s.plan, s.recipes, s.settings.household_size, s.pantry]);
 
   if (!s.plan.length) return <div><h1>Shopping List</h1><p className="muted">Generate a meal plan first.</p></div>;
 
