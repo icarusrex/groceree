@@ -16,10 +16,12 @@ interface Store {
   signal: (id: string, sig: string) => void;
   addPantry: (t: string) => void;
   delPantry: (id: number) => void;
+  refreshPantry: () => Promise<void>;
   setDeals: (d: Record<string, number>) => void;
   savePlan: () => Promise<void>;
   assignSlot: (day: number, slot: string, recipeId: string) => void;
   clearSlot: (day: number, slot: string) => void;
+  applyPlanChanges: (changes: { day_of_week: number; slot: string; recipe_id: string }[]) => void;
   refreshRecipes: () => void;
 }
 
@@ -78,6 +80,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     },
     addPantry: (t) => { api.addPantry(t).then(() => api.pantry().then(setPantry)); },
     delPantry: (id) => { api.delPantry(id).then(() => api.pantry().then(setPantry)); },
+    refreshPantry: () => api.pantry().then(setPantry),
     setDeals,
     savePlan: () => {
       const items = plan.map((p) => ({ day_of_week: p.day_of_week, slot: p.slot,
@@ -92,6 +95,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     },
     clearSlot: (day, slot) => {
       persist(plan.filter((p) => !(p.day_of_week === day && p.slot === slot)));
+    },
+    applyPlanChanges: (changes) => {
+      const known = new Set(recipes.map((r) => r.id));
+      let next = [...plan];
+      for (const c of changes) {
+        if (!known.has(c.recipe_id)) continue;
+        next = next.filter((p) => !(p.day_of_week === c.day_of_week && p.slot === c.slot));
+        next.push({ day_of_week: c.day_of_week, slot: c.slot as any, recipe_id: c.recipe_id,
+          is_leftover: false, leftover_of: null, servings: settings.household_size });
+      }
+      next.sort((a, b) => a.day_of_week - b.day_of_week || (a.slot === "lunch" ? -1 : 1));
+      persist(next);
     },
     refreshRecipes: () => { api.recipes().then(setRecipes); },
   };

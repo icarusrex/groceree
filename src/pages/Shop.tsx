@@ -34,7 +34,6 @@ export default function Shop() {
                   onChange={() => setChecked({ ...checked, [key]: !checked[key] })} />
                 <span className={checked[key] ? "struck" : ""}>
                   {i.name}{i.amt.text && <em> · {i.amt.text}</em>}</span>
-                <span className="meta">{i.recipes.length} recipe{i.recipes.length > 1 ? "s" : ""}</span>
                 <button className="icon to-pantry" title="move to pantry"
                   onClick={(e) => { e.preventDefault();
                     s.addPantry(`${i.amt.text ? i.amt.text + " " : ""}${i.name}`);
@@ -45,9 +44,8 @@ export default function Shop() {
         </div>
       ))}
       {staples.length > 0 && (
-        <div className="shop-group">
-          <h3>Pantry &amp; seasonings — check you have these</h3>
-          <p className="muted small">Small amounts you usually buy as a jar/pack and likely have.</p>
+        <div className="shop-group staples">
+          <h3>Pantry &amp; seasonings</h3>
           {staples.map((i) => {
             const key = "p" + i.name;
             return (

@@ -84,6 +84,12 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .rail-item:active { cursor: grabbing; }
 .link { cursor: pointer; }
 .link:hover { text-decoration: underline; }
+.ri-main { flex: 1; cursor: pointer; }
+.rail-item.placing { outline: 1px dashed var(--accent); outline-offset: -1px; }
+.rail-item.placing:hover { background: #ecfdf5; }
+.place-banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ai-edit { display: flex; gap: 8px; margin: 10px 0 6px; }
+.ai-edit input { flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; }
 
 /* recipe / remix modal */
 .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45);
@@ -139,3 +145,52 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .flyer-actions { display: flex; align-items: center; justify-content: space-between; }
 .btn.small { padding: 5px 10px; font-size: 13px; }
 .to-pantry { font-size: 14px; }
+
+/* ---- new flyer states (#1) + scan row (#7) ---- */
+.flyer-card.upcoming { opacity: .8; border-style: dashed; }
+.flyer-soon { color: var(--accent); font-size: 12px; }
+.scan-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.shop-group.staples { opacity: .85; }
+
+/* ---- mobile (#2) ---- */
+@media (max-width: 820px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: auto; display: flex; align-items: center; gap: 4px;
+    border-right: 0; border-bottom: 1px solid var(--line); padding: 8px 10px;
+    position: sticky; top: 0; z-index: 20; overflow-x: auto; }
+  .brand { padding: 4px 8px; font-size: 16px; white-space: nowrap; }
+  .sidebar nav { display: flex; gap: 4px; }
+  .nav { width: auto; padding: 8px 12px; font-size: 14px; white-space: nowrap; }
+  .content { padding: 16px; max-width: 100%; }
+  .header-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .actions { flex-wrap: wrap; }
+  .plan-wrap { flex-direction: column; }
+  .recipe-rail { width: 100%; position: static; }
+  .rail-list { max-height: 420px; }
+  .field input, .field select { min-width: 0; width: 100%; }
+  .modal { padding: 18px 16px; border-radius: 12px; }
+  .cook-cols { grid-template-columns: 1fr; gap: 16px; }
+}
+@media (max-width: 520px) {
+  .slots { grid-template-columns: 1fr; }
+  h1 { font-size: 22px; }
+}
+
+/* ---- store comparison (#4) ---- */
+.flyers-head { display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.compare-card { border: 1px solid var(--line); background: var(--surface);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+.compare-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.compare-winner { font-weight: 700; font-size: 16px; }
+.compare-theme { background: #fef3c7; color: #92400e; border-radius: 999px;
+  padding: 3px 10px; font-size: 12px; font-weight: 600; }
+.compare-reason { margin: 8px 0 12px; font-size: 14px; }
+.compare-stores { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.compare-store { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.cs-name { font-weight: 600; font-size: 14px; }
+.cs-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.cs-chip { background: var(--bg); border: 1px solid var(--line); border-radius: 999px;
+  padding: 2px 8px; font-size: 11px; color: var(--text); }
+@media (max-width: 520px) { .compare-stores { grid-template-columns: 1fr; } }

@@ -55,6 +55,15 @@ export default function RecipeModal({ recipe, onClose }:
   const view = draft || recipe;
   const steps: string[] = view.instructions || [];
 
+  const runRemix = async (instr: string) => {
+    setBusy(true); setMsg("Adapting…");
+    try {
+      const res = await api.remix(view, instr);
+      if (res.error) setMsg(res.error);
+      else { setDraft(res); setMsg("Done — review, then save as a new recipe."); }
+    } catch { setMsg("Adapt failed (Gemini key set?)."); }
+    setBusy(false);
+  };
   const remix = async () => {
     if (!instruction.trim()) return;
     setBusy(true); setMsg("");
@@ -118,9 +127,23 @@ export default function RecipeModal({ recipe, onClose }:
       </div>
 
       <div className="remix-box">
-        <h3>Remix this recipe</h3>
+        <h3>Adapt this recipe</h3>
+        <div className="chips" style={{ margin: "0 0 8px" }}>
+          {!view.is_gluten_free && (
+            <button className="chip" disabled={busy}
+              onClick={() => runRemix("Make this gluten-free. Swap only what's necessary (e.g. gluten-free pasta/flour, tamari instead of soy sauce, cornflour to thicken). Keep everything else the same and note if a swap changes the method.")}>
+              🌾 Make gluten-free</button>
+          )}
+          {!view.is_dairy_free && (
+            <button className="chip" disabled={busy}
+              onClick={() => runRemix("Make this dairy-free with simple swaps, keeping it cookable.")}>
+              🥛 Make dairy-free</button>
+          )}
+          <button className="chip" disabled={busy}
+            onClick={() => runRemix("Halve all quantities, keep the method.")}>½ Halve it</button>
+        </div>
         <div className="add-row">
-          <input placeholder='e.g. "make it dairy-free", "halve it", "swap chicken for tofu"'
+          <input placeholder='or type your own: "swap chicken for tofu", "make it spicier"…'
             value={instruction} onChange={(e) => setInstruction(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") remix(); }} />
           <button className="btn" disabled={busy} onClick={remix}>{busy ? "…" : "Remix"}</button>

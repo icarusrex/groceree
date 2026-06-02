@@ -25,20 +25,22 @@ export default function PriceTrends() {
 
   if (!data) return <p className="muted">Loading price data…</p>;
 
-  // honest sparse-data state
-  const uniqueDates = new Set((data.points || []).map((p: any) => p.date)).size;
-  if (!data.count || uniqueDates < 2) {
+  // honest sparse-data state — evaluated against the CURRENTLY SELECTED store,
+  // not globally, so picking one store with a single flyer date is handled right.
+  const selDates = series ? (series.dates as string[]).length : 0;
+  if (!data.count || !series || selDates < 1) {
     return (
       <div className="trend-empty">
         <p className="muted">
-          {data.count ? `${data.count} prices from 1 flyer date so far.` : "No flyer prices yet."}
-          {" "}Trends need at least 2 different flyer dates to plot a line. Upload flyers
-          over a few weeks (Meal Plan → “From flyer”) and lines will appear here, one per
-          category, per store.
+          {data.count ? `${data.count} prices loaded${store ? ` · none yet for ${store}` : ""}.`
+            : "No flyer prices yet."}
+          {" "}Upload flyers over time (Meal Plan → “From flyer”) and a line per category
+          builds up here. A single flyer shows as points; two or more dates draw trend lines.
         </p>
       </div>
     );
   }
+  const singleDate = selDates < 2;
 
   // build SVG
   const W = 620, H = 260, PAD = 40;
@@ -64,8 +66,16 @@ export default function PriceTrends() {
           <text key={k} x={PAD - 6} y={y(p) + 3} textAnchor="end" fontSize="10" fill="#888">€{p.toFixed(2)}</text>
         ))}
         {Object.entries(series!.byCat).map(([cat, pts]) => (
-          <polyline key={cat} fill="none" stroke={COLORS[cat] || "#666"} strokeWidth="2"
-            points={(pts as any[]).map((p) => `${x(p.date)},${y(p.price)}`).join(" ")} />
+          <React.Fragment key={cat}>
+            {!singleDate && (
+              <polyline fill="none" stroke={COLORS[cat] || "#666"} strokeWidth="2"
+                points={(pts as any[]).map((p) => `${x(p.date)},${y(p.price)}`).join(" ")} />
+            )}
+            {(pts as any[]).map((p, k) => (
+              <circle key={k} cx={x(p.date)} cy={y(p.price)} r={singleDate ? 4 : 2.5}
+                fill={COLORS[cat] || "#666"} />
+            ))}
+          </React.Fragment>
         ))}
         {dates.map((d) => (
           <text key={d} x={x(d)} y={H - PAD + 14} textAnchor="middle" fontSize="9" fill="#888">

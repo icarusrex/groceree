@@ -1,4 +1,4 @@
-const j = (r: Response) => r.json();
+const j = (r: Response): Promise<any> => r.json() as Promise<any>;
 export const api = {
   recipes: () => fetch("/api/recipes").then(j),
   settings: () => fetch("/api/settings").then(j),
@@ -13,14 +13,19 @@ export const api = {
   savePlan: (p: any) => fetch("/api/plan", { method: "POST", body: JSON.stringify(p) }).then(j),
   parseFlyer: (images: any[]) =>
     fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
+  scanPantry: (images: any[]) =>
+    fetch("/api/scan-pantry", { method: "POST", body: JSON.stringify({ images }) }).then(j),
+  compareStores: (plan: any[]) =>
+    fetch("/api/compare-stores", { method: "POST", body: JSON.stringify({ plan }) }).then(j),
   remix: (recipe: any, instruction: string) =>
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
+  editPlan: (plan: any[], instruction: string) =>
+    fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction }) }).then(j),
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
   prices: () => fetch("/api/prices").then(j),
   generateImage: (recipe_id: string, name: string, description: string) =>
     fetch("/api/generate-image", { method: "POST", body: JSON.stringify({ recipe_id, name, description }) }).then(j),
-  pantryRecipes: () => fetch("/api/pantry-recipes", { method: "POST", body: "{}" }).then(j),
   flyers: () => fetch("/api/flyers").then(j),
   delFlyer: (id: number) => fetch(`/api/flyers?id=${id}`, { method: "DELETE" }).then(j),
 };
