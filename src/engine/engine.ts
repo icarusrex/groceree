@@ -252,7 +252,7 @@ export function tidyAmount(item: ShoppingItem): { text: string; staple: boolean 
   if (item.staple || item.quantity == null) return { text: "", staple: item.staple };
   const num = Number.isInteger(item.quantity) ? String(item.quantity)
     : item.quantity.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
-  return { text: `${num}${item.unit ? " " + item.unit : item.unit === "" && item.category !== "pantry" ? " un" : ""}`, staple: false };
+  return { text: `${num}${item.unit ? " " + item.unit : ""}`, staple: false };
 }
 
 // ---- human-sensible shopping amounts ---------------------------------------

@@ -12,6 +12,10 @@ function stepTimer(text: string): number | null {
 }
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
+// "unit"/"un"/"whole" etc. aren't real units — "1 lemon", not "1 unit lemon".
+const COUNT_WORDS = new Set(["unit", "units", "whole", "x", "un", "piece", "pieces", "each", "ea", "count"]);
+const dispUnit = (u: string) => (COUNT_WORDS.has((u || "").toLowerCase().trim()) ? "" : u || "");
+
 function Timer({ seconds, label }: { seconds: number; label: string }) {
   const [left, setLeft] = useState<number | null>(null);
   const ref = useRef<any>(null);
@@ -110,7 +114,7 @@ export default function RecipeModal({ recipe, onClose }:
           <h3>Ingredients</h3>
           <ul className="ing-list">
             {(view.ingredients || []).map((i: any, k: number) => (
-              <li key={k}>{i.quantity ? `${i.quantity} ${i.unit || ""} ` : ""}{i.name}</li>))}
+              <li key={k}>{i.quantity ? `${i.quantity}${dispUnit(i.unit) ? " " + dispUnit(i.unit) : ""} ` : ""}{i.name}</li>))}
           </ul>
         </div>
         {steps.length > 0 && (
@@ -148,6 +152,7 @@ export default function RecipeModal({ recipe, onClose }:
             onKeyDown={(e) => { if (e.key === "Enter") remix(); }} />
           <button className="btn" disabled={busy} onClick={remix}>{busy ? "…" : "Remix"}</button>
         </div>
+        {busy && <div className="remix-progress"><div className="bar" /></div>}
         {msg && <p className="muted small">{msg}</p>}
         {draft && <button className="btn dark" disabled={busy} onClick={save}>Save as new recipe</button>}
       </div>
