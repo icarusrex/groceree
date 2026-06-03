@@ -115,6 +115,12 @@ export function scoreAll(input: GenerateInput): Scored[] {
 // ---- plan generation --------------------------------------------------------
 const VARIETY_PROTEIN_PENALTY = 0.55; // same protein as yesterday's cook
 const VARIETY_CUISINE_PENALTY = 0.8;
+const SALAD_PENALTY = 0.8; // lunch-only de-emphasis (dinner hard-excludes salads)
+
+// salads stay manually pickable, but are never auto-suggested for dinner and
+// only show up at lunch when they carry a protein (so it's a real meal).
+const isSalad = (r: Recipe) => /\bsalad\b/i.test(r.name);
+const saladLunchOk = (r: Recipe) => !isSalad(r) || r.primary_protein !== "none";
 
 export function generatePlan(input: GenerateInput): PlanItem[] {
   const household = Math.max(1, input.settings.household_size);
@@ -137,6 +143,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
       if (s.recipe.primary_protein !== "none" &&
           s.recipe.primary_protein === lastProtein) adj *= VARIETY_PROTEIN_PENALTY;
       if (s.recipe.cuisine && s.recipe.cuisine === lastCuisine) adj *= VARIETY_CUISINE_PENALTY;
+      if (isSalad(s.recipe)) adj *= SALAD_PENALTY;
       if (maxMin && s.recipe.total_time > maxMin) adj *= 0.4;
       if (adj > bestAdj) { bestAdj = adj; best = s; }
     }
@@ -150,9 +157,9 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   for (let day = 1; day <= 7; day++) {
     // prefer dinners that yield leftovers (servings cover a 2nd household meal)
     let choice = autoLeftover
-      ? pick((r) => r.servings >= 2 * household)
+      ? pick((r) => r.servings >= 2 * household && !isSalad(r))
       : null;
-    if (!choice) choice = pick(() => true);
+    if (!choice) choice = pick((r) => !isSalad(r));
     if (!choice) break;
     used.add(choice.recipe.id);
     dinner[day] = choice;
@@ -179,7 +186,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
     // otherwise a fresh, quick lunch (bias to easy + small)
     lastProtein = day > 1 ? (dinner[day - 1]?.recipe.primary_protein ?? "") : "";
     lastCuisine = day > 1 ? (dinner[day - 1]?.recipe.cuisine ?? "") : "";
-    const fresh = pick((r) => r.ease_score >= 0.6) ?? pick(() => true);
+    const fresh = pick((r) => r.ease_score >= 0.6 && saladLunchOk(r)) ?? pick(saladLunchOk);
     if (fresh) {
       used.add(fresh.recipe.id);
       lunch[day] = {
