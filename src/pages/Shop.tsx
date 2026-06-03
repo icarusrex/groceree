@@ -53,6 +53,10 @@ export default function Shop() {
                 <input type="checkbox" checked={!!checked[key]}
                   onChange={() => setChecked({ ...checked, [key]: !checked[key] })} />
                 <span className={checked[key] ? "struck" : ""}>{i.name}</span>
+                <button className="icon to-pantry" title="keep in pantry"
+                  onClick={(e) => { e.preventDefault();
+                    s.addPantry(i.name);
+                    setChecked({ ...checked, [key]: true }); }}>→🥫</button>
               </label>
             );
           })}

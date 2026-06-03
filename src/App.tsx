@@ -27,6 +27,7 @@ export default function App() {
                 onClick={() => setView(n.id)}>{n.label}</button>
             ))}
           </nav>
+          <div className="version">v{__APP_VERSION__}</div>
         </aside>
         <main className="content">
           {view === "plan" && <MealPlan />}
