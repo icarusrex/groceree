@@ -2401,7 +2401,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "turkey",
     "ease_score": 0.943,
     "ingredient_count": 11,
     "is_one_pot": true,
@@ -2524,7 +2524,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "pork",
+    "primary_protein": "turkey",
     "ease_score": 0.637,
     "ingredient_count": 7,
     "is_one_pot": true,
@@ -3253,7 +3253,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "other",
+    "primary_protein": "none",
     "ease_score": 0.943,
     "ingredient_count": 11,
     "is_one_pot": true,
@@ -3661,7 +3661,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "beef",
     "ease_score": 0.943,
     "ingredient_count": 13,
     "is_one_pot": true,
@@ -4157,7 +4157,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "other",
+    "primary_protein": "none",
     "ease_score": 0.848,
     "ingredient_count": 6,
     "is_one_pot": true,
@@ -4494,7 +4494,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "pork",
     "ease_score": 0.943,
     "ingredient_count": 12,
     "is_one_pot": true,
@@ -4914,7 +4914,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "chicken",
+    "primary_protein": "turkey",
     "ease_score": 0.693,
     "ingredient_count": 9,
     "is_one_pot": false,
@@ -5011,7 +5011,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "other",
+    "primary_protein": "none",
     "ease_score": 0.71,
     "ingredient_count": 9,
     "is_one_pot": true,
@@ -5623,7 +5623,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "beef",
     "ease_score": 0.812,
     "ingredient_count": 10,
     "is_one_pot": false,
@@ -6402,7 +6402,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "beef",
     "ease_score": 0.943,
     "ingredient_count": 7,
     "is_one_pot": true,
@@ -8071,7 +8071,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "beef",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 4,
     "is_one_pot": true,
@@ -10370,99 +10370,6 @@
     "source": "clean"
   },
   {
-    "id": "apple-cinnamon-granola",
-    "name": "Apple-Cinnamon Granola",
-    "description": "From Stress-Free Family Meal Planning - 6 servings",
-    "cuisine": "american",
-    "meal_type": "dinner",
-    "difficulty": "medium",
-    "cook_time": 28,
-    "prep_time": 12,
-    "total_time": 40,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": true,
-    "contains_dairy": false,
-    "primary_protein": "none",
-    "ease_score": 0.575,
-    "ingredient_count": 8,
-    "is_one_pot": true,
-    "ingredients": [
-      {
-        "name": "unsweetened applesauce",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "produce"
-      },
-      {
-        "name": "pure maple syrup",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "coconut oil",
-        "quantity": 2,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "old-fashioned oats",
-        "quantity": 2,
-        "unit": "cups",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "sliced almonds",
-        "quantity": 0.5,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "cashews",
-        "quantity": 0.5,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "chia seeds",
-        "quantity": 2,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "coarsely chopped dried apples",
-        "quantity": 0.75,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "produce"
-      }
-    ],
-    "instructions": [
-      "Preheat the oven to 350°F (177°C).",
-      "Line a large baking sheet with parchment paper.In a small saucepan over medium heat, combine the applesauce, maple syrup, coconut oil, and vanilla.",
-      "Cook the mixture for 3 to 4 minutes, until it is combined and smooth.In a large bowl, toss together the oats, almonds, cashews, chia seeds, cinnamon, and salt.",
-      "Add the applesauce mixture and mix well.",
-      "Spread the granola out in a single layer about ½ inch (1 cm) thick on the prepared baking sheet.Bake the granola for 25 to 30 minutes, until it is light brown.",
-      "Let it cool for at least 30 minutes for the granola to harden and become crispy.",
-      "Break the granola into chunks, transfer it to a medium bowl, and toss it with the dried apples.",
-      "Store the granola in an airtight container.Recipe Blueprint: Use this base recipe to make all kinds of granola.",
-      "Add your favorite nuts, seeds, dried fruits, and sweet treats.",
-      "Some of my favorite combinations include pepitas, dried cranberries, and white chocolate chips; or peanuts, sunflower seeds, and carob chips."
-    ],
-    "source": "clean"
-  },
-  {
     "id": "cheesy-broccoli-and-cauliflower-chowder",
     "name": "Cheesy Broccoli and Cauliflower Chowder",
     "description": "From Stress-Free Family Meal Planning - 4 servings",
@@ -11060,90 +10967,6 @@
     "source": "clean"
   },
   {
-    "id": "creamy-chocolate-smoothie",
-    "name": "Creamy Chocolate Smoothie",
-    "description": "From Stress-Free Family Meal Planning - 2 servings",
-    "cuisine": "american",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 10,
-    "prep_time": 5,
-    "total_time": 15,
-    "servings": 2,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 1,
-    "ingredient_count": 8,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "baby spinach",
-        "quantity": 0.33,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "produce"
-      },
-      {
-        "name": "silken tofu",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "old-fashioned oats",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "unsweetened cocoa powder",
-        "quantity": 2,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "nut butter",
-        "quantity": 1,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "dairy"
-      },
-      {
-        "name": "unsweetened almond milk",
-        "quantity": 1.5,
-        "unit": "cups",
-        "unit_norm": "cup",
-        "category": "dairy"
-      },
-      {
-        "name": "ice cubes",
-        "quantity": 0.5,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "Honey or pure maple syrup",
-        "quantity": null,
-        "unit": "",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "In a blender, combine the banana, spinach, tofu, oats, cocoa powder, nut butter, milk, ice cubes, and honey (if using).",
-      "Blend until the ingredients are smooth and creamy."
-    ],
-    "source": "clean"
-  },
-  {
     "id": "baked-cilantro-lime-salmon-packets",
     "name": "Baked Cilantro-Lime Salmon Packets",
     "description": "From Stress-Free Family Meal Planning - 4 servings",
@@ -11360,95 +11183,6 @@
       "Drizzle the mixture with the sauce and toss to coat.",
       "Cook the chicken and vegetables for 8 to 10 minutes, until the vegetables are crisp-tender.Recipe Ideas: Play around with the flavors in the stir-fry sauce to create different spins on this easy sheet-pan dinner.",
       "Add Sriracha for a spicy sauce, add ginger and lemongrass for extra punch, swap oyster or sweet chili sauce for the hoisin sauce, add some curry paste—you get the idea."
-    ],
-    "source": "clean"
-  },
-  {
-    "id": "orange-pistachio-overnight-oats",
-    "name": "Orange Pistachio Overnight Oats",
-    "description": "From Downshiftology Healthy Meal Prep cookbook",
-    "cuisine": "american",
-    "meal_type": "dinner",
-    "difficulty": "medium",
-    "cook_time": 20,
-    "prep_time": 15,
-    "total_time": 35,
-    "servings": 1,
-    "calories_per_serving": null,
-    "is_gluten_free": true,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.693,
-    "ingredient_count": 8,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "gluten-free old-fashioned rolled oats",
-        "quantity": 0.5,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "milk",
-        "quantity": 0.5,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "dairy"
-      },
-      {
-        "name": "plain Greek yogurt",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "dairy"
-      },
-      {
-        "name": "chia seeds",
-        "quantity": 1,
-        "unit": "tablespoon",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "pure maple syrup",
-        "quantity": 1,
-        "unit": "tablespoon",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "diced orange",
-        "quantity": 0.25,
-        "unit": "cup",
-        "unit_norm": "cup",
-        "category": "pantry"
-      },
-      {
-        "name": "roughly chopped pistachios",
-        "quantity": 1,
-        "unit": "tablespoon",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "pure maple syrup",
-        "quantity": 1,
-        "unit": "tablespoon",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "To make the base: Place the oats, milk, yogurt, chia seeds, and maple syrup in a pint-size mason jar or other storage container.",
-      "Stir well to combine.",
-      "Let the oat mixture soak in the fridge for at least 2 hours, but it’s best to soak overnight for 8 hours.",
-      "This will yield a creamier consistency.",
-      "To top the base: Top with the orange, pistachios, maple syrup, and spice before serving.",
-      "To thaw a frozen serving, just place it in the fridge the day before. helpful tip You can use quick-cooking oats rather than rolled oats in this recipe, but the texture will be more mushy and porridge-like."
     ],
     "source": "clean"
   },
@@ -13557,7 +13291,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "chicken",
+    "primary_protein": "pork",
     "ease_score": 0.71,
     "ingredient_count": 14,
     "is_one_pot": true,
@@ -14487,7 +14221,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "beef",
+    "primary_protein": "fish",
     "ease_score": 0.63,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -18156,7 +17890,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "none",
+    "primary_protein": "pork",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -18221,7 +17955,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "beef",
+    "primary_protein": "pork",
     "ease_score": 0.967,
     "ingredient_count": 5,
     "is_one_pot": true,
@@ -18821,7 +18555,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "other",
+    "primary_protein": "beef",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -19899,7 +19633,7 @@
     "is_pescatarian": true,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "beef",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -20017,7 +19751,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "none",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -20083,7 +19817,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "beef",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -20547,7 +20281,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "other",
+    "primary_protein": "none",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": true,
@@ -21680,7 +21414,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "beef",
+    "primary_protein": "pork",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": true,
@@ -22276,7 +22010,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "beef",
+    "primary_protein": "lamb",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -23271,72 +23005,6 @@
     "source": "rescued-deterministic"
   },
   {
-    "id": "cherry-chocolate-mousse",
-    "name": "Cherry Chocolate Mousse",
-    "description": "5-ingredient recipe: Cherry Chocolate Mousse",
-    "cuisine": null,
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 30,
-    "prep_time": null,
-    "total_time": 30,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.887,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "dark chocolate",
-        "quantity": 200,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "black pitted cherries in syrup",
-        "quantity": 1,
-        "unit": "tin",
-        "unit_norm": "tin",
-        "category": "pantry"
-      },
-      {
-        "name": "double cream",
-        "quantity": 200,
-        "unit": "ml",
-        "unit_norm": "ml",
-        "category": "dairy"
-      },
-      {
-        "name": "large eggs",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "golden caster sugar",
-        "quantity": 2,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Melt the chocolate in a heatproof bowl over a pan of gently simmering water, then remove to cool for 10 minutes. Meanwhile, simmer the cherries and their syrup in a non-stick frying pan on a medium heat until thick, then remove.",
-      "Whip the cream to very soft peaks. Separate the eggs, add the yolks to the cream with the sugar, and whisk to combine. Add a pinch of sea salt to the whites and, with a clean whisk, beat until super-stiff. Fold the cooled chocolate into the cream, then very gently fold that through the egg whites with a spatula.",
-      "Divvy up the mousse between six glasses or bowls, interspersing the cherries and syrup throughout, and finishing with a few nice cherries on top.",
-      "ALMOND PASTRY PUFF"
-    ],
-    "source": "rescued-deterministic"
-  },
-  {
     "id": "almond-pastry-puff",
     "name": "Almond Pastry Puff",
     "description": "5-ingredient recipe: Almond Pastry Puff",
@@ -23407,71 +23075,6 @@
       "Preheat the oven to 200°C/400°F/gas 6. Line two trays with greaseproof paper and rub with olive oil. Whiz the apple in a food processor until finely chopped, then add the flour, cubed butter, sugar and a pinch of sea salt. Blitz to fine crumbs for 1 minute, then remove 3 tablespoons of the mix and set aside. Pulse in the egg until combined, stopping to scrape down the sides, if needed.",
       "Divide into 24 pieces, roll into balls, then press down lightly into 4cm rounds, lining them up on the trays as you go. Sprinkle over the reserved mix, lightly pressing it into the cookies. Bake for 8 to 10 minutes, or until lightly golden. Leave to cool slightly, then transfer to a wire cooling rack. Yum!",
       "ORANGE POLENTA CAKE"
-    ],
-    "source": "rescued-deterministic"
-  },
-  {
-    "id": "speedy-steamed-pudding-pots",
-    "name": "Speedy Steamed Pudding Pots",
-    "description": "5-ingredient recipe: Speedy Steamed Pudding Pots",
-    "cuisine": null,
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 17,
-    "prep_time": null,
-    "total_time": 17,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 1,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "chunky marmalade",
-        "quantity": 375,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "single cream",
-        "quantity": 150,
-        "unit": "ml",
-        "unit_norm": "ml",
-        "category": "dairy"
-      },
-      {
-        "name": "large eggs",
-        "quantity": 2,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "self-raising flour",
-        "quantity": 100,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "ground almonds",
-        "quantity": 150,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Grease six heatproof teacups with a little olive oil. In a large bowl, whisk 100ml of olive oil and 2 tablespoons of marmalade with the cream and eggs. Add the flour, almonds and a pinch of sea salt, and whisk again to combine. Place the remaining marmalade in a small pan with a splash of water and simmer on a medium-high heat until thick and syrupy, then remove.",
-      "Divide the pudding mixture between the teacups, then microwave in pairs for 2½ to 3 minutes on high, or until puffed up. Turn out, drizzle with the marmalade syrup, and serve with a little extra cream, if you like.",
-      "FLAMING RUM ’N’ RAISIN"
     ],
     "source": "rescued-deterministic"
   },
@@ -23745,72 +23348,6 @@
     "source": "rescued-deterministic"
   },
   {
-    "id": "frozen-banoffee-cheesecake",
-    "name": "Frozen Banoffee Cheesecake",
-    "description": "5-ingredient recipe: Frozen Banoffee Cheesecake",
-    "cuisine": null,
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 18,
-    "prep_time": null,
-    "total_time": 18,
-    "servings": 10,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 1,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "dark chocolate",
-        "quantity": 150,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "packet of Hobnobs",
-        "quantity": 300,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "overripe bananas",
-        "quantity": 8,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      },
-      {
-        "name": "light cream cheese",
-        "quantity": 500,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "dairy"
-      },
-      {
-        "name": "dulce de leche",
-        "quantity": 0.5,
-        "unit": "jar",
-        "unit_norm": "jar",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Rub the base of a 20cm springform cake tin with olive oil and line with greaseproof paper, then rub the paper with oil, too. Melt 50g of chocolate in a heatproof bowl over a pan of gently simmering water, then remove. Snap the Hobnobs into a food processor and blitz with 2 tablespoons of extra virgin olive oil until well combined. Drizzle in the melted chocolate, then pulse again. Pat into the cake tin in a 1cm-thick layer.",
-      "Peel the bananas, tear into the food processor, add the cream cheese and dulce de leche, blitz well until nice and smooth, then pour over the biscuit base. Freeze overnight or until needed, transferring to the fridge for 2 hours before serving, or until it’s the slicing consistency you like.",
-      "Loosen the edges of the cheesecake with a palette knife, then release from the tin. Shave or grate over the remaining chocolate, and serve. Delicious.",
-      "WATERMELON GRANITA"
-    ],
-    "source": "rescued-deterministic"
-  },
-  {
     "id": "watermelon-granita",
     "name": "Watermelon Granita",
     "description": "5-ingredient recipe: Watermelon Granita",
@@ -23937,71 +23474,6 @@
       "Toast the hazelnuts in a large non-stick frying pan on a high heat for 2 minutes, until lightly golden, tossing regularly, then tip into a pestle and mortar, returning the pan to the heat. Pour in the pears (juice and all), let them get hot, then add the Armagnac. Stand back and carefully set light to the liquor with a match. Let it flame, then leave to bubble and reduce to a lovely syrup. Meanwhile, crush the hazelnuts and divide between four plates, making a pile on each one.",
       "Spoon the pears on to the plates, cup side up. Remove the syrup from the heat, then snap most of the chocolate into the pan. While it melts, top each hazelnut pile with a nice round scoop of ice cream, and shave over the last bit of chocolate. Mix up the chocolate syrup, drizzle into the pear cups, and serve.",
       "MANGO RICE PUDDING"
-    ],
-    "source": "rescued-deterministic"
-  },
-  {
-    "id": "mango-rice-pudding",
-    "name": "Mango Rice Pudding",
-    "description": "5-ingredient recipe: Mango Rice Pudding",
-    "cuisine": null,
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 28,
-    "prep_time": null,
-    "total_time": 28,
-    "servings": 4,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": true,
-    "contains_dairy": false,
-    "primary_protein": "none",
-    "ease_score": 0.887,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "pudding rice",
-        "quantity": 150,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "star anise",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "frozen mango chunks",
-        "quantity": 350,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "produce"
-      },
-      {
-        "name": "runny honey",
-        "quantity": 4,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "Greek-style coconut yoghurt",
-        "quantity": 4,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Place the rice, star anise, frozen mango, 3 tablespoons of honey and a tiny pinch of sea salt in a pan on a medium heat. Cover with 700ml of water and simmer for 25 minutes, or until thick and creamy, stirring occasionally.",
-      "Stir through the yoghurt so it’s nice and creamy, then divide between your bowls. Drizzle over the remaining honey, and enjoy. Super-easy!",
-      "HONEY BERRY FILO SMASH"
     ],
     "source": "rescued-deterministic"
   },
@@ -26375,7 +25847,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "none",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": true,
@@ -28068,7 +27540,7 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "none",
+    "primary_protein": "fish",
     "ease_score": 0.677,
     "ingredient_count": 5,
     "is_one_pot": false,
@@ -28609,7 +28081,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "none",
+    "primary_protein": "fish",
     "ease_score": 1,
     "ingredient_count": 5,
     "is_one_pot": true,
@@ -30731,276 +30203,6 @@
     "source": "rescued-named"
   },
   {
-    "id": "bean-figs-yoghurt",
-    "name": "Bean, Figs & Yoghurt",
-    "description": "5-ingredient recipe: Take The Fuss Out Of Creating A Show-Stopping Dessert With This Super-Quick No-Cook Fig Tart – A Delicate Base Of Crushed Fruit And Nuts, Topped With Yoghurt, Figs And A Drizzle Of Honey.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 10,
-    "prep_time": null,
-    "total_time": 10,
-    "servings": 8,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 1,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "luxury fruit and nut mix",
-        "quantity": 300,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "Greek yoghurt",
-        "quantity": 500,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "dairy"
-      },
-      {
-        "name": "vanilla bean paste",
-        "quantity": 1,
-        "unit": "tsp",
-        "unit_norm": "tsp",
-        "category": "produce"
-      },
-      {
-        "name": "runny honey",
-        "quantity": 1,
-        "unit": "tsp",
-        "unit_norm": "tsp",
-        "category": "pantry"
-      },
-      {
-        "name": "perfectly ripe figs",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      }
-    ],
-    "instructions": [
-      "Line a 20cm springform cake tin with greaseproof paper. Tip the fruit and nuts into a food processor and blitz until fine and tacky (it should be easy to mould with your hands), then push and press it into the base of the lined tin, and 2.5cm up the sides. Leave to firm up in the freezer for 1 hour. When the time’s up, mix the yoghurt with the vanilla and 1 teaspoon of honey, then spoon into the chilled tart case. Freeze for 1 further hour, or until slightly set. Release the tart from the tin, halve or quarter the figs and arrange nicely on top, then drizzle generously with honey, to finish.",
-      "EASY FIG TART",
-      "APPLE TART",
-      "STICKY APRICOT GLAZE, FLAKED ALMONDS & ICE CREAM",
-      "Inspired by the classic French tartelettes you can find in pâtisseries, I’m using shop-bought pastry for convenience. Topped with vanilla ice cream, this is a lovely little number to have up your sleeve."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "apricot-apples-cream-salad",
-    "name": "Apricot, Apples & Cream Salad",
-    "description": "5-ingredient recipe: Inspired By The Classic French Tartelettes You Can Find In Pâtisseries, I’M Using Shop-Bought Pastry For Convenience. Topped With Vanilla Ice Cream, This Is A Lovely Little Number To Have Up Your Sleeve.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 50,
-    "prep_time": null,
-    "total_time": 50,
-    "servings": 8,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.752,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "sheet of ready-rolled puff pastry",
-        "quantity": 320,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "apricot jam",
-        "quantity": 200,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "produce"
-      },
-      {
-        "name": "eating apples",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      },
-      {
-        "name": "flaked almonds",
-        "quantity": 1,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      },
-      {
-        "name": "vanilla ice cream",
-        "quantity": null,
-        "unit": "",
-        "unit_norm": "",
-        "category": "dairy"
-      }
-    ],
-    "instructions": [
-      "Preheat the oven to 200°C. Unroll the pastry sheet on its paper and place on a baking tray, then score a 1cm border around the edge (don’t cut all the way through). Heat the jam in a pan over a low heat for 30 seconds, just to loosen, stirring occasionally. Very finely slice the apples into rounds, discarding any pips (use a mandolin, with a guard, if you have one). Toss the apple with the apricot jam and arrange nicely, in layers, inside the border, hiding any smaller tattier bits of apple underneath. Cook at the bottom of the oven for 30 minutes, or until beautifully golden and cooked through, scattering over the almonds for the last 5 minutes. Slice up and serve topped with balls of vanilla ice cream.",
-      "APPLE TART",
-      "CRÈME CARAMEL",
-      "SWEET VANILLA CUSTARD & PASSION FRUIT",
-      "Sometimes nothing beats an old-school classic like the crème caramel. Serving up this popular dessert with magical passion fruit gives it a fresh and fruity twist to really cut through the indulgence."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "milk-bowl",
-    "name": "Milk Bowl",
-    "description": "5-ingredient recipe: Sometimes Nothing Beats An Old-School Classic Like The Crème Caramel. Serving Up This Popular Dessert With Magical Passion Fruit Gives It A Fresh And Fruity Twist To Really Cut Through The Indulgence.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 20,
-    "prep_time": null,
-    "total_time": 20,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 1,
-    "ingredient_count": 5,
-    "is_one_pot": true,
-    "ingredients": [
-      {
-        "name": "caster sugar",
-        "quantity": 160,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "vanilla pod",
-        "quantity": 1,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "whole milk",
-        "quantity": 600,
-        "unit": "ml",
-        "unit_norm": "ml",
-        "category": "dairy"
-      },
-      {
-        "name": "large eggs",
-        "quantity": 6,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "ripe passion fruit",
-        "quantity": 3,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Preheat the oven to 150°C and line a deep roasting tray with greaseproof paper, then place 6 ramekins or ovenproof moulds inside. Sprinkle 100g of the sugar into a non-stick frying pan, add 3 tablespoons of water and place on a medium heat for about 8 minutes, or until you’ve got a chestnut brown caramel – don’t be tempted to stir or taste it, just gently swirl the pan occasionally. Quickly and carefully divide the caramel between the ramekins. Halve the vanilla pod lengthways and scrape out the seeds, then put both the pod and seeds into a saucepan, along with the milk. Bring almost to the boil, then switch off the heat. Meanwhile, place 2 whole eggs and 4 egg yolks in a bowl (save the whites for making meringues another day) and whisk with the remaining sugar for 1 minute. Slowly pour in the hot milk, whisking continuously. Discard the vanilla pod, and skim away any foam from the top.",
-      "Divide the custard between the ramekins, then carefully half-fill the tray with boiling kettle water and bake for 30 minutes, or until just set and a sharp knife comes out clean. Leave to cool completely in the water, then remove, cover and transfer the crème caramels to the fridge for at least 4 hours, or overnight. To serve, dip the base of each ramekin into a bowl of boiling water for 1 minute to loosen, then run a knife around the edge and confidently turn out on to a plate, shaking slightly to loosen, if needed. Squeeze half a passion fruit over each, to serve.",
-      "CRÈME CARAMEL",
-      "LEMON CURD TART",
-      "CITRUS-SWIRLED PASTRY & FRESH RASPBERRIES",
-      "Many wonderful desserts in the Med celebrate the bounty of citrus. I’ve embellished this lemon tart by rolling and flavouring pastry to create amazing texture, as the Portuguese and French do so well."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "lemons-raspberries-bowl",
-    "name": "Lemons & Raspberries Bowl",
-    "description": "5-ingredient recipe: Many Wonderful Desserts In The Med Celebrate The Bounty Of Citrus. I’Ve Embellished This Lemon Tart By Rolling And Flavouring Pastry To Create Amazing Texture, As The Portuguese And French Do So Well.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 30,
-    "prep_time": null,
-    "total_time": 30,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": true,
-    "contains_dairy": false,
-    "primary_protein": "none",
-    "ease_score": 0.892,
-    "ingredient_count": 5,
-    "is_one_pot": true,
-    "ingredients": [
-      {
-        "name": "icing sugar",
-        "quantity": 120,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "sheet of ready-rolled puff pastry",
-        "quantity": 320,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "lemons",
-        "quantity": 5,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      },
-      {
-        "name": "large eggs",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "raspberries",
-        "quantity": 150,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "produce"
-      }
-    ],
-    "instructions": [
-      "Preheat the oven to 190°C. Dust a clean work surface with icing sugar, then unroll the puff pastry, discarding the paper. Dust the pastry with icing sugar and finely grate over the zest of 2 lemons, then roll it tightly back up and slice into 1cm discs. Rub a 24cm non-stick ovenproof frying pan with olive oil, then distribute the pastry discs around the sides and base, pressing them together really well to create one piece of pastry. Bake on the bottom of the oven for 20 minutes, or until lightly golden.",
-      "Meanwhile, finely grate the zest from the remaining lemons into a large heatproof bowl, and squeeze in all the juice (you’ll need 120ml). Whisk in the icing sugar and eggs, then place the bowl over a pan of simmering water on a medium heat. Whisk continuously for around 10 minutes, or until thickened, then remove from the heat. Pour the lemon curd into the pastry case, then finish under a hot grill for a few minutes (cover any pastry edges with tin foil, if it starts getting too dark). Serve at room temperature, with a few fresh raspberries scattered on top and the rest on the side.",
-      "LEMON CURD TART",
-      "TAHINI ROCKY ROAD",
-      "JAM RIPPLE, CRUSHED BISCUITS, FRUIT & NUTS",
-      "One of the joys of travelling is that you come across amazing ingredient combos, and most of the fun is in incorporating them into your own family classics – this beauty happened after my trip to Tunisia."
-    ],
-    "source": "rescued-named"
-  },
-  {
     "id": "chocolate-bowl-2",
     "name": "Chocolate Bowl",
     "description": "5-ingredient recipe: One Of The Joys Of Travelling Is That You Come Across Amazing Ingredient Combos, And Most Of The Fun Is In Incorporating Them Into Your Own Family Classics – This Beauty Happened After My Trip To Tunisia.",
@@ -31064,74 +30266,6 @@
       "PISTACHIO PANNA COTTA",
       "SWEET ORANGE & HONEY SYRUP, ORANGE SEGMENTS & BASHED PISTACHIOS",
       "Panna cotta is one of the most famous Italian desserts, and on the island of Sicily you get some wonderful Arabic influences coming through, which I think you subtly taste in the flavours here."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "oranges-milk-bowl",
-    "name": "Oranges & Milk Bowl",
-    "description": "5-ingredient recipe: Panna Cotta Is One Of The Most Famous Italian Desserts, And On The Island Of Sicily You Get Some Wonderful Arabic Influences Coming Through, Which I Think You Subtly Taste In The Flavours Here.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 30,
-    "prep_time": null,
-    "total_time": 30,
-    "servings": 8,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.812,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "leaves of gelatine",
-        "quantity": 3,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "whole milk",
-        "quantity": 700,
-        "unit": "ml",
-        "unit_norm": "ml",
-        "category": "dairy"
-      },
-      {
-        "name": "shelled unsalted pistachios",
-        "quantity": 200,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "large juicy oranges",
-        "quantity": 4,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      },
-      {
-        "name": "runny honey",
-        "quantity": 4,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Soak the gelatine leaves in cold water until softened. Pour the milk into a pan and add most of the pistachios. Speed-peel in the zest from 1 orange, then add 2 tablespoons of honey and mix well. Bring just to the boil, then remove from the heat and leave to cool for 10 minutes. Pick out the orange zest and pour the milk mixture into a blender. Squeeze the water out of the gelatine, add to the blender and leave to dissolve, then blitz for 3 minutes, or until silky-smooth. Pour into 8 serving moulds or small glasses. Cover and chill for at least 5 hours, or until set.",
-      "Meanwhile, squeeze the juice of 2 oranges into a small pan, then segment the remaining 2. Drizzle 2 tablespoons of honey into the pan, then reduce over a medium heat until you have a light syrup – about 7 minutes. Bash the remaining pistachios. When you’re ready to serve, turn each panna cotta out on to a little plate or saucer – the easiest way to do this is to carefully dip each mould into a bowl of boiling water for around 10 seconds, or until you get a wiggle, then place a plate on top and confidently flip out. Serve with the orange segments, syrup and pistachios.",
-      "PISTACHIO PANNA COTTA",
-      "KINDA BAKLAVA",
-      "CRISPY FILO, RICE NOODLES, NUTS, FRUIT, ORANGE & HONEY",
-      "I’ve had the privilege of trying all kinds of baklava, flavoured in many beautiful ways, and this is my 5-ingredient homage, using accessible ingredients and a simple method for max flavour and texture."
     ],
     "source": "rescued-named"
   },
@@ -31204,74 +30338,6 @@
     "source": "rescued-named"
   },
   {
-    "id": "lemons-blackberries-milk-bowl",
-    "name": "Lemons, Blackberries & Milk Bowl",
-    "description": "5-ingredient recipe: In The Baking Hot Mediterranean Sun There’S Probably Nothing More Refreshing Than An Iced Dessert, And This Is An Interesting Recipe Where The Citrus Gives The Dairy A Wonderful Sherbety Fizz. Delicious!",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 10,
-    "prep_time": null,
-    "total_time": 10,
-    "servings": 6,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.925,
-    "ingredient_count": 5,
-    "is_one_pot": false,
-    "ingredients": [
-      {
-        "name": "lemons",
-        "quantity": 5,
-        "unit": "",
-        "unit_norm": "",
-        "category": "produce"
-      },
-      {
-        "name": "condensed milk",
-        "quantity": 1,
-        "unit": "tin",
-        "unit_norm": "tin",
-        "category": "dairy"
-      },
-      {
-        "name": "crème fraîche",
-        "quantity": 2,
-        "unit": "tbsp",
-        "unit_norm": "tbsp",
-        "category": "dairy"
-      },
-      {
-        "name": "blackberries",
-        "quantity": 150,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "produce"
-      },
-      {
-        "name": "Amaretti biscuits",
-        "quantity": 70,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Finely grate the lemon zest on to a tray and leave to dry, for garnish. Squeeze all the juice into a bowl (you’ll need 200ml), discarding any pips. Mix in most of the condensed milk, the crème fraîche and 250ml of water, then scrape into a freezer container or a large loaf tin and cover. Freeze for 4 hours, then blitz in a food processor and freeze again until you have a scoopable consistency.",
-      "When you’re ready to serve, whiz the blackberries until super-smooth with the remaining condensed milk, loosening with a splash of water, if needed. Crush the Amaretti biscuits to a very fine crumb, spoon nicely on to serving plates, then scoop the lemon sherbet on top. Sprinkle over the reserved lemon zest and serve the blackberry sauce alongside.",
-      "LEMON SHERBET",
-      "SIMPLE CELEBRATION CAKE",
-      "PANETTONE, RICOTTA & LEMON CURD RIPPLE, STRAWBERRIES",
-      "Here, I’m living and loving the flavours of the Amalfi coast through one of the best cheat cakes ever. It’s an absolute delight to build and eat, and makes a really special centrepiece, with minimal effort."
-    ],
-    "source": "rescued-named"
-  },
-  {
     "id": "strawberries-cheese-curd-bowl",
     "name": "Strawberries, Cheese & Curd Bowl",
     "description": "5-ingredient recipe: Here, I’M Living And Loving The Flavours Of The Amalfi Coast Through One Of The Best Cheat Cakes Ever. It’S An Absolute Delight To Build And Eat, And Makes A Really Special Centrepiece, With Minimal Effort.",
@@ -31337,142 +30403,6 @@
       "AMAZING BAKED APRICOTS",
       "HONEY MERINGUE, FLAKED ALMONDS & DARK CHOCOLATE DRIZZLE",
       "I love celebrating stone fruit, in this case apricots, though peaches, plums or cherries would be just as delicious. With a twisted French-inspired frangipane and meringue, it’s the perfect pudding mash-up."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "halves-bowl",
-    "name": "Halves Bowl",
-    "description": "5-ingredient recipe: I Love Celebrating Stone Fruit, In This Case Apricots, Though Peaches, Plums Or Cherries Would Be Just As Delicious. With A Twisted French-Inspired Frangipane And Meringue, It’S The Perfect Pudding Mash-Up.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 40,
-    "prep_time": null,
-    "total_time": 40,
-    "servings": 8,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": true,
-    "contains_dairy": false,
-    "primary_protein": "none",
-    "ease_score": 0.757,
-    "ingredient_count": 5,
-    "is_one_pot": true,
-    "ingredients": [
-      {
-        "name": "flaked almonds",
-        "quantity": 300,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "apricot halves in juice",
-        "quantity": 2,
-        "unit": "tins",
-        "unit_norm": "tins",
-        "category": "produce"
-      },
-      {
-        "name": "runny honey",
-        "quantity": 250,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "large eggs",
-        "quantity": 3,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "dark chocolate",
-        "quantity": 50,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "Preheat the oven to 180°C. Place 270g of flaked almonds in a food processor and whiz until super-fine. Drain the apricots, reserving the juices, and put the fruit into a large baking dish. Pour the juices into the food processor, then add 100g of the honey and 3 tablespoons of olive oil. Separate the eggs, adding the yolks to the processor (reserve the whites for later), and whiz until smooth. Evenly pour the mixture over the apricots and bake for 25 minutes.",
-      "With 10 minutes to go, whisk the egg whites in a free-standing mixer with a pinch of sea salt until stiff. Heat the remaining honey with 1 tablespoon of water in a small pan over a medium heat until boiling. With the mixer still running at a high speed, slowly, steadily and carefully pour in the boiling honey. Once incorporated, keep whisking for 6 minutes, or until the bowl feels cool. Remove the baking dish from the oven and spoon over the meringue, then scatter over the reserved almonds. Bake for a final 5 minutes while you melt the chocolate over a pan of simmering water, then drizzle it over to finish.",
-      "AMAZING BAKED APRICOTS",
-      "BREAKFAST BREAD",
-      "BOMBS OF FRUITY JAM & HUNG YOGHURT",
-      "Prompted by the delicious sweet breads I devoured in Marseille, this recipe makes a fine breakfast or brunch. It’s not traditionally French, but that’s Marseille – a melting pot of beautiful cultures."
-    ],
-    "source": "rescued-named"
-  },
-  {
-    "id": "yoghurt-bowl",
-    "name": "Yoghurt Bowl",
-    "description": "5-ingredient recipe: Prompted By The Delicious Sweet Breads I Devoured In Marseille, This Recipe Makes A Fine Breakfast Or Brunch. It’S Not Traditionally French, But That’S Marseille – A Melting Pot Of Beautiful Cultures.",
-    "cuisine": "mediterranean",
-    "meal_type": "dinner",
-    "difficulty": "easy",
-    "cook_time": 45,
-    "prep_time": null,
-    "total_time": 45,
-    "servings": 10,
-    "calories_per_serving": null,
-    "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
-    "is_dairy_free": false,
-    "contains_dairy": true,
-    "primary_protein": "none",
-    "ease_score": 0.757,
-    "ingredient_count": 5,
-    "is_one_pot": true,
-    "ingredients": [
-      {
-        "name": "sachet of dried yeast",
-        "quantity": 1,
-        "unit": "",
-        "unit_norm": "",
-        "category": "pantry"
-      },
-      {
-        "name": "natural yoghurt",
-        "quantity": 500,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "dairy"
-      },
-      {
-        "name": "unsalted butter",
-        "quantity": 50,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "dairy"
-      },
-      {
-        "name": "strong bread flour",
-        "quantity": 500,
-        "unit": "g",
-        "unit_norm": "g",
-        "category": "pantry"
-      },
-      {
-        "name": "your favourite fruit jam",
-        "quantity": 0.5,
-        "unit": "jar",
-        "unit_norm": "jar",
-        "category": "pantry"
-      }
-    ],
-    "instructions": [
-      "In a jug, mix the yeast into 300ml of lukewarm water. Add 50g of the yoghurt, roughly chop and add half the butter, then stir together and leave for a few minutes. Put the flour and 1 teaspoon of sea salt into a large bowl and make a well in the middle. Now gradually pour the yeast mixture into the well, stirring and bringing in the flour from the outside with a fork to form a dough. Knead on a flour-dusted surface for 10 minutes, or until smooth and springy. Cover with a clean damp tea towel and prove in a warm place for 1 hour, or until doubled in size. Meanwhile, line a sieve with pieces of kitchen paper, tip in the remaining yoghurt, then pull up the paper and very gently apply pressure so that the liquid starts to drip through into a bowl. Leave in the fridge to drain.",
-      "Knock the air out of the dough, then place in a lightly oiled 30cm non-stick ovenproof frying pan and stretch to fit the pan. With flour-dusted hands, poke your fingers deep into the dough to make lots of little wells, then spoon in small blobs of jam and leave to prove for 1 further hour. Preheat the oven to 180°C and bake for 25 minutes, or until golden and cooked through. Carefully rub over the remaining butter and allow to melt, then move to a board ready to slice. Serve with the hung yoghurt.",
-      "BREAKFAST BREAD",
-      "POSH LOLLIPOPS",
-      "RICE PUD, STRAWBERRY, ROSE WATER, CHOC & SPRINKLES",
-      "When I was researching in Tunisia, it was outrageously hot, and this recipe is inspired by some of the street vendors who were really embellishing the concept of a lollipop – here’s my fruity version."
     ],
     "source": "rescued-named"
   },
@@ -33893,7 +32823,7 @@
     "is_pescatarian": false,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "none",
+    "primary_protein": "fish",
     "ease_score": 0.575,
     "ingredient_count": 4,
     "is_one_pot": true,

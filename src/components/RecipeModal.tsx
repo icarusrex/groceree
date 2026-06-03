@@ -99,7 +99,7 @@ export default function RecipeModal({ recipe, onClose }:
       {img && <img className="recipe-img" src={img} alt={view.name} />}
       <h2>{view.name}</h2>
       <p className="meta">{view.total_time} min · serves {view.servings}
-        {view.primary_protein && view.primary_protein !== "none" ? ` · ${view.primary_protein}` : ""}
+        {view.primary_protein ? ` · ${view.primary_protein === "none" ? "veg" : view.primary_protein}` : ""}
         {draft ? " · remixed (unsaved)" : ""}</p>
 
       <div className="actions" style={{ margin: "10px 0", flexWrap: "wrap" }}>

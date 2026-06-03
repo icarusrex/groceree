@@ -67,7 +67,7 @@ export default function MealPlan() {
     if (protein && r.primary_protein !== protein) return false;
     if (search && !r.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
-  }).slice(0, 80);
+  });
 
   const today = new Date().toISOString().slice(0, 10);
   const liveFlyers = flyers.filter((f) => !(f.valid_to && f.valid_to < today));
@@ -275,7 +275,7 @@ export default function MealPlan() {
                 onDragStart={(e) => e.dataTransfer.setData("recipe", r.id)}>
                 <div className="ri-main" onClick={() => pickRecipe(r)}>
                   <div className="recipe-name link">{r.name}</div>
-                  <div className="meta">{r.total_time}m · {r.primary_protein}</div>
+                  <div className="meta">{r.total_time}m · {r.primary_protein === "none" ? "veg" : r.primary_protein}</div>
                 </div>
                 <div className="ri-actions">
                   <button title="favourite" className={fav ? "icon on" : "icon"}
