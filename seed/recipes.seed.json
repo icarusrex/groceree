@@ -34881,5 +34881,3700 @@
     "total_time": 70,
     "ease_score": 0.55,
     "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "creamy-coconut-curry-lentils-spinach",
+    "name": "Creamy Coconut Curry Lentils with Spinach",
+    "description": "Brown lentils simmered in curried coconut milk with wilted spinach, served over rice.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 5,
+    "cook_time": 40,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": 430,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "produce"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dry brown lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "dairy"
+      },
+      {
+        "name": "Baby spinach",
+        "quantity": 3,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Cooked rice",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute garlic and ginger in the oil in a deep skillet for 1 minute.",
+      "Add diced onion and cook until soft, then add curry powder and toast 1 minute.",
+      "Add lentils and broth, bring to a boil, cover and simmer 20 minutes.",
+      "Stir in coconut milk and simmer uncovered 10 minutes to thicken.",
+      "Off heat, stir in spinach to wilt and adjust salt and curry.",
+      "Serve over rice with chopped cilantro."
+    ],
+    "ingredient_count": 11
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "mujaddara-rice-lentil-pilaf",
+    "name": "Mujaddara (Rice and Lentil Pilaf with Caramelized Onions)",
+    "description": "Cheap, deeply savoury pilaf of rice and lentils crowned with slow caramelized onions.",
+    "cuisine": "middle-eastern",
+    "difficulty": "medium",
+    "prep_time": 10,
+    "cook_time": 100,
+    "total_time": 110,
+    "servings": 6,
+    "calories_per_serving": 350,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.6,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow onions",
+        "quantity": 4,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Allspice",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Ground cloves",
+        "quantity": 0.25,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 2.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Long grain white rice",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Brown lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Thinly slice the onions and cook in oil over low heat about 1 hour until deeply caramelized; remove half to top later.",
+      "Add cumin, allspice and cloves to the remaining onions and toast 1 minute.",
+      "Add the broth and scrape the pot.",
+      "Add lentils and simmer until partly tender, then add the rice.",
+      "Cover and cook until rice and lentils are tender and the liquid is absorbed.",
+      "Top with the reserved caramelized onions."
+    ],
+    "ingredient_count": 8
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "quick-chana-masala",
+    "name": "Quick Chana Masala",
+    "description": "Fast chickpea curry in a spiced fire-roasted tomato sauce.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 15,
+    "cook_time": 20,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 400,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Brown basmati rice",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Serrano or jalapeno",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 5,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Garam masala",
+        "quantity": 1.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Ground coriander",
+        "quantity": 1.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Ground cumin",
+        "quantity": 0.75,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Ground turmeric",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Fire-roasted crushed tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Chickpeas",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Cook the rice if serving.",
+      "Warm oil over medium-low and cook onion, minced serrano and salt about 5 minutes.",
+      "Add garlic and ginger 30 to 60 seconds, then add the spices and cook 1 minute.",
+      "Add the tomatoes with juices, breaking up any whole pieces.",
+      "Add the drained chickpeas and simmer 10 minutes or more, then season.",
+      "Serve over rice with lemon and cilantro."
+    ],
+    "ingredient_count": 14
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "quick-curried-chickpeas-spinach",
+    "name": "Quick Curried Chickpeas with Spinach",
+    "description": "Twenty-minute pantry curry of chickpeas and spinach in tomato sauce.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 5,
+    "cook_time": 20,
+    "total_time": 25,
+    "servings": 4,
+    "calories_per_serving": 380,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "inch",
+        "unit_norm": "inch",
+        "category": "produce"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1.5,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 15,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Chickpeas",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Saute onion, garlic and ginger in the oil 3 to 5 minutes.",
+      "Add curry powder for 1 minute, then add a splash of water and the spinach to wilt.",
+      "Add the drained chickpeas and tomato sauce, stir and heat through 5 minutes.",
+      "Serve over rice or with bread."
+    ],
+    "ingredient_count": 8
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "chana-saag-chickpeas-spinach",
+    "name": "Chana Saag (Creamy Chickpeas and Spinach)",
+    "description": "Chickpeas and spinach simmered creamy with coconut milk over rice.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 420,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "White rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1.5,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      },
+      {
+        "name": "Chickpeas",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "dairy"
+      }
+    ],
+    "instructions": [
+      "Cook the rice.",
+      "Saute the aromatics and add curry powder.",
+      "Add spinach to wilt, then the chickpeas and coconut milk.",
+      "Simmer until creamy and serve over rice."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "sri-lankan-coconut-lentils",
+    "name": "Coconut Lentils (Sri Lankan Parippu)",
+    "description": "Ultra-cheap red lentils cooked soft in turmeric coconut milk.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 5,
+    "cook_time": 25,
+    "total_time": 30,
+    "servings": 4,
+    "calories_per_serving": 316,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Red lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Turmeric",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "dairy"
+      },
+      {
+        "name": "Water",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Rinse the lentils 2 to 3 times.",
+      "Add garlic, salt, turmeric, coconut milk and the water, then stir.",
+      "Bring to a boil then simmer about 20 minutes until the liquid is absorbed.",
+      "Rest 5 minutes and season."
+    ],
+    "ingredient_count": 5
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "cuban-black-beans-and-rice",
+    "name": "Cuban Black Beans and Rice",
+    "description": "Dried black beans simmered with sofrito, vinegar and a touch of sugar, over rice.",
+    "cuisine": "latin",
+    "difficulty": "medium",
+    "prep_time": 15,
+    "cook_time": 75,
+    "total_time": 90,
+    "servings": 4,
+    "calories_per_serving": 410,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.62,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Dried black beans",
+        "quantity": 0.5,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "pantry"
+      },
+      {
+        "name": "Green pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Bay leaf",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Vinegar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Sugar",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Simmer the soaked beans with half the pepper, a quarter of the onion, 2 cloves garlic and the bay leaf about 45 minutes.",
+      "Make a sofrito: saute the remaining onion, pepper and garlic, then add cumin, oregano and paprika 30 seconds.",
+      "Combine the sofrito with the beans and add vinegar and sugar; simmer to thicken.",
+      "Serve over rice."
+    ],
+    "ingredient_count": 12
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "one-pot-green-curry-lentil-dal",
+    "name": "1-Pot Lentil Green Curry Dal",
+    "description": "One-pot lentil dal built on green curry paste and coconut milk.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 30,
+    "total_time": 40,
+    "servings": 4,
+    "calories_per_serving": 400,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Coconut oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Green chili",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Shallot",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Green curry paste",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "dairy"
+      },
+      {
+        "name": "Rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Heat the pot and add coconut oil, chili, ginger, shallot and garlic.",
+      "Add the curry paste and stir.",
+      "Add lentils and coconut milk and simmer until tender (use canned lentils and warm 10 minutes to shorten).",
+      "Serve over rice."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "best-red-lentil-dahl",
+    "name": "Red Lentil Dahl",
+    "description": "Vegetable-loaded split red lentil dahl finished with coconut milk and citrus.",
+    "cuisine": "indian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 6,
+    "calories_per_serving": 360,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Carrot",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garam masala",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Turmeric",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Split red lentils",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 3,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut milk",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "dairy"
+      },
+      {
+        "name": "Lime",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute the onion 3 to 4 minutes, then add ginger, garlic, carrot and bell pepper.",
+      "Add the spices, lentils and broth, bring to a boil and simmer about 10 minutes.",
+      "Add coconut milk and cook 5 minutes more to your desired thickness.",
+      "Season and serve with rice or potatoes."
+    ],
+    "ingredient_count": 15
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "lentil-bolognese-vegan-gf",
+    "name": "Lentil Bolognese (Vegan, Gluten-Free)",
+    "description": "Quick weeknight lentil and mushroom bolognese over gluten-free pasta.",
+    "cuisine": "italian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 450,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.78,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Gluten-free pasta",
+        "quantity": 12,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Mushrooms",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      },
+      {
+        "name": "Oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Red pepper flakes",
+        "quantity": 0.25,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Tomato sauce",
+        "quantity": 15,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Green or brown lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Cook the gluten-free pasta.",
+      "Saute onion, garlic, mushrooms and spices 3 to 5 minutes.",
+      "Add diced tomatoes with liquid, tomato sauce, lentils and water; cover, boil then simmer 18 to 25 minutes.",
+      "Serve over the pasta."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "red-lentil-walnut-bolognese",
+    "name": "Red Lentil and Walnut Bolognese",
+    "description": "Ten-ingredient red lentil bolognese with walnuts for a meaty base.",
+    "cuisine": "italian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 45,
+    "total_time": 55,
+    "servings": 5,
+    "calories_per_serving": 470,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.72,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrot",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Celery",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Mushrooms",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      },
+      {
+        "name": "Red lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Walnuts",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
+      },
+      {
+        "name": "Tomato paste",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Fresh basil",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Gluten-free pasta",
+        "quantity": 12,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Saute the onion, carrot, celery, garlic and mushrooms into a soffritto.",
+      "Add lentils, chopped walnuts, tomato paste, tomatoes and broth.",
+      "Simmer until thick and the lentils are tender.",
+      "Serve over gluten-free pasta with basil."
+    ],
+    "ingredient_count": 13
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "lentil-bolognese-pappardelle",
+    "name": "Vegetarian Lentil Bolognese with Pappardelle",
+    "description": "Creamy red lentil bolognese brightened with balsamic, over GF pappardelle.",
+    "cuisine": "italian",
+    "difficulty": "medium",
+    "prep_time": 10,
+    "cook_time": 50,
+    "total_time": 60,
+    "servings": 5,
+    "calories_per_serving": 460,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.68,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrot",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Celery",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Mushrooms",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      },
+      {
+        "name": "Red lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Balsamic vinegar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Gluten-free pappardelle",
+        "quantity": 12,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Bay leaf",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Fresh parsley",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute the aromatics.",
+      "Add lentils and broth and simmer until creamy.",
+      "Remove the bay leaf and stir in the balsamic.",
+      "Cook the gluten-free pasta separately, then combine and garnish."
+    ],
+    "ingredient_count": 12
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "sheet-pan-greek-chicken-vegetables",
+    "name": "Sheet Pan Greek Chicken and Vegetables",
+    "description": "Lemon-oregano chicken roasted with peppers, tomatoes and onion on one tray.",
+    "cuisine": "mediterranean",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 40,
+    "total_time": 50,
+    "servings": 4,
+    "calories_per_serving": 480,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Dried oregano",
+        "quantity": 0.5,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Grape tomatoes",
+        "quantity": 1,
+        "unit": "pint",
+        "unit_norm": "pint",
+        "category": "produce"
+      },
+      {
+        "name": "Bell peppers",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Boneless skinless chicken breast",
+        "quantity": 1.5,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Kalamata olives",
+        "quantity": 15,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Parsley",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Cooked rice",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Heat the oven to 400F and make the lemon, garlic, oregano and oil marinade.",
+      "Chop the vegetables into 1 to 1.5 inch pieces, toss with half the marinade and roast 10 minutes.",
+      "Pound the chicken even, cut each breast in two and coat with the remaining marinade.",
+      "Add the chicken to the sheet and roast 20 to 25 minutes to 165F.",
+      "Top with olives, lemon zest and parsley and serve over rice."
+    ],
+    "ingredient_count": 11
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "sheet-pan-honey-mustard-chicken",
+    "name": "Sheet Pan Honey Mustard Chicken and Veggies",
+    "description": "Chicken thighs and baby potatoes roasted in a tangy honey mustard glaze.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 40,
+    "total_time": 50,
+    "servings": 4,
+    "calories_per_serving": 592,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken thighs",
+        "quantity": 2,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Baby potatoes",
+        "quantity": 1.5,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "produce"
+      },
+      {
+        "name": "Mixed vegetables",
+        "quantity": 3,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Mayonnaise",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Dijon mustard",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow mustard",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Honey",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Apple cider vinegar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic powder",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Paprika",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Heat the oven to 400F.",
+      "Whisk the honey mustard sauce.",
+      "Toss the chicken and vegetables with the sauce on a sheet pan.",
+      "Roast 30 to 40 minutes until the chicken reaches 165F and the potatoes are tender."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "roasted-chicken-and-vegetables",
+    "name": "Roasted Chicken and Vegetables",
+    "description": "Bone-in thighs roasted over herbed potatoes, carrots and onion.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 45,
+    "total_time": 55,
+    "servings": 4,
+    "calories_per_serving": 781,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Bone-in chicken thighs",
+        "quantity": 2,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Baby potatoes",
+        "quantity": 1.5,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 4,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 6,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried basil",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried rosemary",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried thyme",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Heat the oven to 425F.",
+      "Mix the oil with the herbs and spices.",
+      "Toss the vegetables with half and spread in a 9x13 dish.",
+      "Coat the chicken with the rest, place on top and roast until the chicken is 165F and the vegetables are tender."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "italian-sausage-white-bean-skillet",
+    "name": "Italian Sausage and White Bean Skillet",
+    "description": "Crispy Italian sausage with cannellini beans and wilted spinach in one pan.",
+    "cuisine": "italian",
+    "difficulty": "easy",
+    "prep_time": 5,
+    "cook_time": 20,
+    "total_time": 25,
+    "servings": 4,
+    "calories_per_serving": 520,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "pork",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Italian sausage",
+        "quantity": 1,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cannellini beans",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Brown the sausage in the oil until crispy-edged, about 10 minutes.",
+      "Add the drained beans and pepper and coat in the fat to heat through.",
+      "Stir in the spinach in batches until wilted."
+    ],
+    "ingredient_count": 4
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "chicken-sausage-white-bean-skillet",
+    "name": "Chicken Sausage White Bean Skillet",
+    "description": "Fully-cooked chicken sausage with white beans in a light pan sauce and greens.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 20,
+    "total_time": 30,
+    "servings": 4,
+    "calories_per_serving": 470,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken sausage links",
+        "quantity": 5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "White beans",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 8,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Slice and brown the sausage, then set aside.",
+      "Saute onion and garlic in the remaining oil about 3 minutes.",
+      "Add the beans (do not rinse, the starchy liquid makes a light sauce) and seasonings.",
+      "Add spinach to wilt and return the sausage."
+    ],
+    "ingredient_count": 8
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "sun-dried-tomato-kale-white-bean-skillet",
+    "name": "Sun-Dried Tomato, Kale and White Bean Skillet",
+    "description": "Garlicky kale and white beans dressed with sun-dried tomatoes.",
+    "cuisine": "mediterranean",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 15,
+    "total_time": 25,
+    "servings": 4,
+    "calories_per_serving": 340,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "White beans",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Sun-dried tomatoes",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Apple cider vinegar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried basil",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Red pepper flakes",
+        "quantity": 0.25,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Kale",
+        "quantity": 1,
+        "unit": "bunch",
+        "unit_norm": "bunch",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Make a dressing from the jar oil, vinegar, basil and seasonings.",
+      "Saute garlic in olive oil 1 minute, then add the kale with 2 tablespoons water to wilt.",
+      "Add the beans and sun-dried tomatoes to heat through.",
+      "Drizzle the dressing and season."
+    ],
+    "ingredient_count": 8
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "easy-chicken-stir-fry",
+    "name": "Easy Chicken Stir Fry",
+    "description": "Chicken and crisp vegetables in a glossy tamari-ginger sauce over rice.",
+    "cuisine": "asian",
+    "difficulty": "easy",
+    "prep_time": 15,
+    "cook_time": 15,
+    "total_time": 30,
+    "servings": 4,
+    "calories_per_serving": 450,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 1,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Cooking oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Tamari",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Brown sugar",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Toasted sesame oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Cornstarch",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Broccoli",
+        "quantity": 3,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Red bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Green onions",
+        "quantity": 3,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Mix the tamari sauce ingredients.",
+      "Chop the vegetables and chicken.",
+      "Brown the chicken in hot oil, then remove.",
+      "Stir-fry the vegetables tender-crisp.",
+      "Return the chicken, add the sauce and toss until glossy; serve over rice."
+    ],
+    "ingredient_count": 13
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "one-pot-teriyaki-chicken-rice",
+    "name": "One Pot Teriyaki Chicken and Rice",
+    "description": "Chicken, jasmine rice and vegetables cooked together with GF teriyaki.",
+    "cuisine": "asian",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 499,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 0.66,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Cooking oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "produce"
+      },
+      {
+        "name": "Jasmine rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Water",
+        "quantity": 2.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Gluten-free teriyaki sauce",
+        "quantity": 0.33,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Mixed vegetables",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Green onions",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute garlic, ginger and chicken in the oil.",
+      "Add the rice and toast 1 minute, then add water, boil and simmer covered about 15 minutes.",
+      "Add the vegetables, drizzle the teriyaki and fold gently.",
+      "Rest 5 minutes and top with green onion."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "chicken-fried-rice",
+    "name": "Chicken Fried Rice",
+    "description": "Day-old rice stir-fried with chicken, egg and vegetables in tamari.",
+    "cuisine": "asian",
+    "difficulty": "easy",
+    "prep_time": 15,
+    "cook_time": 15,
+    "total_time": 30,
+    "servings": 4,
+    "calories_per_serving": 500,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken breast",
+        "quantity": 0.66,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "meat"
+      },
+      {
+        "name": "Toasted sesame oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cooking oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Tamari",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "produce"
+      },
+      {
+        "name": "Green onions",
+        "quantity": 3,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrot",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Frozen peas",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Cooked and cooled rice",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Scramble the eggs and set aside.",
+      "Stir-fry the carrots, then the bell pepper and white green-onion ends, and add the chicken.",
+      "Add the cold rice and return the eggs.",
+      "Season with tamari and sesame oil and top with green onion."
+    ],
+    "ingredient_count": 12
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "best-lentil-soup",
+    "name": "Best Lentil Soup",
+    "description": "Hearty curried lentil soup with greens, part-blended for body.",
+    "cuisine": "mediterranean",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 45,
+    "total_time": 55,
+    "servings": 4,
+    "calories_per_serving": 380,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.78,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Ground cumin",
+        "quantity": 2,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Curry powder",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried thyme",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Brown or green lentils",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Water",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Kale or collard greens",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute the onion and carrot 5 minutes.",
+      "Add garlic, cumin, curry and thyme 30 seconds, then the tomatoes and cook a few minutes.",
+      "Add lentils, broth, water, salt and pepper, boil then simmer partially covered 25 to 30 minutes.",
+      "Blend 2 cups and return to the pot.",
+      "Add the greens 5 minutes, stir in lemon juice and season."
+    ],
+    "ingredient_count": 13
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "smoky-black-bean-soup",
+    "name": "Smoky Black Bean Soup",
+    "description": "Smoky paprika black bean soup, partly pureed and finished with lime.",
+    "cuisine": "mexican",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 351,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Black beans",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Jalapeno",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Lime",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute the aromatics and spices.",
+      "Add the beans (puree some for thickness) and the broth.",
+      "Simmer until thick and finish with lime.",
+      "Top as desired."
+    ],
+    "ingredient_count": 8
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "slow-cooker-black-bean-soup",
+    "name": "Slow Cooker Black Bean Soup",
+    "description": "Set-and-forget dried black bean soup with peppers and salsa.",
+    "cuisine": "mexican",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 480,
+    "total_time": 490,
+    "servings": 6,
+    "calories_per_serving": 294,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Dried black beans",
+        "quantity": 1,
+        "unit": "lb",
+        "unit_norm": "lb",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Chili powder",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 6,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Salsa",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Add everything to the slow cooker.",
+      "Cook on low about 8 hours until the beans are very soft.",
+      "Immersion-blend until thick and season."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "vegetarian-15-bean-soup",
+    "name": "Vegetarian 15 Bean Soup",
+    "description": "Big-batch mixed bean soup seasoned from scratch, finished with cider vinegar.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 110,
+    "total_time": 120,
+    "servings": 6,
+    "calories_per_serving": 320,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.7,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "15-bean mix",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 3,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Apple cider vinegar",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Saute the aromatics.",
+      "Add the beans and water and simmer about 90 minutes until soft (discard the seasoning packet).",
+      "Add the tomatoes and spices and simmer 20 minutes.",
+      "Salt to taste and finish with apple cider vinegar."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "classic-minestrone-soup-gf",
+    "name": "Classic Minestrone Soup (Gluten-Free)",
+    "description": "Vegetable, bean and GF-pasta minestrone in a herby tomato broth.",
+    "cuisine": "italian",
+    "difficulty": "easy",
+    "prep_time": 15,
+    "cook_time": 45,
+    "total_time": 60,
+    "servings": 6,
+    "calories_per_serving": 360,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.76,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 4,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Carrots",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Celery",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Tomato paste",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Seasonal vegetables",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Dried oregano",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried thyme",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Water",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Small gluten-free pasta",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Cannellini beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Greens",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute onion, carrot, celery and tomato paste 7 to 10 minutes.",
+      "Add the seasonal vegetables, garlic and herbs 2 minutes.",
+      "Add tomatoes, broth, water, salt, bay and pepper, boil then simmer 15 minutes.",
+      "Add the gluten-free pasta, beans and greens and cook until the pasta is done.",
+      "Remove the bay and stir in lemon and a final tablespoon of oil."
+    ],
+    "ingredient_count": 16
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "vegan-sweet-potato-peanut-stew",
+    "name": "Vegan Sweet Potato Peanut Stew",
+    "description": "West-African-inspired sweet potato and peanut butter stew with collards.",
+    "cuisine": "african",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 30,
+    "total_time": 40,
+    "servings": 5,
+    "calories_per_serving": 468,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Fresh ginger",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Sweet potatoes",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Crushed tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Natural peanut butter",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
+      },
+      {
+        "name": "Collard greens",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Brown rice",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Chopped peanuts",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
+      }
+    ],
+    "instructions": [
+      "Saute ginger, onion and garlic.",
+      "Add sweet potatoes, tomatoes, broth and peanut butter and simmer 15 to 20 minutes until soft.",
+      "Stir in the collards 5 minutes and smash some sweet potato to thicken; season.",
+      "Serve over rice with peanuts."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "slow-cooker-vegetarian-lentil-chili",
+    "name": "Slow Cooker Vegetarian Lentil Chili",
+    "description": "Dump-and-go brown lentil chili with a silky mouthfeel.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 240,
+    "total_time": 250,
+    "servings": 6,
+    "calories_per_serving": 369,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.85,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Brown lentils",
+        "quantity": 1.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Kidney beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Chili powder",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Coconut oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Vegetable broth",
+        "quantity": 4,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Dice the onion and mince the garlic.",
+      "Add all the ingredients to the slow cooker and stir.",
+      "Cook on high 4 hours or low 8 hours until the lentils are tender.",
+      "Salt to taste and add toppings."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "homemade-vegetarian-three-bean-chili",
+    "name": "Homemade Vegetarian Three-Bean Chili",
+    "description": "Smoky three-bean and corn chili sweetened with a touch of molasses.",
+    "cuisine": "mexican",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 30,
+    "total_time": 40,
+    "servings": 6,
+    "calories_per_serving": 400,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Green bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Tomato paste",
+        "quantity": 6,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Fire-roasted green chiles",
+        "quantity": 4,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Molasses",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Kidney beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Black beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Pinto beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Corn",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Chili powder",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 2,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Dice the onion and pepper and mince the garlic.",
+      "Toast the spices in a dry pot 2 to 4 minutes.",
+      "Add oil, onion, garlic, pepper and salt and cook 4 to 6 minutes.",
+      "Add tomato paste, tomatoes, chiles, molasses and water and simmer 5 minutes.",
+      "Add the beans and corn and simmer covered 20 to 25 minutes."
+    ],
+    "ingredient_count": 14
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "simple-shakshuka",
+    "name": "Simple Shakshuka",
+    "description": "Eggs poached in a smoky spiced tomato and pepper sauce.",
+    "cuisine": "middle-eastern",
+    "difficulty": "easy",
+    "prep_time": 5,
+    "cook_time": 35,
+    "total_time": 40,
+    "servings": 4,
+    "calories_per_serving": 300,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.78,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Jalapenos",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Celery",
+        "quantity": 5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cardamom",
+        "quantity": 1.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 4,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Fire-roasted diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Tomato paste",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 3,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Parsley",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Heat the oven to 350F.",
+      "In an oven-safe skillet saute onion, bell pepper, jalapeno, celery and all the spices 10 to 12 minutes.",
+      "Add garlic, tomatoes, tomato paste, lemon and sugar and cook 10 minutes, thinning with water.",
+      "Make wells and crack in the eggs.",
+      "Bake 8 to 12 minutes until the whites set and top with parsley."
+    ],
+    "ingredient_count": 14
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "smoky-white-bean-shakshuka",
+    "name": "Smoky White Bean Shakshuka",
+    "description": "Eggs and white beans baked into a smoky tomato sauce.",
+    "cuisine": "middle-eastern",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 25,
+    "total_time": 35,
+    "servings": 4,
+    "calories_per_serving": 360,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Canned tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cannellini beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 4,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Parsley",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Saute the garlic and onion.",
+      "Add the tomatoes and spices and simmer 5 to 7 minutes to thicken, then salt.",
+      "Stir in the drained beans.",
+      "Make wells, add the eggs, cover and cook until set.",
+      "Top with parsley."
+    ],
+    "ingredient_count": 10
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "ratatouille-frittata",
+    "name": "Ratatouille Frittata",
+    "description": "Roasted eggplant, zucchini and tomato folded into a dairy-free baked frittata.",
+    "cuisine": "mediterranean",
+    "difficulty": "medium",
+    "prep_time": 15,
+    "cook_time": 80,
+    "total_time": 95,
+    "servings": 8,
+    "calories_per_serving": 162,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.6,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Eggplant",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Zucchini",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Grape tomatoes",
+        "quantity": 1,
+        "unit": "pint",
+        "unit_norm": "pint",
+        "category": "produce"
+      },
+      {
+        "name": "Dried basil",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried oregano",
+        "quantity": 0.5,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 8,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Dairy-free milk",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Heat the oven to 400F and roast the diced eggplant, zucchini, onion and whole tomatoes with the herbs and oil about 50 minutes, stirring.",
+      "Whisk the eggs with the dairy-free milk and salt and pepper and pour over the vegetables in an oven-safe skillet.",
+      "Bake about 30 minutes until set."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "dairy-free-vegetable-frittata",
+    "name": "Dairy-Free Vegetable Frittata",
+    "description": "Quick baked frittata with spinach, peppers and broccoli, made with non-dairy milk.",
+    "cuisine": "american",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 20,
+    "total_time": 30,
+    "servings": 6,
+    "calories_per_serving": 220,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.8,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Eggs",
+        "quantity": 9,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Dairy-free milk",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Red bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Broccoli",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Saute the vegetables in an oven-safe skillet.",
+      "Whisk the eggs with the non-dairy milk and seasoning and pour over.",
+      "Bake until set, about 13 to 20 minutes."
+    ],
+    "ingredient_count": 7
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "sweet-potato-black-bean-enchiladas",
+    "name": "Sweet Potato Black Bean Enchiladas",
+    "description": "Corn tortillas rolled around spiced sweet potato and black beans under a salsa sauce.",
+    "cuisine": "mexican",
+    "difficulty": "medium",
+    "prep_time": 20,
+    "cook_time": 35,
+    "total_time": 55,
+    "servings": 4,
+    "calories_per_serving": 430,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.62,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": 3,
+        "unit": "clove",
+        "unit_norm": "clove",
+        "category": "produce"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Sweet potatoes",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Black beans",
+        "quantity": 2,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Canned diced tomatoes",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Corn tortillas",
+        "quantity": 10,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Salsa",
+        "quantity": 1,
+        "unit": "jar",
+        "unit_norm": "jar",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Saute onion, garlic and cumin.",
+      "Add sweet potato, beans and tomatoes and simmer covered 15 to 20 minutes until mashable, then mash slightly.",
+      "Blend salsa with reserved beans and cumin for the sauce and spread in a dish.",
+      "Warm the tortillas, fill and roll seam-down.",
+      "Top with the sauce and bake until hot."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "southwest-stuffed-sweet-potatoes",
+    "name": "Southwest Stuffed Sweet Potatoes",
+    "description": "Baked sweet potatoes stuffed with black beans and drizzled with cashew-nacho sauce.",
+    "cuisine": "mexican",
+    "difficulty": "medium",
+    "prep_time": 15,
+    "cook_time": 60,
+    "total_time": 75,
+    "servings": 4,
+    "calories_per_serving": 420,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.6,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Sweet potatoes",
+        "quantity": 4,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Black beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Mixed vegetables",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Cashews",
+        "quantity": 0.75,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
+      },
+      {
+        "name": "Green chiles",
+        "quantity": 4,
+        "unit": "oz",
+        "unit_norm": "oz",
+        "category": "pantry"
+      },
+      {
+        "name": "Lemon",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Jalapenos",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Cilantro",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Bake the sweet potatoes at 425F about 45 to 60 minutes.",
+      "Make the black bean and vegetable filling.",
+      "Blend the cashews, water, green chiles, lemon juice and jalapenos into a sauce.",
+      "Split the potatoes, fluff, fill, drizzle the sauce and garnish with cilantro."
+    ],
+    "ingredient_count": 9
+  },
+  {
+    "meal_type": "dinner",
+    "is_gluten_free": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "source": "curated-budget-gfdf",
+    "id": "mexican-sweet-potato-hash",
+    "name": "Mexican Sweet Potato Hash with Black Beans and Spinach",
+    "description": "Quick skillet hash of sweet potato, black beans and spinach, great with a fried egg.",
+    "cuisine": "mexican",
+    "difficulty": "easy",
+    "prep_time": 10,
+    "cook_time": 20,
+    "total_time": 30,
+    "servings": 3,
+    "calories_per_serving": 330,
+    "is_vegetarian": true,
+    "is_pescatarian": true,
+    "primary_protein": "none",
+    "ease_score": 0.82,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Olive oil",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Sweet potatoes",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Shallot",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Black beans",
+        "quantity": 1,
+        "unit": "can",
+        "unit_norm": "can",
+        "category": "pantry"
+      },
+      {
+        "name": "Cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Chili powder",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Spinach",
+        "quantity": 3,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Lime",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Eggs",
+        "quantity": 3,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      }
+    ],
+    "instructions": [
+      "Cook the diced sweet potatoes in the oil over medium-high about 15 minutes until tender.",
+      "Add the shallot, beans, salt, cumin and chili powder and saute 3 minutes.",
+      "Fold in the spinach to wilt and finish with lime.",
+      "Top with a fried egg if you like."
+    ],
+    "ingredient_count": 9
   }
 ]
