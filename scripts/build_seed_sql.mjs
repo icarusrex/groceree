@@ -15,14 +15,14 @@ for (const r of recipes) {
   lines.push(
     "INSERT INTO recipes (id,name,description,cuisine,difficulty,cook_time," +
       "prep_time,total_time,servings,calories_per_serving,is_gluten_free," +
-      "is_vegetarian,is_pescatarian,is_dairy_free,contains_dairy,primary_protein," +
+      "is_vegetarian,is_pescatarian,is_dairy_free,contains_dairy,primary_protein,cost_tier," +
       "ease_score,ingredient_count,is_one_pot,ingredients,instructions,source) VALUES (" +
       [
         q(r.id), q(r.name), q(r.description), q(r.cuisine), q(r.difficulty),
         n(r.cook_time), n(r.prep_time), n(r.total_time), n(r.servings),
         n(r.calories_per_serving), b(r.is_gluten_free), b(r.is_vegetarian),
         b(r.is_pescatarian), b(r.is_dairy_free), b(r.contains_dairy),
-        q(r.primary_protein), n(r.ease_score), n(r.ingredient_count),
+        q(r.primary_protein), n(r.cost_tier ?? 2), n(r.ease_score), n(r.ingredient_count),
         b(r.is_one_pot), q(JSON.stringify(r.ingredients)),
         q(JSON.stringify(r.instructions ?? [])), q(r.source),
       ].join(",") +

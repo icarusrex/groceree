@@ -197,8 +197,44 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   }
 
   for (let day = 1; day <= 7; day++) if (lunch[day]) items.push(lunch[day]!);
-  return items.sort((a, b) => a.day_of_week - b.day_of_week ||
-    (a.slot === "lunch" ? -1 : 1));
+  return sizePlanForLeftovers(items.sort((a, b) => a.day_of_week - b.day_of_week ||
+    (a.slot === "lunch" ? -1 : 1)), household);
+}
+
+// Derive each meal's servings from the plan's leftover structure. A meal that is
+// reused as a leftover (e.g. dinner → next-day lunch) must be COOKED big enough
+// to cover every meal it feeds, so the shopping list buys for all of them (the
+// leftover meal itself is skipped when shopping). Run this whenever the plan
+// changes — on generate, and again at save after any manual edits — so sizing
+// always matches reality:
+//   • a cooked meal feeding N leftovers → servings = household × (1 + N)
+//   • a leftover whose source meal still exists → kept, re-synced to its recipe
+//   • an orphaned leftover (source edited away) → promoted to a fresh cooked meal
+//   • a meal that feeds nothing → back to a single household serving
+export function sizePlanForLeftovers(plan: PlanItem[], household: number): PlanItem[] {
+  const h = Math.max(1, household);
+  const childCount = new Map<PlanItem, number>();
+  const out = plan.map((p) => ({ ...p }));
+  const find = (d: number, s: Slot) => out.find((p) => p.day_of_week === d && p.slot === s);
+
+  for (const item of out) {
+    if (!item.is_leftover || !item.leftover_of) continue;
+    const src = find(item.leftover_of.day_of_week, item.leftover_of.slot);
+    if (src && src.recipe_id && !src.is_leftover) {
+      item.recipe_id = src.recipe_id;            // follow an edited source recipe
+      item.servings = h;
+      childCount.set(src, (childCount.get(src) || 0) + 1);
+    } else {
+      item.is_leftover = false;                  // orphaned → cook it fresh
+      item.leftover_of = null;
+      item.servings = h;
+    }
+  }
+  for (const item of out) {
+    if (item.is_leftover) continue;
+    item.servings = h * (1 + (childCount.get(item) || 0));
+  }
+  return out;
 }
 
 // ---- shopping list ----------------------------------------------------------

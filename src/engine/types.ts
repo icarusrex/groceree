@@ -25,6 +25,7 @@ export interface Recipe {
   is_dairy_free: boolean;
   contains_dairy: boolean;
   primary_protein: string;
+  cost_tier?: number; // 1 cheap … 4 premium (static, discount-free)
   ease_score: number;
   is_one_pot: boolean;
   ingredients: Ingredient[];

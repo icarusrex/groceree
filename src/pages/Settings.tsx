@@ -44,8 +44,8 @@ export default function Settings() {
         </select>
       </label>
       <div className="field">
-        <span>Grocery price trends</span>
-        <p className="muted small">Average price per category over time, from the flyers you upload. One line per category; filter by store.</p>
+        <span>Grocery prices</span>
+        <p className="muted small">Which store is cheaper, by category, from the flyers you upload — plus exact matched items and a basket trend over time.</p>
         <PriceTrends />
       </div>
     </div>

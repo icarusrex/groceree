@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS recipes (
   is_dairy_free        INTEGER NOT NULL DEFAULT 0,
   contains_dairy       INTEGER NOT NULL DEFAULT 0,
   primary_protein      TEXT,
+  cost_tier            INTEGER NOT NULL DEFAULT 2,   -- 1 cheap … 4 premium
   ease_score           REAL NOT NULL DEFAULT 0.5,
   ingredient_count     INTEGER NOT NULL DEFAULT 0,
   is_one_pot           INTEGER NOT NULL DEFAULT 0,

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "./lib/api.ts";
-import { generatePlan } from "./engine/engine.ts";
+import { generatePlan, sizePlanForLeftovers } from "./engine/engine.ts";
 import type { Recipe, Settings, PlanItem, RecipeState } from "./engine/types.ts";
 
 interface Store {
@@ -83,7 +83,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     refreshPantry: () => api.pantry().then(setPantry),
     setDeals,
     savePlan: () => {
-      const items = plan.map((p) => ({ day_of_week: p.day_of_week, slot: p.slot,
+      // Re-derive leftover sizing from the (possibly edited) plan before saving,
+      // so dinners reused as lunch are cooked/shopped for every meal they feed.
+      const sized = sizePlanForLeftovers(plan, settings.household_size);
+      persist(sized);
+      const items = sized.map((p) => ({ day_of_week: p.day_of_week, slot: p.slot,
         recipe_id: p.recipe_id, is_leftover: p.is_leftover, servings: p.servings }));
       return api.savePlan({ week_start: mondayOf(), status: "saved", items });
     },

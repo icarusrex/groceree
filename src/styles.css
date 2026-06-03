@@ -111,6 +111,10 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .legend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); margin-right: 10px; }
 .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .trend-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 10px; padding: 18px; }
+.match-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+.match-table th, .match-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.match-table th:not(:first-child), .match-table td:not(:first-child) { text-align: right; }
+.match-table td.cheapest { color: var(--accent, #0f6e56); font-weight: 600; }
 
 /* recipe image + cooking mode */
 .recipe-img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
