@@ -4,13 +4,15 @@ import MealPlan from "./pages/MealPlan.tsx";
 import Shop from "./pages/Shop.tsx";
 import Pantry from "./pages/Pantry.tsx";
 import Settings from "./pages/Settings.tsx";
+import PriceTrends from "./components/PriceTrends.tsx";
 
-type View = "plan" | "shop" | "pantry" | "settings";
+type View = "plan" | "shop" | "pantry" | "prices" | "settings";
 
 const NAV: { id: View; label: string }[] = [
   { id: "plan", label: "Meal Plan" },
   { id: "shop", label: "Shop" },
   { id: "pantry", label: "Pantry" },
+  { id: "prices", label: "Prices" },
   { id: "settings", label: "Settings" },
 ];
 
@@ -33,6 +35,12 @@ export default function App() {
           {view === "plan" && <MealPlan />}
           {view === "shop" && <Shop />}
           {view === "pantry" && <Pantry />}
+          {view === "prices" && (
+            <div className="plan-wrap">
+              <h1>Price Trends</h1>
+              <PriceTrends />
+            </div>
+          )}
           {view === "settings" && <Settings />}
         </main>
       </div>

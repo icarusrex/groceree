@@ -28,4 +28,8 @@ export const api = {
     fetch("/api/generate-image", { method: "POST", body: JSON.stringify({ recipe_id, name, description }) }).then(j),
   flyers: () => fetch("/api/flyers").then(j),
   delFlyer: (id: number) => fetch(`/api/flyers?id=${id}`, { method: "DELETE" }).then(j),
+  discoverFlyers: (store_id?: string) =>
+    fetch("/api/discover-flyers", { method: "POST", body: JSON.stringify({ store_id }) }).then(j),
+  fetchFlyer: (p: { store_id?: string; store_name?: string; flyer_url: string; valid_from?: string; valid_to?: string }) =>
+    fetch("/api/fetch-flyer", { method: "POST", body: JSON.stringify(p) }).then(j),
 };

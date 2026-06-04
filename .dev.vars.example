@@ -1,2 +1,3 @@
 # local-only secrets for `wrangler pages dev`; copy to .dev.vars (gitignored)
 GEMINI_API_KEY=your-key-here
+FIRECRAWL_API_KEY=your-key-here

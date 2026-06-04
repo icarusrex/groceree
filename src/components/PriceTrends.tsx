@@ -75,8 +75,8 @@ export default function PriceTrends() {
     return (
       <div className="trend-empty">
         <p className="muted">
-          No flyer prices yet. Upload flyers (Meal Plan → “From flyer”) and this builds a
-          store-vs-store price comparison plus trends over time.
+          No flyer prices yet. On Meal Plan, hit “Find flyers online” (or “Upload flyer”) and
+          this builds a store-vs-store price comparison plus trends over time.
         </p>
       </div>
     );

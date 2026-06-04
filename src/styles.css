@@ -155,6 +155,14 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .btn.small { padding: 5px 10px; font-size: 13px; }
 .to-pantry { font-size: 14px; }
 
+/* ---- discover-flyers panel ---- */
+.discover-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+.discover-head { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.discover-store { padding: 8px 0; border-top: 1px solid var(--line); }
+.discover-store:first-of-type { border-top: 0; }
+.ds-name { font-weight: 600; margin-bottom: 6px; }
+.ds-flyers { display: flex; gap: 8px; flex-wrap: wrap; }
+
 /* ---- new flyer states (#1) + scan row (#7) ---- */
 .flyer-card.upcoming { opacity: .8; border-style: dashed; }
 .flyer-soon { color: var(--accent); font-size: 12px; }

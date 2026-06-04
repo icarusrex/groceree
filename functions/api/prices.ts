@@ -1,17 +1,10 @@
 import { json, type Env } from "./_helpers.ts";
+import { categorize } from "./_flyer.ts";
 
 // GET /api/prices — returns price history aggregated for charting:
 //  { stores:[...], categories:[...], points:[{date, store, category, avg_price, n}],
 //    items:[{name, store, date, price}] }
-// Category is inferred from item name keywords (flyers don't carry our categories).
-const CAT = (name: string) => {
-  const n = name.toLowerCase();
-  if (/chicken|beef|pork|lamb|turkey|sausage|bacon|mince|steak/.test(n)) return "meat";
-  if (/fish|salmon|cod|tuna|prawn|shrimp|sardine|hake|squid/.test(n)) return "fish";
-  if (/milk|cheese|yogurt|yoghurt|butter|cream|egg/.test(n)) return "dairy";
-  if (/apple|banana|tomato|onion|potato|carrot|lettuce|pepper|fruit|veg|salad|orange|lemon/.test(n)) return "produce";
-  return "pantry";
-};
+// Category is inferred from item name keywords; non-grocery rows are dropped.
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const { results } = await ctx.env.DB.prepare(
@@ -21,8 +14,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   ).all();
   const rows = (results as any[]).map((r) => ({
     store: r.store, name: r.item_name, price: Number(r.price),
-    date: (r.valid_from || r.created_at || "").slice(0, 10), cat: CAT(r.item_name),
-  }));
+    date: (r.valid_from || r.created_at || "").slice(0, 10), cat: categorize(r.item_name),
+  })).filter((r) => r.cat !== null) as { store: string; name: string; price: number; date: string; cat: string }[];
   // aggregate avg price per (date, store, category)
   const agg = new Map<string, { sum: number; n: number }>();
   for (const r of rows) {

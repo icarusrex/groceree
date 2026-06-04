@@ -1,5 +1,5 @@
 // Shared helpers for Pages Functions. Underscore prefix = not routed.
-export interface Env { DB: D1Database; GEMINI_API_KEY: string; }
+export interface Env { DB: D1Database; GEMINI_API_KEY: string; FIRECRAWL_API_KEY: string; }
 
 export const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), {

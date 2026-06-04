@@ -15,6 +15,10 @@ export default function MealPlan() {
   const [open, setOpen] = useState<Recipe | null>(null);
   const [saveMsg, setSaveMsg] = useState("");
   const [flyers, setFlyers] = useState<any[]>([]);
+  const [discoverOpen, setDiscoverOpen] = useState(false);
+  const [discovering, setDiscovering] = useState(false);
+  const [discovered, setDiscovered] = useState<any[]>([]);
+  const [fetchingUrl, setFetchingUrl] = useState("");
   const [compare, setCompare] = useState<any>(null);
   const [comparing, setComparing] = useState(false);
   const [activeSlot, setActiveSlot] = useState<{ day: number; slot: Slot } | null>(null);
@@ -87,6 +91,29 @@ export default function MealPlan() {
     setComparing(false);
   };
 
+  const runDiscover = async () => {
+    setDiscoverOpen(true);
+    if (discovered.length || discovering) return;
+    setDiscovering(true);
+    try { setDiscovered((await api.discoverFlyers()).stores || []); }
+    catch { setFlyerMsg("Flyer discovery failed (Firecrawl key set?)."); }
+    setDiscovering(false);
+  };
+
+  const fetchOnline = async (storeId: string, storeName: string, url: string) => {
+    setFetchingUrl(url); setFlyerMsg(`Fetching ${storeName} flyer…`);
+    try {
+      const res = await api.fetchFlyer({ store_id: storeId, store_name: storeName, flyer_url: url });
+      if (res.error) setFlyerMsg(res.error);
+      else {
+        if (res.deals && Object.keys(res.deals).length) s.setDeals(res.deals);
+        setFlyerMsg(`${res.store}: loaded ${res.item_count} grocery prices. ${res.summary || ""}`);
+        api.flyers().then(setFlyers);
+      }
+    } catch { setFlyerMsg("Fetch failed."); }
+    setFetchingUrl("");
+  };
+
   const onFlyer = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
@@ -110,7 +137,8 @@ export default function MealPlan() {
         <div className="header-row">
           <h1>Meal Planner</h1>
           <div className="actions">
-            <label className="btn ghost">From flyer
+            <button className="btn ghost" onClick={runDiscover}>Find flyers online</button>
+            <label className="btn ghost">Upload flyer
               <input type="file" accept="image/*,application/pdf" multiple hidden onChange={onFlyer} />
             </label>
             <button className="btn" onClick={s.generate}>Generate plan</button>
@@ -123,6 +151,36 @@ export default function MealPlan() {
           </div>
         </div>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
+
+        {discoverOpen && (
+          <div className="discover-panel">
+            <div className="discover-head">
+              <span>Flyers found online — pick one to load its prices:</span>
+              <button className="icon" title="close" onClick={() => setDiscoverOpen(false)}>✕</button>
+            </div>
+            {discovering && <div className="muted small">Searching store sites…</div>}
+            {!discovering && discovered.map((st) => (
+              <div className="discover-store" key={st.store_id}>
+                <div className="ds-name">{st.store_name}
+                  {st.kind !== "ipaper" && <span className="muted small"> · manual</span>}</div>
+                {st.flyers?.length > 0 ? (
+                  <div className="ds-flyers">
+                    {st.flyers.map((f: any) => (
+                      <button className="btn small" key={f.url} disabled={!!fetchingUrl}
+                        onClick={() => fetchOnline(st.store_id, st.store_name, f.url)}>
+                        {fetchingUrl === f.url ? "Loading…" : `↓ ${f.title}`}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="muted small">{st.note || "No flyers found."}
+                    {st.landing && <> · <a href={st.landing} target="_blank" rel="noreferrer">open store page</a></>}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         {saveMsg && <div className="banner ok">{saveMsg}</div>}
         {Object.keys(s.deals).length > 0 &&
           <div className="banner ok">Using {Object.keys(s.deals).length} flyer deals + seasonality.</div>}
