@@ -20,6 +20,7 @@ export default function MealPlan() {
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<any[]>([]);
   const [fetchingUrl, setFetchingUrl] = useState("");
+  const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
   const [compare, setCompare] = useState<any>(null);
   const [comparing, setComparing] = useState(false);
   const [activeSlot, setActiveSlot] = useState<{ day: number; slot: Slot } | null>(null);
@@ -106,29 +107,45 @@ export default function MealPlan() {
     setComparing(false);
   };
 
-  const runDiscover = async () => {
-    if (discovering) return;
+  // One trigger: discover the selected stores' current flyers, then fetch+parse
+  // every one automatically. No per-flyer clicking — the user waits, doesn't click.
+  const autoLoad = async () => {
+    if (discovering || !!fetchingUrl) return;
     const ids = selectedStoreIds.length ? selectedStoreIds : allStoreIds;
     if (!ids.length) { setFlyerMsg("Pick at least one store first."); return; }
-    setFlyerMsg("");
-    setDiscovering(true); setDiscovered([]);
-    try { setDiscovered((await api.discoverFlyers(ids)).stores || []); }
-    catch { setFlyerMsg("Flyer discovery failed (Firecrawl key set?)."); }
+    setFlyerMsg("Finding this week's flyers…");
+    setDiscovering(true); setDiscovered([]); setLoadedUrls(new Set());
+    let stores: any[] = [];
+    try { stores = (await api.discoverFlyers(ids)).stores || []; }
+    catch { setFlyerMsg("Flyer discovery failed (Firecrawl key set?)."); setDiscovering(false); return; }
+    setDiscovered(stores);
     setDiscovering(false);
-  };
 
-  const fetchOnline = async (storeId: string, storeName: string, url: string) => {
-    setFetchingUrl(url); setFlyerMsg(`Fetching ${storeName} flyer…`);
-    try {
-      const res = await api.fetchFlyer({ store_id: storeId, store_name: storeName, flyer_url: url });
-      if (res.error) setFlyerMsg(res.error);
-      else {
-        if (res.deals && Object.keys(res.deals).length) s.setDeals(res.deals);
-        setFlyerMsg(`${res.store}: loaded ${res.item_count} grocery prices. ${res.summary || ""}`);
-        api.flyers().then(setFlyers);
-      }
-    } catch { setFlyerMsg("Fetch failed."); }
+    const jobs = stores.flatMap((st: any) =>
+      (st.flyers || []).map((f: any) => ({ store_id: st.store_id, store_name: st.store_name, url: f.url, title: f.title })));
+    if (!jobs.length) { setFlyerMsg("No current grocery flyers found for the selected stores."); return; }
+
+    const merged: Record<string, number> = { ...s.deals };
+    let loaded = 0, totalItems = 0;
+    const fails: string[] = [];
+    for (let i = 0; i < jobs.length; i++) {
+      const jb = jobs[i];
+      setFetchingUrl(jb.url);
+      setFlyerMsg(`Loading flyers… ${i + 1}/${jobs.length} · ${jb.store_name} (${jb.title})`);
+      try {
+        const res = await api.fetchFlyer({ store_id: jb.store_id, store_name: jb.store_name, flyer_url: jb.url });
+        if (res.error) fails.push(`${jb.store_name}: ${res.error}`);
+        else {
+          loaded++; totalItems += res.item_count || 0; Object.assign(merged, res.deals || {});
+          setLoadedUrls((prev) => new Set(prev).add(jb.url));
+        }
+      } catch { fails.push(`${jb.store_name}: fetch failed.`); }
+    }
     setFetchingUrl("");
+    if (Object.keys(merged).length) s.setDeals(merged);
+    await api.flyers().then(setFlyers).catch(() => {});
+    const tail = fails.length ? ` · couldn't load: ${fails.join("; ")}` : "";
+    setFlyerMsg(`Loaded ${loaded}/${jobs.length} flyers · ${totalItems} grocery prices.${tail}`);
   };
 
   const onFlyer = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -178,7 +195,7 @@ export default function MealPlan() {
         {discoverOpen && (
           <div className="discover-panel">
             <div className="discover-head">
-              <span>Fetch new flyers — choose stores, then search:</span>
+              <span>Fetch new flyers — choose stores, then load (no clicking per flyer):</span>
               <button className="icon" title="close" onClick={() => setDiscoverOpen(false)}>✕</button>
             </div>
             <div className="store-picker">
@@ -190,12 +207,10 @@ export default function MealPlan() {
                   {st.kind !== "ipaper" && <span className="muted small"> · manual</span>}
                 </label>
               ))}
-              <button className="btn small dark" disabled={discovering} onClick={runDiscover}>
-                {discovering ? "Searching…" : "Search selected"}</button>
+              <button className="btn small dark" disabled={discovering || !!fetchingUrl} onClick={autoLoad}>
+                {discovering || !!fetchingUrl ? "Loading…" : "Load this week's flyers"}</button>
             </div>
             {discovering && <div className="muted small">Searching store sites…</div>}
-            {!discovering && discovered.length > 0 &&
-              <div className="muted small" style={{ marginTop: 6 }}>Pick a flyer to load its prices:</div>}
             {!discovering && discovered.map((st) => (
               <div className="discover-store" key={st.store_id}>
                 <div className="ds-name">{st.store_name}
@@ -203,10 +218,9 @@ export default function MealPlan() {
                 {st.flyers?.length > 0 ? (
                   <div className="ds-flyers">
                     {st.flyers.map((f: any) => (
-                      <button className="btn small" key={f.url} disabled={!!fetchingUrl}
-                        onClick={() => fetchOnline(st.store_id, st.store_name, f.url)}>
-                        {fetchingUrl === f.url ? "Loading…" : `↓ ${f.title}`}
-                      </button>
+                      <span className="flyer-chip" key={f.url}>
+                        {fetchingUrl === f.url ? "⏳ " : loadedUrls.has(f.url) ? "✓ " : "• "}{f.title}
+                      </span>
                     ))}
                   </div>
                 ) : (

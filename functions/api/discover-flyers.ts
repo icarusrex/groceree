@@ -57,10 +57,14 @@ function pickWeekly(src: StoreSource, links: string[]): { url: string; title: st
     const key = Number.isFinite(w) ? w : -1;
     if (!byWeek.has(key)) byWeek.set(key, l); // first (best) url for that week
   }
-  const cur = isoWeek(new Date());
+  const now = new Date();
+  const cur = isoWeek(now);
+  // Default: current week only. On Sundays, also surface next week's flyer
+  // (people plan the upcoming week, and next week's flyer is usually live by then).
+  const want = now.getDay() === 0 ? 2 : 1;
   const weeks = [...byWeek.keys()];
   const future = weeks.filter((w) => w >= cur).sort((a, b) => a - b);
-  const chosen = future.length ? future.slice(0, 2) : weeks.sort((a, b) => b - a).slice(0, 1);
+  const chosen = future.length ? future.slice(0, want) : weeks.sort((a, b) => b - a).slice(0, 1);
   return chosen.map((w) => ({ url: byWeek.get(w)!, title: weekLabel(w, cur) }));
 }
 
