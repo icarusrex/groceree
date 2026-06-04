@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS user_settings (
   exclude_cuisines   TEXT NOT NULL DEFAULT '[]',      -- JSON array
   max_active_minutes INTEGER,
   leftover_strategy  TEXT NOT NULL DEFAULT 'auto',
+  plan_days          INTEGER NOT NULL DEFAULT 4,      -- meals to generate (4 or 7)
+  selected_stores    TEXT NOT NULL DEFAULT '[]',      -- JSON array of store ids; [] = all
   updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

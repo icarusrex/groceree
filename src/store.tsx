@@ -11,7 +11,7 @@ interface Store {
   plan: PlanItem[];
   deals: Record<string, number>;
   loading: boolean;
-  generate: () => void;
+  generate: (days?: number) => void;
   setSettings: (s: Settings) => void;
   signal: (id: string, sig: string) => void;
   addPantry: (t: string) => void;
@@ -31,6 +31,7 @@ export const useStore = () => useContext(Ctx);
 const DEFAULTS: Settings = {
   household_size: 2, diet: [], exclude_cuisines: [],
   max_active_minutes: null, leftover_strategy: "auto",
+  plan_days: 4, selected_stores: [],
 };
 
 function mondayOf(d = new Date()) {
@@ -61,10 +62,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const store: Store = {
     recipes, settings, states, pantry, plan, deals, loading,
-    generate: () => {
+    generate: (days?: number) => {
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
       persist(generatePlan({ recipes, settings, states, pantry: pantryNames, deals,
-        seed: Math.floor(Math.random() * 1e9) }));
+        days, seed: Math.floor(Math.random() * 1e9) }));
     },
     setSettings: (s) => { setSettingsState(s); api.saveSettings(s); },
     signal: (id, sig) => {

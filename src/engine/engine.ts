@@ -126,6 +126,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   const household = Math.max(1, input.settings.household_size);
   const maxMin = input.settings.max_active_minutes;
   const autoLeftover = input.settings.leftover_strategy !== "off";
+  const days = Math.max(1, Math.min(7, input.days ?? input.settings.plan_days ?? 4));
   const ranked = scoreAll(input);
 
   const used = new Set<string>();
@@ -151,10 +152,10 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   }
 
   // grid: for each day fill dinner first, then lunch (leftover or fresh)
-  const dinner: (Scored | null)[] = Array(8).fill(null); // 1..7
-  const lunch: (PlanItem | null)[] = Array(8).fill(null);
+  const dinner: (Scored | null)[] = Array(days + 1).fill(null); // 1..days
+  const lunch: (PlanItem | null)[] = Array(days + 1).fill(null);
 
-  for (let day = 1; day <= 7; day++) {
+  for (let day = 1; day <= days; day++) {
     // prefer dinners that yield leftovers (servings cover a 2nd household meal)
     let choice = autoLeftover
       ? pick((r) => r.servings >= 2 * household && !isSalad(r))
@@ -171,7 +172,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
     });
   }
 
-  for (let day = 1; day <= 7; day++) {
+  for (let day = 1; day <= days; day++) {
     // does yesterday's dinner have spare servings for today's lunch?
     const prev = dinner[day - 1];
     if (autoLeftover && prev && prev.recipe.servings >= 2 * household) {
@@ -196,7 +197,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
     }
   }
 
-  for (let day = 1; day <= 7; day++) if (lunch[day]) items.push(lunch[day]!);
+  for (let day = 1; day <= days; day++) if (lunch[day]) items.push(lunch[day]!);
   return sizePlanForLeftovers(items.sort((a, b) => a.day_of_week - b.day_of_week ||
     (a.slot === "lunch" ? -1 : 1)), household);
 }

@@ -83,6 +83,45 @@ export async function geminiParse(
   return JSON.parse(txt);
 }
 
+// Text-only theme summary for an already-parsed flyer (e.g. the iPaper feed,
+// which has names+prices but no AI pass). One short shop-this hint like
+// "Mexican week" or "great fish deals". Returns null if no key / no items / on
+// any failure — callers fall back to the generic product-count summary.
+export async function summariseFlyer(
+  apiKey: string | undefined,
+  store: string,
+  items: FlyerItem[],
+): Promise<string | null> {
+  if (!apiKey || !items.length) return null;
+  const top = items
+    .filter((i) => i.name)
+    .sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0))
+    .slice(0, 80)
+    .map((i) => (i.discount ? `${i.name} (-${Math.round(i.discount * 100)}%)` : i.name))
+    .join(", ");
+  const prompt = `Portuguese supermarket flyer for ${store}. Notable items:\n${top}\n\n` +
+    `In ONE short sentence (max 16 words) tell a home cook what's worth buying or ` +
+    `any theme this week (e.g. "Mexican week", "great fish deals", "stock up on chicken"). ` +
+    `Plain text only, no quotes, no preamble.`;
+  const model = "gemini-3.5-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.4, maxOutputTokens: 60 },
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json<any>();
+    const txt = (data?.candidates?.[0]?.content?.parts?.[0]?.text || "").trim()
+      .replace(/^["']|["']$/g, "");
+    return txt || null;
+  } catch { return null; }
+}
+
 // Writes stores/store_prices/flyers rows and returns the good-value deals map.
 export async function persistFlyer(
   db: D1Database,

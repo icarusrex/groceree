@@ -39,6 +39,8 @@ export interface Settings {
   exclude_cuisines: string[];
   max_active_minutes: number | null;
   leftover_strategy: "auto" | "off";
+  plan_days: number;          // dinners to generate (4 or 7)
+  selected_stores: string[];  // store ids to fetch flyers from; [] = all
 }
 
 export interface RecipeState {
@@ -66,4 +68,5 @@ export interface GenerateInput {
   deals?: Record<string, number>; // ingredient name (lower) -> discount 0..1
   month?: number; // 1..12, defaults to current
   seed?: number; // for reproducible jitter
+  days?: number; // dinners to fill (defaults to settings.plan_days or 4)
 }

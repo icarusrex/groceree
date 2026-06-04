@@ -1,5 +1,5 @@
 import { json, uid, type Env } from "./_helpers.ts";
-import { geminiParse, persistFlyer, type ParsedFlyer } from "./_flyer.ts";
+import { geminiParse, persistFlyer, summariseFlyer, type ParsedFlyer } from "./_flyer.ts";
 import { extractIpaper, looksLikeIpaper } from "./_ipaper.ts";
 import { sourceById } from "./_sources.ts";
 
@@ -40,11 +40,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       if (!items.length) {
         return json({ error: "iPaper feed found no priced products on this flyer" }, 502);
       }
+      // AI theme hint ("Mexican week" / "great fish deals"); falls back to a
+      // plain product-count line when there's no Gemini key or the call fails.
+      const theme = await summariseFlyer(ctx.env.GEMINI_API_KEY, storeName, items);
       const parsed: ParsedFlyer = {
         store: storeName,
         valid_from: body.valid_from ?? validFrom,
         valid_to: body.valid_to ?? validTo,
-        summary: `${items.length} products from this week's flyer (${pageCount} pages).`,
+        summary: theme || `${items.length} products from this week's flyer (${pageCount} pages).`,
         items,
       };
       const deals = await persistFlyer(ctx.env.DB, user, parsed);

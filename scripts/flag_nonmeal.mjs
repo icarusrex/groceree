@@ -33,9 +33,9 @@ function keep(x) {
 // generic (non-mexican) breakfast / snack — by NAME
 const BREAKFAST = /\b(pancakes?|waffles?|french toast|granola|oatmeal|porridge|overnight oats|smoothie|smoothie bowl|cereal|bagel|muesli|acai|chia pudding|hash browns?|yoghurt bowl|yogurt bowl)\b/;
 // dessert — by NAME
-const DESSERT = /\b(cake|cupcake|cheesecake|brownies?|cookies?|ice cream|gelato|sorbet|mousse|tiramisu|trifle|custard|fudge|cobbler|crumble|pavlova|panna cotta|donut|doughnut|macarons?|tartelette|bakewell|fruit tart|jam tart|rice pudding|bread pudding|steamed pudding|sticky pudding|pudding pots?|christmas pudding|flan|parfait|truffle|sundae|banoffee)\b/;
-// standalone side (name-only, no protein/main thanks to keep guard)
-const SIDE = /\b(garlic bread|dinner rolls?|mashed potatoes?|roasted vegetables?|coleslaw|side salad|sauteed greens?|steamed (?:rice|broccoli|vegetables?)|bread rolls?|cornbread|biscuits?|hummus|guacamole)\b/;
+const DESSERT = /\b(cake|cupcake|cheesecake|brownies?|cookies?|ice cream|gelato|sorbet|mousse|tiramisu|trifle|custard|fudge|cobbler|crumble|pavlova|panna cotta|donut|doughnut|macarons?|tartelette|bakewell|fruit tart|jam tart|rice pudding|bread pudding|steamed pudding|sticky pudding|pudding pots?|christmas pudding|flan|parfait|truffle|sundae|banoffee|almond joy|stuffed dates?|energy (?:bites?|balls?)|bliss (?:bites?|balls?)|protein (?:bites?|balls?)|fat bombs?)\b/;
+// standalone side / snack (name-only, no protein/main thanks to keep guard)
+const SIDE = /\b(garlic bread|dinner rolls?|mashed potatoes?|roasted vegetables?|coleslaw|side salad|sauteed greens?|steamed (?:rice|broccoli|vegetables?)|bread rolls?|cornbread|biscuits?|hummus|guacamole|tater tots?|muffin tots?|veggie tots?|potato tots?)\b/;
 
 // DESCRIPTION signals — these auto-renamed "5-ingredient recipe:" items hide the
 // real dish in the description (name is a vague "X & Y Bowl/Salad").

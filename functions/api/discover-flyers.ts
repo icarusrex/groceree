@@ -56,10 +56,19 @@ async function discover(src: StoreSource, key: string): Promise<Found> {
   return base;
 }
 
+// GET — the source registry (for store-selection checkboxes; no scraping).
+export const onRequestGet: PagesFunction<Env> = async () =>
+  json({ sources: SOURCES.map((s) => ({ store_id: s.id, store_name: s.name, kind: s.kind })) });
+
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL_API_KEY not set" }, 500);
   const body = await ctx.request.json<any>().catch(() => ({}));
-  const list = body.store_id ? [sourceById(body.store_id)].filter(Boolean) as StoreSource[] : SOURCES;
+  // store_ids (array) wins; store_id (single) kept for back-compat; else all.
+  const ids: string[] = Array.isArray(body.store_ids) ? body.store_ids
+    : body.store_id ? [body.store_id] : [];
+  const list = ids.length
+    ? ids.map(sourceById).filter(Boolean) as StoreSource[]
+    : SOURCES;
   const results = await Promise.all(list.map((s) => discover(s, ctx.env.FIRECRAWL_API_KEY)));
   return json({ stores: results });
 };

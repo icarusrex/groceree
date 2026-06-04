@@ -15,6 +15,7 @@ export default function MealPlan() {
   const [open, setOpen] = useState<Recipe | null>(null);
   const [saveMsg, setSaveMsg] = useState("");
   const [flyers, setFlyers] = useState<any[]>([]);
+  const [sources, setSources] = useState<any[]>([]);
   const [discoverOpen, setDiscoverOpen] = useState(false);
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<any[]>([]);
@@ -28,8 +29,22 @@ export default function MealPlan() {
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
 
   React.useEffect(() => { api.flyers().then(setFlyers).catch(() => {}); }, []);
+  React.useEffect(() => { api.flyerSources().then((r) => setSources(r.sources || [])).catch(() => {}); }, []);
 
   if (s.loading) return <p>Loading recipes…</p>;
+
+  // store selection: settings.selected_stores is [] when "all"; resolve to the
+  // full id list for the checkboxes, and normalise back to [] when all are on.
+  const allStoreIds = sources.map((x) => x.store_id);
+  const selectedStoreIds = s.settings.selected_stores.length ? s.settings.selected_stores : allStoreIds;
+  const storeChecked = (id: string) => selectedStoreIds.includes(id);
+  const toggleStore = (id: string) => {
+    const next = storeChecked(id)
+      ? selectedStoreIds.filter((x: string) => x !== id)
+      : [...selectedStoreIds, id];
+    const norm = next.length === allStoreIds.length ? [] : next;
+    s.setSettings({ ...s.settings, selected_stores: norm });
+  };
 
   const cell = (day: number, slot: Slot) =>
     s.plan.find((p) => p.day_of_week === day && p.slot === slot);
@@ -92,10 +107,12 @@ export default function MealPlan() {
   };
 
   const runDiscover = async () => {
-    setDiscoverOpen(true);
-    if (discovered.length || discovering) return;
-    setDiscovering(true);
-    try { setDiscovered((await api.discoverFlyers()).stores || []); }
+    if (discovering) return;
+    const ids = selectedStoreIds.length ? selectedStoreIds : allStoreIds;
+    if (!ids.length) { setFlyerMsg("Pick at least one store first."); return; }
+    setFlyerMsg("");
+    setDiscovering(true); setDiscovered([]);
+    try { setDiscovered((await api.discoverFlyers(ids)).stores || []); }
     catch { setFlyerMsg("Flyer discovery failed (Firecrawl key set?)."); }
     setDiscovering(false);
   };
@@ -137,11 +154,17 @@ export default function MealPlan() {
         <div className="header-row">
           <h1>Meal Planner</h1>
           <div className="actions">
-            <button className="btn ghost" onClick={runDiscover}>Find flyers online</button>
+            <button className="btn ghost" onClick={() => setDiscoverOpen(true)}>Fetch new flyers</button>
             <label className="btn ghost">Upload flyer
               <input type="file" accept="image/*,application/pdf" multiple hidden onChange={onFlyer} />
             </label>
-            <button className="btn" onClick={s.generate}>Generate plan</button>
+            <div className="seg" title="How many days to plan">
+              {[4, 7].map((d) => (
+                <button key={d} className={s.settings.plan_days === d ? "seg-btn on" : "seg-btn"}
+                  onClick={() => s.setSettings({ ...s.settings, plan_days: d })}>{d} days</button>
+              ))}
+            </div>
+            <button className="btn" onClick={() => s.generate()}>Generate plan</button>
             <button className="btn dark" onClick={async () => {
               setSaveMsg("Saving…");
               try { await s.savePlan(); setSaveMsg("Plan saved ✓ — shopping list is on the Shop tab."); }
@@ -155,10 +178,24 @@ export default function MealPlan() {
         {discoverOpen && (
           <div className="discover-panel">
             <div className="discover-head">
-              <span>Flyers found online — pick one to load its prices:</span>
+              <span>Fetch new flyers — choose stores, then search:</span>
               <button className="icon" title="close" onClick={() => setDiscoverOpen(false)}>✕</button>
             </div>
+            <div className="store-picker">
+              {sources.map((st) => (
+                <label key={st.store_id} className="store-check">
+                  <input type="checkbox" checked={storeChecked(st.store_id)}
+                    onChange={() => toggleStore(st.store_id)} />
+                  {st.store_name}
+                  {st.kind !== "ipaper" && <span className="muted small"> · manual</span>}
+                </label>
+              ))}
+              <button className="btn small dark" disabled={discovering} onClick={runDiscover}>
+                {discovering ? "Searching…" : "Search selected"}</button>
+            </div>
             {discovering && <div className="muted small">Searching store sites…</div>}
+            {!discovering && discovered.length > 0 &&
+              <div className="muted small" style={{ marginTop: 6 }}>Pick a flyer to load its prices:</div>}
             {!discovering && discovered.map((st) => (
               <div className="discover-store" key={st.store_id}>
                 <div className="ds-name">{st.store_name}
@@ -268,7 +305,9 @@ export default function MealPlan() {
         {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or tap a slot then a recipe
           (drag works on desktop). Optimises for cost, Portugal seasonality, ease, your pantry, and favourites.</p>}
 
-        {s.plan.length > 0 && DAYS.map((d, i) => {
+        {s.plan.length > 0 && DAYS.slice(0,
+          Math.max(s.settings.plan_days, ...s.plan.map((p) => p.day_of_week))
+        ).map((d, i) => {
           const day = i + 1;
           return (
             <div className="day" key={day}>
