@@ -78,15 +78,25 @@ Exactly ${days} recipes. Each recipe's main ingredients should be mostly from th
 
   const model = "gemini-3.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: PROMPT }] }],
-      generationConfig: { temperature: 0.6, response_mime_type: "application/json" },
-    }),
+  const reqBody = JSON.stringify({
+    contents: [{ role: "user", parts: [{ text: PROMPT }] }],
+    generationConfig: { temperature: 0.6, response_mime_type: "application/json" },
   });
-  if (!res.ok) return json({ error: "gemini failed", detail: await res.text() }, 502);
+  // The model is occasionally overloaded (503/429). Retry a few times with backoff
+  // before giving up, and return a friendly message rather than a raw upstream error.
+  let res: Response | null = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    res = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: reqBody });
+    if (res.ok || (res.status !== 503 && res.status !== 429)) break;
+    await new Promise((r) => setTimeout(r, 700 * (attempt + 1)));
+  }
+  if (!res || !res.ok) {
+    const busy = res?.status === 503 || res?.status === 429;
+    return json({
+      error: busy ? "The recipe model is busy right now — give it a few seconds and try again." : "Menu generation failed.",
+      detail: res ? await res.text() : "no response",
+    }, 502);
+  }
   const data = await res.json<any>();
   let parsed: any;
   try {
