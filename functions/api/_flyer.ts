@@ -18,6 +18,7 @@ export interface ParsedFlyer {
   valid_to?: string | null;
   summary?: string | null;
   items: FlyerItem[];
+  page_count?: number;
 }
 
 export const storeIdOf = (name: string) =>
@@ -28,9 +29,12 @@ export const storeIdOf = (name: string) =>
 // the whole catalogue don't pollute price comparison. Structured iPaper feeds
 // give Portuguese names; Gemini gives English.
 export type FoodCat = "meat" | "fish" | "dairy" | "produce" | "pantry";
-// Appliances/homeware that share keywords with food (an air fryer matches "oil",
-// a coffee machine matches "coffee"). Block these before food matching.
-const NONFOOD = /maquina|fritadeira|torradeira|liquidificad|batedeira|robot|microond|aspirador|frigorific|congelador\b|\barca\b|fogao|forno\b|grelhador|frigideira|\bpanela|tacho|faqueiro|talher|chavena|caneca|hoffen|\btv\b|telemovel|portatil|auricular|colchao|almofada|toalha|edredao|panela/i;
+// Non-grocery that shares keywords with food. Two families:
+//  - appliances/homeware (an air fryer matches "oil", a coffee machine "coffee")
+//  - personal care / household (Portuguese "pasta de dentes" = toothpaste matches
+//    "pasta"; cleaning/beauty/pet items pad the full-catalogue structured feeds)
+// Block these before food matching so they never reach price-comparison or picks.
+const NONFOOD = /maquina|fritadeira|torradeira|liquidificad|batedeira|robot|microond|aspirador|frigorific|congelador\b|\barca\b|fogao|forno\b|grelhador|frigideira|\bpanela|tacho|faqueiro|talher|chavena|caneca|hoffen|\btv\b|telemovel|portatil|auricular|colchao|almofada|toalha|edredao|panela|parodontax|sensodyne|colgate|oral-?b|dentifric|toothpaste|\bdentes?\b|mouthwash|shampoo|champ[oô]|condicionador|gel de banho|sabonete|\bsoap\b|desodor|deodorant|\brazor|gill?ett?e|barbear|aftershave|maquilha|makeup|verniz|perfume|col[oó]nia|fralda|diaper|penso higi|t[aâ]mpon|papel higi|len[cç]o|detergent|deterg|lix[ií]via|amaciador|limpa-|cleaner|sonasol|ra[cç][aã]o\b/i;
 export function categorize(name: string): FoodCat | null {
   if (NONFOOD.test(name)) return null;
   const n = name.toLowerCase();

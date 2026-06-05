@@ -145,12 +145,31 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .flyers-strip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
 .flyers-head { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
 .flyer-cards { display: flex; gap: 12px; flex-wrap: wrap; }
-.flyer-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 240px; }
+.flyer-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 260px; }
 .flyer-card.expired { opacity: .55; }
 .flyer-store { font-weight: 600; }
 .flyer-exp { color: var(--muted); font-weight: 400; font-size: 12px; }
 .flyer-dates { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
-.flyer-sum { font-size: 13px; margin-bottom: 8px; }
+.fa-theme { display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 6px;
+  padding: 2px 8px; margin-bottom: 6px; }
+.flyer-sum { font-size: 13px; margin-bottom: 8px; color: var(--muted); }
+.flyer-analysis { margin-bottom: 10px; }
+.fa-top { background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 8px; padding: 7px 9px; margin-bottom: 9px; }
+.fa-top-label { font-size: 11px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 2px; }
+.fa-top-item .fa-name { font-weight: 600; }
+.fa-group { margin-bottom: 8px; }
+.fa-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted); margin-bottom: 3px; }
+.fa-item { display: flex; justify-content: space-between; gap: 8px; font-size: 13px;
+  line-height: 1.5; }
+.fa-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fa-meta { white-space: nowrap; color: var(--muted); }
+.fa-disc { color: var(--accent); font-weight: 600; }
+.fa-rec { font-size: 11px; }
 .flyer-actions { display: flex; align-items: center; justify-content: space-between; }
 .btn.small { padding: 5px 10px; font-size: 13px; }
 .to-pantry { font-size: 14px; }

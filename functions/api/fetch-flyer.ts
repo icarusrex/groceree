@@ -1,6 +1,8 @@
 import { json, uid, type Env } from "./_helpers.ts";
 import { geminiParse, persistFlyer, summariseFlyer, type ParsedFlyer } from "./_flyer.ts";
 import { extractIpaper, looksLikeIpaper } from "./_ipaper.ts";
+import { extractImageFlyer } from "./_imageflyer.ts";
+import { extractLeafletFlyer } from "./_leaflet.ts";
 import { sourceById } from "./_sources.ts";
 
 // POST /api/fetch-flyer { store_id?, store_name?, flyer_url, valid_from?, valid_to? }
@@ -27,6 +29,43 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const src = body.store_id ? sourceById(body.store_id) : undefined;
   const storeName = body.store_name || src?.name || "unknown";
   const user = uid(ctx);
+
+  // Image-only iPaper viewers (Intermarché, Aldi): render → page images → Gemini
+  // vision. No structured feed, so we OCR the pages.
+  if (src?.kind === "ipaper-image") {
+    if (!ctx.env.FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL_API_KEY not set" }, 500);
+    if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
+    let parsed: ParsedFlyer;
+    try {
+      parsed = await extractImageFlyer(ctx.env.FIRECRAWL_API_KEY, ctx.env.GEMINI_API_KEY, flyerUrl, storeName);
+    } catch (e: any) {
+      return json({ error: "image flyer parse failed", detail: e.message }, 502);
+    }
+    if (body.valid_from) parsed.valid_from = body.valid_from;
+    if (body.valid_to) parsed.valid_to = body.valid_to;
+    if (!(parsed.items || []).length) return json({ error: "No grocery deals found on this flyer" }, 502);
+    const deals = await persistFlyer(ctx.env.DB, user, parsed);
+    return json({ method: "vision", store: parsed.store, item_count: parsed.items.length,
+                  page_count: parsed.page_count, summary: parsed.summary, deals });
+  }
+
+  // Schwarz leaflet platform (Lidl): read the manifest API for the page-image
+  // list, then OCR with Gemini vision. No Firecrawl needed (manifest is open).
+  if (src?.kind === "leaflet") {
+    if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
+    let parsed: ParsedFlyer;
+    try {
+      parsed = await extractLeafletFlyer(ctx.env.GEMINI_API_KEY, flyerUrl, storeName);
+    } catch (e: any) {
+      return json({ error: "leaflet flyer parse failed", detail: e.message }, 502);
+    }
+    if (body.valid_from) parsed.valid_from = body.valid_from;
+    if (body.valid_to) parsed.valid_to = body.valid_to;
+    if (!(parsed.items || []).length) return json({ error: "No grocery deals found on this flyer" }, 502);
+    const deals = await persistFlyer(ctx.env.DB, user, parsed);
+    return json({ method: "vision", store: parsed.store, item_count: parsed.items.length,
+                  page_count: parsed.page_count, summary: parsed.summary, deals });
+  }
 
   // Decide the extraction strategy.
   const res = await fetch(flyerUrl, { headers: UA });

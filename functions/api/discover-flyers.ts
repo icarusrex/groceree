@@ -1,4 +1,5 @@
 import { json, type Env } from "./_helpers.ts";
+import { firecrawl } from "./_firecrawl.ts";
 import { SOURCES, sourceById, type StoreSource } from "./_sources.ts";
 
 // POST /api/discover-flyers  { store_id? }
@@ -13,16 +14,6 @@ interface Found {
   landing: string;
   flyers: { url: string; title: string }[];
   note?: string;
-}
-
-async function firecrawl(key: string, url: string) {
-  const res = await fetch("https://api.firecrawl.dev/v1/scrape", {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({ url, formats: ["markdown", "links"], onlyMainContent: false }),
-  });
-  if (!res.ok) throw new Error(`firecrawl ${res.status}: ${await res.text()}`);
-  return res.json<any>();
 }
 
 // Title a flyer viewer URL from its last meaningful path segment.
@@ -68,26 +59,116 @@ function pickWeekly(src: StoreSource, links: string[]): { url: string; title: st
   return chosen.map((w) => ({ url: byWeek.get(w)!, title: weekLabel(w, cur) }));
 }
 
+// Leaflet (Schwarz/Lidl) slugs carry a DD-MM start date, not an ISO week number.
+// Rank by that date: keep the most recent flyer whose start date is on/before
+// today (the active one), plus next week's on Sundays. Falls back to whatever's
+// newest if nothing has started yet.
+function pickLeaflet(src: StoreSource, links: string[]): { url: string; title: string }[] {
+  const weekly = links.filter((l) => src.weeklyRe!.test(l) && !(src.excludeRe && src.excludeRe.test(l)));
+  const now = new Date();
+  const yr = now.getFullYear();
+  // Parse DD-MM → a Date this year (roll to next year if it's far in the past,
+  // so a January flyer ranks ahead of a December one near the year boundary).
+  const dateOf = (l: string): number => {
+    const m = l.match(src.weekRe!);
+    if (!m) return NaN;
+    const [dd, mm] = m[1].split("-").map(Number);
+    let t = Date.UTC(yr, mm - 1, dd);
+    if (t < now.getTime() - 300 * 86400000) t = Date.UTC(yr + 1, mm - 1, dd);
+    return t;
+  };
+  // First (best) url per distinct start date.
+  const byDate = new Map<number, string>();
+  for (const l of weekly) {
+    const t = dateOf(l);
+    if (!Number.isFinite(t)) continue;
+    if (!byDate.has(t)) byDate.set(t, l);
+  }
+  if (!byDate.size) return [];
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const dates = [...byDate.keys()].sort((a, b) => a - b);
+  const started = dates.filter((t) => t <= today);
+  const future = dates.filter((t) => t > today);
+  const chosen: number[] = [];
+  if (started.length) chosen.push(started[started.length - 1]); // active flyer
+  else if (future.length) chosen.push(future[0]);               // nothing live yet
+  if (now.getDay() === 0 && future.length) chosen.push(future[0]); // Sunday: peek next
+  const seen = new Set<number>();
+  return chosen.filter((t) => !seen.has(t) && seen.add(t)).map((t) => {
+    const label = t <= today ? "This week" : "Next week";
+    return { url: byDate.get(t)!, title: label };
+  });
+}
+
 async function discover(src: StoreSource, key: string): Promise<Found> {
   const base: Found = {
     store_id: src.id, store_name: src.name, kind: src.kind,
     landing: src.landing, flyers: [],
   };
-  if (src.kind !== "ipaper" || !src.flyerHost) {
-    return { ...base, note: "Open the store page and upload the flyer (auto-parse not wired for this store yet)." };
+
+  // Image-only iPaper viewers (Intermarché, Aldi) — discovery only locates the
+  // viewer URL(s); fetch-flyer renders + OCRs the page images.
+  if (src.kind === "ipaper-image") {
+    // Fixed viewer URLs (Aldi: this-week / next-week pages are static).
+    if (src.staticViewers) {
+      const sunday = new Date().getDay() === 0;
+      base.flyers = src.staticViewers
+        .filter((v) => !v.sundayOnly || sunday)
+        .map((v) => ({ url: v.url, title: v.title }));
+      return base;
+    }
+    // Render a catalogue page and rank the week-dated viewer links.
+    if (src.viewerLanding && src.viewerRe) {
+      try {
+        const data = await firecrawl(key, src.viewerLanding, ["links", "rawHtml"], 6000);
+        const links: string[] = data?.data?.links || [];
+        const html: string = (data?.data?.rawHtml || "").replace(/\\u0026/g, "&").replace(/\\\//g, "/");
+        const fromHtml = html.match(new RegExp(src.viewerRe.source, "gi")) || [];
+        const all = [...new Set([...links, ...fromHtml])].filter((l) => src.viewerRe!.test(l));
+        base.flyers = pickWeekly(src, all);
+        if (!base.flyers.length) base.note = "No current grocery flyer found on the catalogue page.";
+      } catch (e: any) {
+        base.note = `Discovery failed: ${e.message}`;
+      }
+      return base;
+    }
+    return { ...base, note: "Image flyer source misconfigured." };
   }
-  try {
-    const data = await firecrawl(key, src.landing);
-    const links: string[] = data?.data?.links || [];
-    const hits = [...new Set(links.filter((l) => l.includes(src.flyerHost!)))]
-      // drop obvious non-flyer asset links
-      .filter((l) => !/\.(png|jpe?g|css|js|ico|svg|gif|webp)(\?|$)/i.test(l));
-    base.flyers = pickWeekly(src, hits);
-    if (!base.flyers.length) base.note = "No current grocery flyer found on the landing page.";
-  } catch (e: any) {
-    base.note = `Discovery failed: ${e.message}`;
+
+  // Schwarz leaflet platform (Lidl) — render the folhetos hub, rank week-dated
+  // viewer slugs by their start date. fetch-flyer reads the manifest + OCRs.
+  if (src.kind === "leaflet" && src.viewerLanding && src.viewerRe) {
+    try {
+      const data = await firecrawl(key, src.viewerLanding, ["links", "rawHtml"], 6000);
+      const links: string[] = data?.data?.links || [];
+      const html: string = (data?.data?.rawHtml || "").replace(/\\u0026/g, "&").replace(/\\\//g, "/");
+      const fromHtml = html.match(new RegExp(src.viewerRe.source, "gi")) || [];
+      const all = [...new Set([...links, ...fromHtml])].filter((l) => src.viewerRe!.test(l));
+      base.flyers = pickLeaflet(src, all);
+      if (!base.flyers.length) base.note = "No current grocery flyer found on the folhetos page.";
+    } catch (e: any) {
+      base.note = `Discovery failed: ${e.message}`;
+    }
+    return base;
   }
-  return base;
+
+  // Structured iPaper viewers (Pingo Doce, Continente) — list weekly flyers.
+  if (src.kind === "ipaper" && src.flyerHost) {
+    try {
+      const data = await firecrawl(key, src.landing);
+      const links: string[] = data?.data?.links || [];
+      const hits = [...new Set(links.filter((l) => l.includes(src.flyerHost!)))]
+        // drop obvious non-flyer asset links
+        .filter((l) => !/\.(png|jpe?g|css|js|ico|svg|gif|webp)(\?|$)/i.test(l));
+      base.flyers = pickWeekly(src, hits);
+      if (!base.flyers.length) base.note = "No current grocery flyer found on the landing page.";
+    } catch (e: any) {
+      base.note = `Discovery failed: ${e.message}`;
+    }
+    return base;
+  }
+
+  return { ...base, note: "Open the store page and upload the flyer (auto-parse not wired for this store yet)." };
 }
 
 // GET — the source registry (for store-selection checkboxes; no scraping).

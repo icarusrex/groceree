@@ -7,6 +7,55 @@ import type { Slot, Recipe } from "../engine/types.ts";
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const PROTEINS = ["chicken", "beef", "pork", "fish", "none"];
 
+type DealPick = { name: string; unit: string | null; price: number | null;
+  normal_price: number | null; discount: number | null; saving: number | null; recipes?: number };
+type Analysis = { theme: string | null; top_pick: DealPick | null; for_you: DealPick[];
+  stock_up: DealPick[]; cook_fresh: DealPick[] };
+
+const eur = (n: number | null) => (n == null ? "" : "€" + n.toFixed(2));
+const pct = (d: number | null) => (d ? `-${Math.round(d * 100)}%` : "");
+
+// Compact, personalised deal breakdown inside each flyer card. Leads with the
+// single best pick (cheapest food you're likely to eat), then supporting lenses.
+function FlyerAnalysis({ a }: { a: Analysis }) {
+  const Row = ({ d, showRecipes }: { d: DealPick; showRecipes?: boolean }) => (
+    <div className="fa-item">
+      <span className="fa-name">{d.name}</span>
+      <span className="fa-meta">
+        {eur(d.price)} {d.discount ? <b className="fa-disc">{pct(d.discount)}</b> : null}
+        {showRecipes && d.recipes ? <span className="fa-rec"> · in {d.recipes} recipes</span> : null}
+      </span>
+    </div>
+  );
+  const Group = ({ label, items, showRecipes }:
+    { label: string; items: DealPick[]; showRecipes?: boolean }) =>
+    items.length ? (
+      <div className="fa-group">
+        <div className="fa-label">{label}</div>
+        {items.slice(0, 3).map((d, i) => <Row key={i} d={d} showRecipes={showRecipes} />)}
+      </div>
+    ) : null;
+  return (
+    <div className="flyer-analysis">
+      {a.top_pick && (
+        <div className="fa-top">
+          <div className="fa-top-label">★ Top pick for you</div>
+          <div className="fa-item fa-top-item">
+            <span className="fa-name">{a.top_pick.name}</span>
+            <span className="fa-meta">
+              {eur(a.top_pick.price)} {a.top_pick.discount ? <b className="fa-disc">{pct(a.top_pick.discount)}</b> : null}
+            </span>
+          </div>
+          {a.top_pick.recipes ? <div className="fa-rec">in {a.top_pick.recipes} of your recipes</div> : null}
+        </div>
+      )}
+      <Group label="Stock up" items={a.stock_up} />
+      <Group label="Cook fresh now" items={a.cook_fresh} />
+      <Group label="More you'll use" items={a.for_you} showRecipes />
+    </div>
+  );
+}
+
 export default function MealPlan() {
   const s = useStore();
   const [search, setSearch] = useState("");
@@ -292,7 +341,9 @@ export default function MealPlan() {
                     {status === "upcoming" && <span className="flyer-soon"> · starts {f.valid_from}</span>}</div>
                   <div className="flyer-dates">
                     {f.valid_from || "?"} → {f.valid_to || "?"} · {f.item_count} items</div>
+                  {f.analysis?.theme && <div className="fa-theme">{f.analysis.theme}</div>}
                   {f.summary && <div className="flyer-sum">{f.summary}</div>}
+                  {f.analysis && <FlyerAnalysis a={f.analysis} />}
                   <div className="flyer-actions">
                     <button className="btn small" onClick={() => {
                       s.setDeals(f.deals); s.generate();
