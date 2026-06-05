@@ -51,7 +51,10 @@ function FlyerAnalysis({ a }: { a: Analysis }) {
       )}
       <Group label="Stock up" items={a.stock_up} />
       <Group label="Cook fresh now" items={a.cook_fresh} />
-      <Group label="More you'll use" items={a.for_you} showRecipes />
+      {/* Recipe-relevant fallback only for stores with no discount data, so the
+          card stays useful there without piling extra lists onto discount stores. */}
+      {!a.stock_up.length && !a.cook_fresh.length &&
+        <Group label="Worth buying" items={a.for_you} showRecipes />}
     </div>
   );
 }

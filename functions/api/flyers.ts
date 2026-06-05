@@ -16,6 +16,13 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const anyActive = rows.some((f) => !f.valid_to || f.valid_to >= today);
   // Build the recipe-ingredient index once, only if there's a flyer to analyse.
   const idx: IngredientIndex = anyActive ? await buildIngredientIndex(ctx.env.DB, user) : new Map();
+  // Dietary prefs hard-filter the picks (e.g. dairy-free hides yogurt deals).
+  let diet: string[] = [];
+  if (anyActive) {
+    const st = await ctx.env.DB.prepare("SELECT diet FROM user_settings WHERE user_id=?")
+      .bind(user).first<{ diet: string }>();
+    try { diet = JSON.parse(st?.diet || "[]"); } catch { diet = []; }
+  }
 
   const flyers = await Promise.all(rows.map(async (f) => {
     const expired = f.valid_to && f.valid_to < today;
@@ -25,7 +32,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
         `SELECT item_name, item_name_pt, unit, price, normal_price, discount
            FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
       ).bind(f.store_id, f.valid_from ?? null).all();
-      const deal = analyzeFlyer((pr.results as unknown as DealRow[]) || [], idx);
+      const deal = analyzeFlyer((pr.results as unknown as DealRow[]) || [], idx, diet);
       // Only attach if there's something worth showing.
       if (deal.top_pick || deal.stock_up.length || deal.cook_fresh.length) analysis = deal;
     }

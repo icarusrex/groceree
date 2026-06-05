@@ -40,11 +40,31 @@ const FRESH: FoodCat[] = ["produce", "meat", "fish", "dairy"];
 // Alcohol / soft drinks: categorize() files these under "pantry" (wine, beer) or
 // matches stray tokens ("Dr Pepper" → black pepper recipes), polluting both the
 // stock-up list and recipe matching. They aren't meal ingredients — drop them.
-const BOOZE = /\bwine\b|\bbeer\b|whisk|vodka|\bgin\b|\brum\b|liqueur|licor|spirit|espirituosa|aguardente|brandy|cognac|conhaque|\bport\b|porto\b|moscatel|champagne|espumante|prosecco|sangria|scotch|bourbon|tequila|aperol|aperitiv|vermouth|martini|cerveja|vinho|\bbebida\b|cola\b|dr\.?\s*pepper|tonic|guaran|energ(y|etic)|red bull|monster\b/i;
+const BOOZE = /\bwine\b|\bbeer\b|whisk|vodka|\bgin\b|\brum\b|liqueur|licor|spirit|espirituosa|aguardente|brandy|cognac|conhaque|\bport\b|porto\b|moscatel|champagne|espumante|prosecco|sangria|scotch|bourbon|tequila|aperol|aperitiv|vermouth|martini|cerveja|vinho|v\.?\s?verde|via latina|periquita|\bbebida\b|cola\b|dr\.?\s*pepper|tonic|guaran|energ(y|etic)|red bull|monster\b/i;
 // Snacks / confectionery: not meal ingredients a home cook plans around, and the
 // messy structured-feed names ("Buffalo Chicken Wings Pringles") cause false
 // recipe matches. Exclude from the personalised picks.
 const JUNK = /pringles|doritos|crisps|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr/i;
+// Dietary exclusions. The user's diet prefs (user_settings.diet) are hard
+// filters on the picks: a dairy-free shopper shouldn't see yogurt in their deals.
+// categorize() already tags dairy/meat/fish; gluten has no category so we match
+// the name. Erring toward exclusion is correct here — better to hide a maybe-ok
+// item than to recommend one that breaks the diet.
+const DAIRY = /\bmilk\b|leite|cheese|queijo|yogurt|yoghurt|iogurte|\bbutter\b|manteiga|\bcream\b|\bnata|requeij|flamengo|mozzarell|cheddar|parmes|\bfeta\b|ricotta|halloumi|paneer|\bgouda|\bbrie\b|mascarpone|yopro|\bskyr\b|kefir|chantilly/i;
+// "butter beans" / "peanut butter" / "coconut milk" etc. trip the dairy words but
+// are plant foods — and categorize() also mis-files coconut milk as dairy. Guard
+// against both so dairy-free shoppers don't lose their legumes and plant milks.
+const NOT_DAIRY = /coconut|almond|\boat\b|\bsoy\b|soja|cashew|peanut|\bnut butter|butter ?bean|amendoim|body milk|leite (de )?coco/i;
+const GLUTEN = /\bbread\b|\bp[aã]o\b|\bpasta\b|\bmassa\b|spaghetti|esparguete|noodle|\bflour\b|farinha|cracker|biscuit|bolacha|\bcake\b|\bbolo\b|cereal|cereais|pastry|croissant|\bpizza\b|baguette|\bbun\b|couscous|cuscuz|barley|cevada|\brye\b|centeio|breadcrumb|panko|wheat|trigo|tosta|torrada|\bwrap\b|lasagn|gnocchi|massas/i;
+export type Diet = "gluten_free" | "vegetarian" | "pescatarian" | "dairy_free";
+function violatesDiet(name: string, cat: FoodCat | null, diet: string[]): boolean {
+  if (!diet.length) return false;
+  if (diet.includes("dairy_free") && (cat === "dairy" || DAIRY.test(name)) && !NOT_DAIRY.test(name)) return true;
+  if (diet.includes("gluten_free") && GLUTEN.test(name)) return true;
+  if (diet.includes("vegetarian") && (cat === "meat" || cat === "fish")) return true;
+  if (diet.includes("pescatarian") && cat === "meat") return true;
+  return false;
+}
 // Tokens too generic to mean anything when matching a deal to recipes. Includes
 // product descriptors (extra, original, forte…) that otherwise create phantom
 // matches — e.g. "extra" hits every "extra virgin olive oil" recipe, making an
@@ -121,7 +141,7 @@ const THEME_LABEL: Record<FoodCat, string> = {
   dairy: "Dairy deals this week",
 };
 
-export function analyzeFlyer(rows: DealRow[], idx: IngredientIndex): FlyerAnalysis {
+export function analyzeFlyer(rows: DealRow[], idx: IngredientIndex, diet: string[] = []): FlyerAnalysis {
   type Enriched = DealPick & { cat: FoodCat | null; rank: number; score: number };
   const items: Enriched[] = [];
   for (const r of rows) {
@@ -133,6 +153,8 @@ export function analyzeFlyer(rows: DealRow[], idx: IngredientIndex): FlyerAnalys
     const saving = normal && price && normal > price ? round2(normal - price) : null;
     const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name);
     const cat = excluded ? null : categorize(r.item_name);
+    // Hard dietary filter — diet-violating items never enter any list.
+    if (violatesDiet(r.item_name, cat, diet)) continue;
     // Only recipe-match real food. Non-food / snacks shouldn't borrow a stray
     // ingredient token ("Buffalo Chicken" crisps ≠ chicken).
     const hit = cat ? recipeHits(r.item_name, idx) : { count: 0, weight: 0 };
