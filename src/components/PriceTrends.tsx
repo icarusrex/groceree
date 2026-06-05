@@ -202,20 +202,28 @@ function CompareBars({ compare, stores, colors, hov, setHov }:
         {cats.map((cat: string, ci: number) => {
           const gx = PAD + ci * (groupW + GAP);
           const present = stores.filter((s) => byCat[cat]?.[s] != null);
+          // Label only the cheapest bar per category (the "who's cheaper" point) —
+          // five overlapping price labels per group were unreadable. The rest are
+          // one hover away.
+          const cheapest = present.reduce((a, b) => (byCat[cat][b] < byCat[cat][a] ? b : a), present[0]);
           return (
             <g key={cat}>
               {present.map((s, si) => {
                 const bx = gx + (groupW - present.length * (barW + 4)) / 2 + si * (barW + 4);
                 const v = byCat[cat][s];
                 const dim = hov && hov !== s;
+                const isMin = s === cheapest && present.length > 1;
                 return (
                   <g key={s} opacity={dim ? 0.22 : 1} style={{ transition: "opacity .12s" }}
                     onMouseMove={(e) => { setHov(s); show(e, <><b>{s}</b> · {cat}<br />{eur(v)}</>); }}>
                     <rect x={bx} y={y(v)} width={barW} height={H - PAD - y(v)} rx={3}
                       fill={colors[s]} stroke={hov === s ? "#222" : "none"} strokeWidth={hov === s ? 1.5 : 0}
                       style={{ cursor: "pointer" }} />
-                    <text x={bx + barW / 2} y={y(v) - 4} textAnchor="middle" fontSize="9" fill="#555">
-                      {eur(v)}</text>
+                    {(isMin || hov === s) && (
+                      <text x={bx + barW / 2} y={y(v) - 5} textAnchor="middle" fontSize="10"
+                        fontWeight={isMin ? 700 : 400} fill={isMin ? "#0f6e56" : "#555"}>
+                        {eur(v)}</text>
+                    )}
                   </g>
                 );
               })}
