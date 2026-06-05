@@ -47,6 +47,11 @@ const BOOZE = /\bwine\b|\bbeer\b|whisk|vodka|\bgin\b|\brum\b|liqueur|licor|spiri
 // Snacks, confectionery and — per the user — plain sugar/sweeteners: things they
 // don't plan meals around, so they shouldn't sway the picks or the best-shop call.
 const JUNK = /pringles|doritos|crisps|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr|\bsugar\b|a[cç][uú]car|ado[cç]ante|sweetener|stevia/i;
+// Background staples you always have and don't shop deals for — olive oil above
+// all (it's in ~150 recipes, so it would otherwise dominate everything, yet a
+// discount on it is meaningless). Exclude oils, salt, vinegar, flour, water from
+// the picks and the best-shop call entirely.
+const STAPLE = /\bolive oil\b|\bazeite\b|\boil\b|\b[oó]leo\b|\bsalt\b|\bsal\b|\bvinegar\b|\bvinagre\b|\bflour\b|\bfarinha\b|\bwater\b|\b[aá]gua\b/i;
 // Dietary exclusions. The user's diet prefs (user_settings.diet) are hard
 // filters on the picks: a dairy-free shopper shouldn't see yogurt in their deals.
 // categorize() already tags dairy/meat/fish; gluten has no category so we match
@@ -134,8 +139,12 @@ function recipeHits(name: string, idx: IngredientIndex): TokenStat {
       if (tok.length <= 3 || STOP.has(tok)) return;
       const s = idx.get(tok);
       if (!s) return;
-      const eff = s.weight / (1 + 0.5 * i); // decay by position
-      if (eff > bestEff) { bestEff = eff; best = s; }
+      // IDF-style damping: a token in many recipes (onion, garlic) carries little
+      // personal signal, so its weight saturates instead of dominating. Rare,
+      // distinctive ingredients keep their full weight. Report the damped weight.
+      const damped = s.weight / (1 + s.count / 25);
+      const eff = damped / (1 + 0.5 * i); // then decay by position
+      if (eff > bestEff) { bestEff = eff; best = { count: s.count, weight: damped }; }
     });
     return { best, eff: bestEff };
   };
@@ -169,7 +178,7 @@ function enrichItem(r: DealRow, idx: IngredientIndex, diet: string[]): Enriched 
   let disc = r.discount ?? null;
   if ((disc == null || disc <= 0) && normal && price && normal > price) disc = (normal - price) / normal;
   const saving = normal && price && normal > price ? round2(normal - price) : null;
-  const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name);
+  const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name) || STAPLE.test(r.item_name);
   const cat = excluded ? null : categorize(r.item_name);
   if (violatesDiet(r.item_name, cat, diet)) return null;
   // Only recipe-match real food. Non-food / snacks shouldn't borrow a stray
@@ -229,12 +238,17 @@ export function crossStoreDeals(
   return out;
 }
 
-export interface BestStore { store: string; reason: string[]; deal_count: number; }
+export interface BestStore { store: string; reason: string; deal_count: number; }
 
-// The single best shop this week: the store whose discounted, diet-friendly,
-// recipe-relevant deals add up to the most value (sum of its strongest few). The
-// reason is that store's top deal names, so the call is always grounded in real
-// offers rather than a vibe. Null until at least one store has 2+ qualifying deals.
+// The single best shop this week. Flyers only expose PROMO prices, not regular
+// shelf prices, so a true "cheapest on average" comparison isn't possible — a
+// store that merely promotes cheap items would look cheap regardless. So we rank
+// on the VALUE of this week's deals on food you actually cook: discounted,
+// diet-friendly items with olive oil / dairy / staples / sugar / alcohol already
+// excluded, each scored by cheapness × discount × (damped) recipe relevance. The
+// store whose strongest handful of such deals adds up to the most wins. Where the
+// same product appears at 2+ stores, the cheaper one naturally scores higher, so
+// real head-to-head price differences do feed in. Null until a store has 2+ deals.
 export function bestStore(
   perStore: { store: string; rows: DealRow[] }[],
   idx: IngredientIndex, diet: string[] = [],
@@ -254,10 +268,11 @@ export function bestStore(
     if (top.length >= 2 && (!win || score > win.score)) win = { store, score, items: top };
   }
   if (!win) return null;
+  const names = win.items.slice(0, 3).map((i) => i.name);
   return {
     store: win.store,
     deal_count: byStore[win.store].length,
-    reason: win.items.slice(0, 3).map((i) => i.name),
+    reason: `most worthwhile deals on food you cook — ${names.join(", ")}`,
   };
 }
 

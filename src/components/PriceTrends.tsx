@@ -1,5 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api.ts";
+import { useStore } from "../store.tsx";
+
+// Categories the diet rules out, so the price comparison reflects what you'd buy
+// (a dairy-free shopper shouldn't be told a store wins on cheap dairy).
+function blockedCats(diet: string[]): Set<string> {
+  const b = new Set<string>();
+  if (diet.includes("dairy_free")) b.add("dairy");
+  if (diet.includes("vegetarian")) { b.add("meat"); b.add("fish"); }
+  if (diet.includes("pescatarian")) b.add("meat");
+  return b;
+}
 
 // Distinct qualitative palette (colourblind-friendly, Tableau-ish). Brand colours
 // are unusable here: Lidl, Continente and Intermarché are all near-identical red,
@@ -32,12 +43,25 @@ function useTip() {
 }
 
 export default function PriceTrends() {
-  const [data, setData] = useState<any>(null);
+  const store = useStore();
+  const [raw, setRaw] = useState<any>(null);
   const [tab, setTab] = useState<"compare" | "trend">("compare");
   // Which store is spotlighted (hovered in a chart or legend); dims the others.
   const [hov, setHov] = useState<string | null>(null);
 
-  useEffect(() => { api.prices().then(setData).catch(() => setData({ count: 0, points: [], items: [] })); }, []);
+  useEffect(() => { api.prices().then(setRaw).catch(() => setRaw({ count: 0, points: [], items: [] })); }, []);
+
+  // Drop diet-excluded categories from the comparison (e.g. dairy when dairy-free).
+  const data = useMemo(() => {
+    if (!raw) return raw;
+    const blocked = blockedCats(store.settings.diet || []);
+    if (!blocked.size) return raw;
+    return {
+      ...raw,
+      points: (raw.points || []).filter((p: any) => !blocked.has(p.category)),
+      items: (raw.items || []).filter((it: any) => !blocked.has(it.cat)),
+    };
+  }, [raw, store.settings.diet]);
 
   const colors = useMemo(() => buildColors((data?.stores || []) as string[]), [data]);
 
