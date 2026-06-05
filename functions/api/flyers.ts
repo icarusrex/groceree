@@ -33,8 +33,10 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
            FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
       ).bind(f.store_id, f.valid_from ?? null).all();
       const deal = analyzeFlyer((pr.results as unknown as DealRow[]) || [], idx, diet);
-      // Only attach if there's something worth showing.
-      if (deal.top_pick || deal.stock_up.length || deal.cook_fresh.length) analysis = deal;
+      // Only surface the analysis when the store actually has discounts. Stores
+      // with no offers (e.g. full-catalogue feeds) are tracked for the cross-store
+      // comparison but shouldn't pad the UI — the card just notes prices tracked.
+      if (deal.stock_up.length || deal.cook_fresh.length) analysis = deal;
     }
     return {
       id: f.id, store_name: f.store_name, valid_from: f.valid_from, valid_to: f.valid_to,

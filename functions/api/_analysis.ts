@@ -141,50 +141,85 @@ const THEME_LABEL: Record<FoodCat, string> = {
   dairy: "Dairy deals this week",
 };
 
+type Enriched = DealPick & { cat: FoodCat | null; rank: number; score: number };
+
+// Score one price row for a user: derive discount, categorise, apply the diet
+// filter, match it to recipes, and compute the personalised value score. Returns
+// null for diet-violating items so they never enter any list. Shared by the
+// per-flyer card (analyzeFlyer) and the cross-store best-deals ranker.
+function enrichItem(r: DealRow, idx: IngredientIndex, diet: string[]): Enriched | null {
+  const price = r.price;
+  const normal = r.normal_price ?? null;
+  // Trust the stored discount; else derive it from the price pair.
+  let disc = r.discount ?? null;
+  if ((disc == null || disc <= 0) && normal && price && normal > price) disc = (normal - price) / normal;
+  const saving = normal && price && normal > price ? round2(normal - price) : null;
+  const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name);
+  const cat = excluded ? null : categorize(r.item_name);
+  if (violatesDiet(r.item_name, cat, diet)) return null;
+  // Only recipe-match real food. Non-food / snacks shouldn't borrow a stray
+  // ingredient token ("Buffalo Chicken" crisps ≠ chicken).
+  const hit = cat ? recipeHits(r.item_name, idx) : { count: 0, weight: 0 };
+  // Personalised value score, designed to work with OR without discount data:
+  //   - rank      : how likely you are to eat it (recipe ingredient weight)
+  //   - discount  : on-sale items rank higher where we know the discount
+  //   - 1/√price  : pulls the *cheapest* relevant items up
+  const p = Math.max(price ?? 99, 0.3);
+  // Recipe weight where we have a match; else a cheapness baseline for any real
+  // food (so Portuguese structured feeds still surface the cheapest staple).
+  const base = hit.weight > 0 ? hit.weight : (cat ? 1 : 0);
+  const score = base > 0 ? base * (0.25 + (disc ?? 0)) / Math.sqrt(p) : 0;
+  return {
+    name: r.item_name, unit: r.unit ?? null, price, normal_price: normal,
+    discount: disc != null ? round2(disc) : null, saving,
+    recipes: hit.count || undefined, cat, rank: hit.weight, score,
+  };
+}
+
+const strip = (e: Enriched): DealPick => ({
+  name: e.name, unit: e.unit, price: e.price, normal_price: e.normal_price,
+  discount: e.discount, saving: e.saving, recipes: e.recipes,
+});
+
+export interface StoreDeal extends DealPick { store: string; }
+
+// Cross-store best deals: the most compelling DISCOUNTED, diet-friendly, recipe-
+// relevant items across every active flyer, each tagged with its store. This is
+// the "where the savings are this week" overview — only real offers qualify
+// (discount ≥ 15%), so stores with no discounts simply don't contribute.
+export function crossStoreDeals(
+  perStore: { store: string; rows: DealRow[] }[],
+  idx: IngredientIndex, diet: string[] = [], limit = 8,
+): StoreDeal[] {
+  const all: (StoreDeal & { score: number })[] = [];
+  for (const { store, rows } of perStore) {
+    for (const r of rows) {
+      const e = enrichItem(r, idx, diet);
+      if (!e || !e.cat || (e.discount ?? 0) < 0.15) continue; // real offers only
+      all.push({ store, score: e.score, ...strip(e) });
+    }
+  }
+  all.sort((a, b) => b.score - a.score);
+  // Light dedupe so the same product from one store can't fill the list twice.
+  const seen = new Set<string>();
+  const out: StoreDeal[] = [];
+  for (const d of all) {
+    const key = `${d.store}|${d.name.toLowerCase()}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const { score, ...rest } = d;
+    out.push(rest);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 export function analyzeFlyer(rows: DealRow[], idx: IngredientIndex, diet: string[] = []): FlyerAnalysis {
-  type Enriched = DealPick & { cat: FoodCat | null; rank: number; score: number };
   const items: Enriched[] = [];
   for (const r of rows) {
-    const price = r.price;
-    const normal = r.normal_price ?? null;
-    // Trust the stored discount; else derive it from the price pair.
-    let disc = r.discount ?? null;
-    if ((disc == null || disc <= 0) && normal && price && normal > price) disc = (normal - price) / normal;
-    const saving = normal && price && normal > price ? round2(normal - price) : null;
-    const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name);
-    const cat = excluded ? null : categorize(r.item_name);
-    // Hard dietary filter — diet-violating items never enter any list.
-    if (violatesDiet(r.item_name, cat, diet)) continue;
-    // Only recipe-match real food. Non-food / snacks shouldn't borrow a stray
-    // ingredient token ("Buffalo Chicken" crisps ≠ chicken).
-    const hit = cat ? recipeHits(r.item_name, idx) : { count: 0, weight: 0 };
-    // Personalised value score, designed to work with OR without discount data:
-    //   - rank      : how likely you are to eat it (recipe ingredient weight)
-    //   - discount  : on-sale items rank higher where we know the discount
-    //   - 1/√price  : pulls the *cheapest* relevant items up (your "cheapest" ask)
-    // Structured feeds have no discount, so there the score is rank × cheapness.
-    const p = Math.max(price ?? 99, 0.3);
-    // Recipe weight where we have a match; else a cheapness baseline for any real
-    // food. The baseline matters on Portuguese structured feeds (Continente/Pingo)
-    // whose names don't overlap the English recipe index — there the cheapest
-    // categorised staple should still surface, just ranked below true matches.
-    const base = hit.weight > 0 ? hit.weight : (cat ? 1 : 0);
-    const score = base > 0 ? base * (0.25 + (disc ?? 0)) / Math.sqrt(p) : 0;
-    items.push({
-      name: r.item_name,
-      unit: r.unit ?? null,
-      price, normal_price: normal,
-      discount: disc != null ? round2(disc) : null,
-      saving,
-      recipes: hit.count || undefined,
-      cat, rank: hit.weight, score,
-    });
+    const e = enrichItem(r, idx, diet);
+    if (e) items.push(e);
   }
-
-  const strip = (e: Enriched): DealPick => ({
-    name: e.name, unit: e.unit, price: e.price, normal_price: e.normal_price,
-    discount: e.discount, saving: e.saving, recipes: e.recipes,
-  });
 
   // Personalised ranking — cheapest food you're most likely to eat. Works for
   // every store, discount data or not. This is the spine of the card.

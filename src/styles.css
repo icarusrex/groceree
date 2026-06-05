@@ -170,6 +170,19 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .fa-meta { white-space: nowrap; color: var(--muted); }
 .fa-disc { color: var(--accent); font-weight: 600; }
 .fa-rec { font-size: 11px; }
+.flyer-track { padding: 4px 0 2px; }
+/* Cross-store best-deals overview — the "where the savings are" lead panel. */
+.best-deals { border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.bd-head { font-size: 12px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 7px; }
+.bd-row { display: grid; grid-template-columns: minmax(64px, auto) 1fr auto;
+  gap: 10px; align-items: baseline; font-size: 13px; line-height: 1.7; }
+.bd-store { font-size: 11px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.bd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bd-meta { white-space: nowrap; color: var(--muted); text-align: right; }
 .flyer-actions { display: flex; align-items: center; justify-content: space-between; }
 .btn.small { padding: 5px 10px; font-size: 13px; }
 .to-pantry { font-size: 14px; }
