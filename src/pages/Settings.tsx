@@ -1,6 +1,5 @@
 import React from "react";
 import { useStore } from "../store.tsx";
-import PriceTrends from "../components/PriceTrends.tsx";
 import type { Diet } from "../engine/types.ts";
 
 const DIETS: Diet[] = ["gluten_free", "vegetarian", "pescatarian", "dairy_free"];
@@ -43,11 +42,6 @@ export default function Settings() {
           <option value="off">Off — cook every meal</option>
         </select>
       </label>
-      <div className="field">
-        <span>Grocery prices</span>
-        <p className="muted small">Which store is cheaper, by category, from the flyers you upload — plus exact matched items and a basket trend over time.</p>
-        <PriceTrends />
-      </div>
     </div>
   );
 }
