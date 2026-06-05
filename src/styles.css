@@ -128,6 +128,23 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .match-table th:not(:first-child), .match-table td:not(:first-child) { text-align: right; }
 .match-table td.cheapest { color: var(--accent, #0f6e56); font-weight: 600; }
 
+/* staple basket */
+.basket { margin-top: 4px; }
+.bk-index { background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 10px; padding: 10px 12px; margin: 8px 0 14px; }
+.bk-index-head { font-size: 12px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 6px; }
+.bk-ix-row { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.bk-ix { font-size: 14px; }
+.bk-scroll { overflow-x: auto; }
+.bk-table { border-collapse: collapse; font-size: 13px; min-width: 520px; }
+.bk-table th, .bk-table td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+.bk-table th.bk-cheap { color: var(--accent); }
+.bk-item { white-space: nowrap; font-weight: 500; }
+.bk-input { width: 70px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; }
+.bk-input:focus { border-color: var(--accent); outline: none; }
+
 /* recipe image + cooking mode */
 .recipe-img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
 .cook-mode { position: fixed; inset: 0; background: #fff; z-index: 100; display: flex; flex-direction: column; }

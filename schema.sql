@@ -147,3 +147,15 @@ CREATE TABLE IF NOT EXISTS flyers (
   created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_flyers_user on flyers(user_id);
+
+-- Staple basket: user-logged REGULAR (non-promo) shelf prices for a fixed set of
+-- staples they actually buy, per store. The only honest cross-store price-level
+-- signal — same item compared like-for-like, immune to flyer product-mix skew.
+CREATE TABLE IF NOT EXISTS basket_prices (
+  user_id    TEXT NOT NULL DEFAULT 'me',
+  item       TEXT NOT NULL,
+  store      TEXT NOT NULL,
+  price      REAL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, item, store)
+);

@@ -5,6 +5,7 @@ import Shop from "./pages/Shop.tsx";
 import Pantry from "./pages/Pantry.tsx";
 import Settings from "./pages/Settings.tsx";
 import PriceTrends from "./components/PriceTrends.tsx";
+import BasketTracker from "./components/BasketTracker.tsx";
 
 type View = "plan" | "shop" | "pantry" | "prices" | "settings";
 
@@ -36,9 +37,15 @@ export default function App() {
           {view === "shop" && <Shop />}
           {view === "pantry" && <Pantry />}
           {view === "prices" && (
-            <div className="plan-wrap">
-              <h1>Price Trends</h1>
+            <div>
+              <h1>Prices</h1>
+              <p className="muted small" style={{ marginTop: 0, marginBottom: 18 }}>
+                Two views: this week's flyer deals (promotional), and your own staple basket
+                (regular prices) for an honest store-vs-store price level.
+              </p>
               <PriceTrends />
+              <div style={{ height: 28 }} />
+              <BasketTracker />
             </div>
           )}
           {view === "settings" && <Settings />}
