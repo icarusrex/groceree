@@ -56,6 +56,12 @@ premium item as a deal if the discount is 40%+.`;
 
 const PROMPT = `You are reading a supermarket flyer (Portugal). Extract the
 discounted grocery items. ${COST_RULE}
+Discounts appear several ways: a crossed-out original price next to a lower one
+("Desconto Direto" / "Poupe X€"), or a flat percentage badge ("-15%", "15% de
+desconto", sometimes "com Cartão"). Whenever a reduction is shown, set
+normal_price to the original price and discount to the fraction off (0..1). If
+only a "% desconto" badge is shown with one price, treat that price as the sale
+price and set discount from the badge (normal_price may be null).
 Return ONLY JSON, no prose, shaped:
 {"store": "<name>", "valid_from": "YYYY-MM-DD|null", "valid_to": "YYYY-MM-DD|null",
  "summary": "<one short sentence: notable cheap items / any theme>",

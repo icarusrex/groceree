@@ -5,6 +5,7 @@
 // Gemini vision (shared logic in _vision.ts).
 import { firecrawl } from "./_firecrawl.ts";
 import { type ParsedFlyer } from "./_flyer.ts";
+import { parsePtDates } from "./_ipaper.ts";
 import { b64, ocrPages, VISION_MAX_PAGES } from "./_vision.ts";
 
 const UA = { "user-agent": "Mozilla/5.0 (compatible; GrocereeBot/1.0)" };
@@ -26,7 +27,7 @@ async function findTemplate(fcKey: string, viewerUrl: string) {
     .replace(/\\u0026/g, "&").replace(/\\\//g, "/").replace(/&amp;/g, "&");
   for (const p of PATTERNS) {
     const m = html.match(p.re);
-    if (m) return { sample: m[0], from: Number(m[1]), swap: p.swap };
+    if (m) return { sample: m[0], from: Number(m[1]), swap: p.swap, html };
   }
   return null;
 }
@@ -51,5 +52,8 @@ export async function extractImageFlyer(
   if (!tpl) throw new Error("no page images found in viewer");
   const media = await fetchPages(tpl);
   if (!media.length) throw new Error("page images did not load");
-  return ocrPages(geminiKey, media, storeName);
+  // Prefer dates read straight from the viewer HTML (reliable) over the model's
+  // OCR of them; ocrPages keeps any seed dates and only fills gaps from Gemini.
+  const { from, to } = parsePtDates(tpl.html, viewerUrl);
+  return ocrPages(geminiKey, media, storeName, from, to);
 }

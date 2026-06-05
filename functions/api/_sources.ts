@@ -25,11 +25,19 @@ export interface StoreSource {
 }
 
 export const SOURCES: StoreSource[] = [
+  // Continente & Pingo Doce: iPaper viewers whose structured feed gives names +
+  // current prices but NO discount, so flat "% desconto" / "Desconto Direto" sales
+  // (old→new price) were invisible. Treat them as image flyers and OCR the pages,
+  // which reads the discounts and the dates ("válidos 2 — 8 junho 2026").
   { id: "pingo-doce", name: "Pingo Doce", landing: "https://www.pingodoce.pt/folhetos/",
-    flyerHost: "folhetos.pingodoce.pt", kind: "ipaper",
+    kind: "ipaper-image",
+    viewerLanding: "https://www.pingodoce.pt/folhetos/",
+    viewerRe: /https:\/\/folhetos\.pingodoce\.pt\/\d{4}\/[^"'\s)\\#]+/i,
     weeklyRe: /poupe-esta-semana/i, excludeRe: /\/(madeira|acores)\//i, weekRe: /\/S(\d+)\b/i },
   { id: "continente", name: "Continente", landing: "https://www.continente.pt/folhetos/",
-    flyerHost: "folhetos.continente.pt", kind: "ipaper",
+    kind: "ipaper-image",
+    viewerLanding: "https://www.continente.pt/folhetos/",
+    viewerRe: /https:\/\/folhetos\.continente\.pt\/\d{4}\/\d{2}\/[^"'\s)\\#]+/i,
     weeklyRe: /semanal-\d+/i, excludeRe: /(semanal-\d+-mad\b|madeira|acores)/i, weekRe: /semanal-(\d+)/i },
   { id: "intermarche", name: "Intermarché", landing: "https://www.intermarche.pt/folhetos",
     kind: "ipaper-image",
