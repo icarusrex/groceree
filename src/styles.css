@@ -108,8 +108,20 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 @keyframes remixslide { 0% { margin-left: -35%; } 100% { margin-left: 100%; } }
 
 /* price trends */
-.legend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); margin-right: 10px; }
+.legend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted);
+  margin-right: 10px; cursor: pointer; transition: opacity .12s; }
+.legend.dim { opacity: 0.35; }
+.legend.on { color: var(--text, #222); font-weight: 600; }
 .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-row { margin-top: 8px; flex-wrap: wrap; }
+/* interactive chart tooltip */
+.chart-wrap { position: relative; }
+.chart-tip { position: absolute; transform: translate(-50%, calc(-100% - 10px));
+  background: #222; color: #fff; font-size: 12px; line-height: 1.35; padding: 5px 8px;
+  border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.chart-tip::after { content: ""; position: absolute; left: 50%; top: 100%;
+  transform: translateX(-50%); border: 5px solid transparent; border-top-color: #222; }
 .trend-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 10px; padding: 18px; }
 .match-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
 .match-table th, .match-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
