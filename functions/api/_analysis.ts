@@ -117,18 +117,31 @@ export async function buildIngredientIndex(
 // rice; "Fiambre da Perna" = ham), while a trailing flavour word ("…Crispy
 // Chicken Maggi" seasoning) is a weak signal. We pick the best *position-decayed*
 // match but report that token's true recipe count (display) and weight (ranking).
+// A trailing "<preposition> <medium>" phrase is the packaging, not the product:
+// "tuna IN OLIVE OIL", "atum EM ÓLEO", "sardines IN BRINE", "cod AO NATURAL",
+// "mushrooms IN TOMATO SAUCE". Olive oil alone is in ~150 recipes, so without this
+// a tuna tin would borrow olive oil's ubiquity. Strip the phrase (and anything
+// after) before matching, so the product noun wins.
+const MEDIUM_TAIL = /\b(?:in|em|no|na|ao|à|au|with|com)\s+(?:extra\s+virgin\s+)?(?:olive\s+oil|sunflower\s+oil|vegetable\s+oil|oil|[oó]leo|azeite|brine|salmoura|spring\s+water|water|[aá]gua|au\s+naturel|natural|syrup|calda|tomato\s+sauce|sauce|molho|vinegar|vinagre|escabeche|jelly|gelatina)\b.*$/i;
+
 function recipeHits(name: string, idx: IngredientIndex): TokenStat {
-  let best: TokenStat = { count: 0, weight: 0 };
-  let bestEff = 0;
-  const toks = name.toLowerCase().match(/[a-z]+/g) || [];
-  toks.forEach((tok, i) => {
-    if (tok.length <= 3 || STOP.has(tok)) return;
-    const s = idx.get(tok);
-    if (!s) return;
-    const eff = s.weight / (1 + 0.5 * i); // decay by position
-    if (eff > bestEff) { bestEff = eff; best = s; }
-  });
-  return best;
+  const pick = (text: string): { best: TokenStat; eff: number } => {
+    let best: TokenStat = { count: 0, weight: 0 };
+    let bestEff = 0;
+    (text.match(/[a-z]+/g) || []).forEach((tok, i) => {
+      if (tok.length <= 3 || STOP.has(tok)) return;
+      const s = idx.get(tok);
+      if (!s) return;
+      const eff = s.weight / (1 + 0.5 * i); // decay by position
+      if (eff > bestEff) { bestEff = eff; best = s; }
+    });
+    return { best, eff: bestEff };
+  };
+  const lower = name.toLowerCase();
+  const head = pick(lower.replace(MEDIUM_TAIL, " "));
+  // Fall back to the full name only if stripping the medium left nothing matchable
+  // (e.g. the medium WAS the product, like a plain "olive oil" bottle).
+  return head.eff > 0 ? head.best : pick(lower).best;
 }
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
