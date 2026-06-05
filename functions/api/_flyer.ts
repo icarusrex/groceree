@@ -18,6 +18,7 @@ export interface ParsedFlyer {
   valid_to?: string | null;
   summary?: string | null;
   items: FlyerItem[];
+  page_count?: number;
 }
 
 export const storeIdOf = (name: string) =>
@@ -28,9 +29,12 @@ export const storeIdOf = (name: string) =>
 // the whole catalogue don't pollute price comparison. Structured iPaper feeds
 // give Portuguese names; Gemini gives English.
 export type FoodCat = "meat" | "fish" | "dairy" | "produce" | "pantry";
-// Appliances/homeware that share keywords with food (an air fryer matches "oil",
-// a coffee machine matches "coffee"). Block these before food matching.
-const NONFOOD = /maquina|fritadeira|torradeira|liquidificad|batedeira|robot|microond|aspirador|frigorific|congelador\b|\barca\b|fogao|forno\b|grelhador|frigideira|\bpanela|tacho|faqueiro|talher|chavena|caneca|hoffen|\btv\b|telemovel|portatil|auricular|colchao|almofada|toalha|edredao|panela/i;
+// Non-grocery that shares keywords with food. Two families:
+//  - appliances/homeware (an air fryer matches "oil", a coffee machine "coffee")
+//  - personal care / household (Portuguese "pasta de dentes" = toothpaste matches
+//    "pasta"; cleaning/beauty/pet items pad the full-catalogue structured feeds)
+// Block these before food matching so they never reach price-comparison or picks.
+const NONFOOD = /maquina|fritadeira|torradeira|liquidificad|batedeira|robot|microond|aspirador|frigorific|congelador\b|\barca\b|fogao|forno\b|grelhador|frigideira|\bpanela|tacho|faqueiro|talher|chavena|caneca|hoffen|\btv\b|telemovel|portatil|auricular|colchao|almofada|toalha|edredao|panela|parodontax|sensodyne|colgate|aquafresh|elmex|oral-?b|dentifric|toothpaste|\bdentes?\b|mouthwash|shampoo|champ[oô]|condicionador|gel de banho|sabonete|\bsoap\b|body milk|nivea|dove\b|creme corpo|hidratante|desodor|deodorant|\brazor|gill?ett?e|barbear|aftershave|maquilha|makeup|verniz|perfume|col[oó]nia|fralda|diaper|penso higi|t[aâ]mpon|papel higi|len[cç]o|detergent|deterg|lix[ií]via|amaciador|limpa-|cleaner|sonasol|ambientador|airwick|air ?wick|glade|febre[sz]e|inseticida|velas?\b|guardanapo|ra[cç][aã]o\b/i;
 export function categorize(name: string): FoodCat | null {
   if (NONFOOD.test(name)) return null;
   const n = name.toLowerCase();
@@ -52,6 +56,12 @@ premium item as a deal if the discount is 40%+.`;
 
 const PROMPT = `You are reading a supermarket flyer (Portugal). Extract the
 discounted grocery items. ${COST_RULE}
+Discounts appear several ways: a crossed-out original price next to a lower one
+("Desconto Direto" / "Poupe X€"), or a flat percentage badge ("-15%", "15% de
+desconto", sometimes "com Cartão"). Whenever a reduction is shown, set
+normal_price to the original price and discount to the fraction off (0..1). If
+only a "% desconto" badge is shown with one price, treat that price as the sale
+price and set discount from the badge (normal_price may be null).
 Return ONLY JSON, no prose, shaped:
 {"store": "<name>", "valid_from": "YYYY-MM-DD|null", "valid_to": "YYYY-MM-DD|null",
  "summary": "<one short sentence: notable cheap items / any theme>",

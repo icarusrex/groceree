@@ -1,15 +1,49 @@
 import { json, uid, type Env } from "./_helpers.ts";
+import { analyzeFlyer, buildIngredientIndex, type DealRow, type IngredientIndex } from "./_analysis.ts";
 
-// GET /api/flyers — list stored flyers (most recent first), with active flag
+// GET /api/flyers — list stored flyers (most recent first), with active flag and
+// a computed deal analysis (stock-up / cook-fresh / recipe-relevant picks) for
+// each non-expired flyer. The analysis is deterministic — derived from the price
+// rows + the user's recipe ingredients, recomputed on read so it stays current.
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
+  const user = uid(ctx);
   const { results } = await ctx.env.DB.prepare(
     "SELECT * FROM flyers WHERE user_id=? ORDER BY created_at DESC LIMIT 20",
-  ).bind(uid(ctx)).all();
+  ).bind(user).all();
   const today = new Date().toISOString().slice(0, 10);
-  const flyers = (results as any[]).map((f) => ({
-    id: f.id, store_name: f.store_name, valid_from: f.valid_from, valid_to: f.valid_to,
-    summary: f.summary, item_count: f.item_count, deals: JSON.parse(f.deals || "{}"),
-    active: (!f.valid_from || f.valid_from <= today) && (!f.valid_to || f.valid_to >= today),
+
+  const rows = results as any[];
+  const anyActive = rows.some((f) => !f.valid_to || f.valid_to >= today);
+  // Build the recipe-ingredient index once, only if there's a flyer to analyse.
+  const idx: IngredientIndex = anyActive ? await buildIngredientIndex(ctx.env.DB, user) : new Map();
+  // Dietary prefs hard-filter the picks (e.g. dairy-free hides yogurt deals).
+  let diet: string[] = [];
+  if (anyActive) {
+    const st = await ctx.env.DB.prepare("SELECT diet FROM user_settings WHERE user_id=?")
+      .bind(user).first<{ diet: string }>();
+    try { diet = JSON.parse(st?.diet || "[]"); } catch { diet = []; }
+  }
+
+  const flyers = await Promise.all(rows.map(async (f) => {
+    const expired = f.valid_to && f.valid_to < today;
+    let analysis = null;
+    if (!expired) {
+      const pr = await ctx.env.DB.prepare(
+        `SELECT item_name, item_name_pt, unit, price, normal_price, discount
+           FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
+      ).bind(f.store_id, f.valid_from ?? null).all();
+      const deal = analyzeFlyer((pr.results as unknown as DealRow[]) || [], idx, diet);
+      // Only surface the analysis when the store actually has discounts. Stores
+      // with no offers (e.g. full-catalogue feeds) are tracked for the cross-store
+      // comparison but shouldn't pad the UI — the card just notes prices tracked.
+      if (deal.stock_up.length || deal.cook_fresh.length) analysis = deal;
+    }
+    return {
+      id: f.id, store_name: f.store_name, valid_from: f.valid_from, valid_to: f.valid_to,
+      summary: f.summary, item_count: f.item_count, deals: JSON.parse(f.deals || "{}"),
+      active: (!f.valid_from || f.valid_from <= today) && (!f.valid_to || f.valid_to >= today),
+      analysis,
+    };
   }));
   return json(flyers);
 };

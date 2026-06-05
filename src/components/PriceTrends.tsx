@@ -1,26 +1,45 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api.ts";
 
-// Store colours (extensible — Pingo Doce / Intermarché / Continente can be added).
-const STORE_COLORS: Record<string, string> = {
-  ALDI: "#00457c", Lidl: "#e3000f", "Pingo Doce": "#00a651",
-  Intermarché: "#e2001a", Continente: "#e30613",
+// Distinct qualitative palette (colourblind-friendly, Tableau-ish). Brand colours
+// are unusable here: Lidl, Continente and Intermarché are all near-identical red,
+// so three stores looked the same. Assign by store, sorted for a stable mapping.
+const PALETTE = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759", "#b07aa1", "#76b7b2", "#edc948", "#9c755f"];
+const buildColors = (stores: string[]): Record<string, string> => {
+  const m: Record<string, string> = {};
+  [...stores].sort().forEach((s, i) => { m[s] = PALETTE[i % PALETTE.length]; });
+  return m;
 };
-const colorFor = (s: string) =>
-  STORE_COLORS[s] || ["#0f6e56", "#8b5cf6", "#b8860b", "#185fa5"][Math.abs(hash(s)) % 4];
-function hash(s: string) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return h; }
 
 const CAT_ORDER = ["produce", "meat", "fish", "dairy", "pantry"];
 const eur = (n: number) => "€" + n.toFixed(2);
 
 type Pt = { date: string; store: string; category: string; avg_price: number; n: number };
 type Item = { store: string; name: string; price: number; date: string; cat: string };
+type Colors = Record<string, string>;
+
+// Small floating tooltip driven by mouse position relative to a wrapper div.
+function useTip() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [tip, setTip] = useState<{ x: number; y: number; node: React.ReactNode } | null>(null);
+  const show = (e: React.MouseEvent, node: React.ReactNode) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    setTip({ x: e.clientX - r.left, y: e.clientY - r.top, node });
+  };
+  const hide = () => setTip(null);
+  return { ref, tip, show, hide };
+}
 
 export default function PriceTrends() {
   const [data, setData] = useState<any>(null);
   const [tab, setTab] = useState<"compare" | "trend">("compare");
+  // Which store is spotlighted (hovered in a chart or legend); dims the others.
+  const [hov, setHov] = useState<string | null>(null);
 
   useEffect(() => { api.prices().then(setData).catch(() => setData({ count: 0, points: [], items: [] })); }, []);
+
+  const colors = useMemo(() => buildColors((data?.stores || []) as string[]), [data]);
 
   // latest flyer date per store — compare current flyers, never mix dates.
   const latest = useMemo(() => {
@@ -53,7 +72,6 @@ export default function PriceTrends() {
     if (!data?.items?.length) return [];
     const byName: Record<string, Item[]> = {};
     for (const it of data.items as Item[]) {
-      // keep only the latest price per store for that item
       const key = it.name.toLowerCase().trim();
       (byName[key] ||= []).push(it);
     }
@@ -85,6 +103,19 @@ export default function PriceTrends() {
   const stores: string[] = data.stores;
   const winner = compare && Object.entries(compare.wins).sort((a, b) => b[1] - a[1])[0];
 
+  // Legend whose items spotlight a store on hover.
+  const Legend = ({ withDate }: { withDate?: boolean }) => (
+    <div className="chips legend-row">
+      {stores.map((st) => (
+        <span key={st}
+          className={"legend" + (hov && hov !== st ? " dim" : "") + (hov === st ? " on" : "")}
+          onMouseEnter={() => setHov(st)} onMouseLeave={() => setHov(null)}>
+          <span className="dot" style={{ background: colors[st] }} />
+          {st}{withDate ? ` · ${latest[st]?.slice(5) || "—"}` : ""}</span>
+      ))}
+    </div>
+  );
+
   return (
     <div>
       <div className="chips" style={{ marginBottom: 12 }}>
@@ -102,14 +133,8 @@ export default function PriceTrends() {
               {" "}(latest flyers).
             </p>
           )}
-          <CompareBars compare={compare} stores={stores} />
-          <div className="chips" style={{ marginTop: 8 }}>
-            {stores.map((st) => (
-              <span key={st} className="legend">
-                <span className="dot" style={{ background: colorFor(st) }} />
-                {st} · {latest[st]?.slice(5) || "—"}</span>
-            ))}
-          </div>
+          <CompareBars compare={compare} stores={stores} colors={colors} hov={hov} setHov={setHov} />
+          <Legend withDate />
           <p className="muted small" style={{ marginTop: 6 }}>
             Average flyer price per category. Stores rarely list the exact same products, so this is a
             directional read; the matched items below are exact.
@@ -139,14 +164,23 @@ export default function PriceTrends() {
         </>
       )}
 
-      {tab === "trend" && <TrendLines points={data.points as Pt[]} stores={stores} />}
+      {tab === "trend" && (
+        <>
+          <TrendLines points={data.points as Pt[]} stores={stores} colors={colors} hov={hov} setHov={setHov} />
+          <Legend />
+          <p className="muted small" style={{ marginTop: 6 }}>Whole-basket average price per flyer date.</p>
+        </>
+      )}
     </div>
   );
 }
 
-// Grouped bars: category on x, one bar per store.
-function CompareBars({ compare, stores }: { compare: any; stores: string[] }) {
+// Grouped bars: category on x, one bar per store. Hover a bar to spotlight its
+// store and read the exact value.
+function CompareBars({ compare, stores, colors, hov, setHov }:
+  { compare: any; stores: string[]; colors: Colors; hov: string | null; setHov: (s: string | null) => void }) {
   const { cats, byCat } = compare;
+  const { ref, tip, show, hide } = useTip();
   const W = 620, H = 260, PAD = 44, GAP = 26;
   const all: number[] = [];
   for (const c of cats) for (const s of stores) if (byCat[c]?.[s] != null) all.push(byCat[c][s]);
@@ -156,42 +190,51 @@ function CompareBars({ compare, stores }: { compare: any; stores: string[] }) {
   const y = (p: number) => H - PAD - (p / maxP) * (H - 2 * PAD);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 640 }}>
-      <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke="#ddd" />
-      {[0, maxP / 2, maxP].map((p, k) => (
-        <g key={k}>
-          <line x1={PAD} y1={y(p)} x2={W - PAD} y2={y(p)} stroke="#f0f0f0" />
-          <text x={PAD - 6} y={y(p) + 3} textAnchor="end" fontSize="10" fill="#888">{eur(p)}</text>
-        </g>
-      ))}
-      {cats.map((cat: string, ci: number) => {
-        const gx = PAD + ci * (groupW + GAP);
-        const present = stores.filter((s) => byCat[cat]?.[s] != null);
-        return (
-          <g key={cat}>
-            {present.map((s, si) => {
-              const bx = gx + (groupW - present.length * (barW + 4)) / 2 + si * (barW + 4);
-              const v = byCat[cat][s];
-              return (
-                <g key={s}>
-                  <rect x={bx} y={y(v)} width={barW} height={H - PAD - y(v)}
-                    rx={3} fill={colorFor(s)} />
-                  <text x={bx + barW / 2} y={y(v) - 4} textAnchor="middle" fontSize="9" fill="#555">
-                    {eur(v)}</text>
-                </g>
-              );
-            })}
-            <text x={gx + groupW / 2} y={H - PAD + 14} textAnchor="middle" fontSize="10" fill="#666">
-              {cat}</text>
+    <div ref={ref} className="chart-wrap" onMouseLeave={() => { hide(); setHov(null); }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 640 }}>
+        <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke="#ddd" />
+        {[0, maxP / 2, maxP].map((p, k) => (
+          <g key={k}>
+            <line x1={PAD} y1={y(p)} x2={W - PAD} y2={y(p)} stroke="#f0f0f0" />
+            <text x={PAD - 6} y={y(p) + 3} textAnchor="end" fontSize="10" fill="#888">{eur(p)}</text>
           </g>
-        );
-      })}
-    </svg>
+        ))}
+        {cats.map((cat: string, ci: number) => {
+          const gx = PAD + ci * (groupW + GAP);
+          const present = stores.filter((s) => byCat[cat]?.[s] != null);
+          return (
+            <g key={cat}>
+              {present.map((s, si) => {
+                const bx = gx + (groupW - present.length * (barW + 4)) / 2 + si * (barW + 4);
+                const v = byCat[cat][s];
+                const dim = hov && hov !== s;
+                return (
+                  <g key={s} opacity={dim ? 0.22 : 1} style={{ transition: "opacity .12s" }}
+                    onMouseMove={(e) => { setHov(s); show(e, <><b>{s}</b> · {cat}<br />{eur(v)}</>); }}>
+                    <rect x={bx} y={y(v)} width={barW} height={H - PAD - y(v)} rx={3}
+                      fill={colors[s]} stroke={hov === s ? "#222" : "none"} strokeWidth={hov === s ? 1.5 : 0}
+                      style={{ cursor: "pointer" }} />
+                    <text x={bx + barW / 2} y={y(v) - 4} textAnchor="middle" fontSize="9" fill="#555">
+                      {eur(v)}</text>
+                  </g>
+                );
+              })}
+              <text x={gx + groupW / 2} y={H - PAD + 14} textAnchor="middle" fontSize="10" fill="#666">
+                {cat}</text>
+            </g>
+          );
+        })}
+      </svg>
+      {tip && <div className="chart-tip" style={{ left: tip.x, top: tip.y }}>{tip.node}</div>}
+    </div>
   );
 }
 
-// Secondary, honest trend: per-store basket average over dates.
-function TrendLines({ points, stores }: { points: Pt[]; stores: string[] }) {
+// Secondary, honest trend: per-store basket average over dates. Hover a point to
+// read its value; hovering a series (or legend) dims the rest.
+function TrendLines({ points, stores, colors, hov, setHov }:
+  { points: Pt[]; stores: string[]; colors: Colors; hov: string | null; setHov: (s: string | null) => void }) {
+  const { ref, tip, show, hide } = useTip();
   const series = useMemo(() => {
     const byStoreDate: Record<string, Record<string, { sum: number; n: number }>> = {};
     for (const p of points) {
@@ -218,37 +261,41 @@ function TrendLines({ points, stores }: { points: Pt[]; stores: string[] }) {
   const sparse = dates.length < 2;
 
   return (
-    <div>
+    <div ref={ref} className="chart-wrap" onMouseLeave={() => { hide(); setHov(null); }}>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ maxWidth: 640 }}>
         <line x1={PAD} y1={H - PAD} x2={W - PAD} y2={H - PAD} stroke="#ddd" />
         {[minP, (minP + maxP) / 2, maxP].map((p, k) => (
-          <text key={k} x={PAD - 6} y={y(p) + 3} textAnchor="end" fontSize="10" fill="#888">{eur(p)}</text>
+          <g key={k}>
+            <line x1={PAD} y1={y(p)} x2={W - PAD} y2={y(p)} stroke="#f4f4f4" />
+            <text x={PAD - 6} y={y(p) + 3} textAnchor="end" fontSize="10" fill="#888">{eur(p)}</text>
+          </g>
         ))}
-        {stores.map((s) => (
-          <React.Fragment key={s}>
-            {lines[s].length > 1 && (
-              <polyline fill="none" stroke={colorFor(s)} strokeWidth="2"
-                points={lines[s].map((p) => `${x(p.date)},${y(p.price)}`).join(" ")} />
-            )}
-            {lines[s].map((p, k) => (
-              <circle key={k} cx={x(p.date)} cy={y(p.price)} r={3} fill={colorFor(s)} />
-            ))}
-          </React.Fragment>
-        ))}
+        {stores.map((s) => {
+          const dim = hov && hov !== s;
+          return (
+            <g key={s} opacity={dim ? 0.18 : 1} style={{ transition: "opacity .12s" }}
+              onMouseEnter={() => setHov(s)}>
+              {lines[s].length > 1 && (
+                <polyline fill="none" stroke={colors[s]} strokeWidth={hov === s ? 3.5 : 2}
+                  strokeLinejoin="round" strokeLinecap="round"
+                  points={lines[s].map((p) => `${x(p.date)},${y(p.price)}`).join(" ")} />
+              )}
+              {lines[s].map((p, k) => (
+                <circle key={k} cx={x(p.date)} cy={y(p.price)} r={hov === s ? 5 : 3.5}
+                  fill={colors[s]} stroke="#fff" strokeWidth={1} style={{ cursor: "pointer" }}
+                  onMouseMove={(e) => { setHov(s); show(e, <><b>{s}</b> · {p.date.slice(5)}<br />{eur(p.price)}</>); }} />
+              ))}
+            </g>
+          );
+        })}
         {dates.map((d) => (
           <text key={d} x={x(d)} y={H - PAD + 14} textAnchor="middle" fontSize="9" fill="#888">
             {d.slice(5)}</text>
         ))}
       </svg>
-      <div className="chips">
-        {stores.map((s) => (
-          <span key={s} className="legend"><span className="dot" style={{ background: colorFor(s) }} />{s}</span>
-        ))}
-      </div>
-      <p className="muted small" style={{ marginTop: 6 }}>
-        Whole-basket average price per flyer date.
-        {sparse ? " Upload flyers across more weeks to see a real trend." : ""}
-      </p>
+      {tip && <div className="chart-tip" style={{ left: tip.x, top: tip.y }}>{tip.node}</div>}
+      {sparse && <p className="muted small" style={{ marginTop: 2 }}>
+        Upload flyers across more weeks to see a real trend.</p>}
     </div>
   );
 }

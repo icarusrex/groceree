@@ -26,25 +26,38 @@ function unitOf(name: string): string | null {
   return null;
 }
 
-// PT flyers state validity as text ("De 2 a 8 de Junho"), not a machine field.
-// Parse that range into ISO dates so the flyer card shows real dates.
+// PT flyers state validity as text, not a machine field. The phrasing varies by
+// chain — "De 2 a 8 de Junho" (Pingo), "válidos 2 — 8 junho 2026" (Continente),
+// "válido de 2 a 8 de junho". Parse any of these into ISO dates. Exported so the
+// vision (image-OCR) path can read reliable dates straight from the viewer HTML
+// instead of trusting the model to OCR them off a page.
 const PT_MONTHS: Record<string, number> = {
   janeiro: 1, fevereiro: 2, marco: 3, março: 3, abril: 4, maio: 5, junho: 6,
   julho: 7, agosto: 8, setembro: 9, outubro: 10, novembro: 11, dezembro: 12,
 };
-function datesFromHtml(html: string, viewerUrl: string): { from: string | null; to: string | null } {
-  const m = html.match(/de\s+(\d{1,2})\s+a\s+(\d{1,2})\s+de\s+([a-zç]+)/i);
-  if (!m) return { from: null, to: null };
-  const d1 = +m[1], d2 = +m[2], mon = PT_MONTHS[m[3].toLowerCase()];
-  if (!mon) return { from: null, to: null };
-  const yr = +(viewerUrl.match(/\/(20\d\d)\//)?.[1] ?? new Date().getFullYear());
-  // The named month belongs to the end date; if the range crosses a month
-  // boundary (start day > end day) the start sits in the previous month.
-  let fromMon = mon, fromYr = yr;
-  if (d1 > d2) { fromMon = mon === 1 ? 12 : mon - 1; if (mon === 1) fromYr = yr - 1; }
-  const iso = (y: number, mo: number, d: number) =>
-    `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-  return { from: iso(fromYr, fromMon, d1), to: iso(yr, mon, d2) };
+export function parsePtDates(html: string, viewerUrl: string): { from: string | null; to: string | null } {
+  // Normalise the various dashes (en/em/figure/minus) to a plain hyphen so one
+  // pattern covers "2 a 8", "2 - 8", "2 — 8".
+  const h = html.replace(/[‐-―−]/g, "-");
+  // <day> (a|-|até) <day> [de] <month> [year]. The month name is what anchors it
+  // and disambiguates from stray "2 a 8" numbers; we validate it against PT_MONTHS.
+  const re = /(\d{1,2})\s*(?:a|-|até)\s*(\d{1,2})\s+(?:de\s+)?([a-zçãâé]+)\.?(?:\s+(?:de\s+)?(\d{4}))?/gi;
+  const yrFromUrl = +(viewerUrl.match(/\/(20\d\d)(?:\/|$)/)?.[1] ?? 0);
+  for (const m of h.matchAll(re)) {
+    const mon = PT_MONTHS[m[3].toLowerCase()];
+    if (!mon) continue;
+    const d1 = +m[1], d2 = +m[2];
+    if (d1 < 1 || d1 > 31 || d2 < 1 || d2 > 31) continue;
+    const yr = +(m[4] || yrFromUrl || new Date().getFullYear());
+    // The named month belongs to the end date; if the range crosses a month
+    // boundary (start day > end day) the start sits in the previous month.
+    let fromMon = mon, fromYr = yr;
+    if (d1 > d2) { fromMon = mon === 1 ? 12 : mon - 1; if (mon === 1) fromYr = yr - 1; }
+    const iso = (y: number, mo: number, d: number) =>
+      `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    return { from: iso(fromYr, fromMon, d1), to: iso(yr, mon, d2) };
+  }
+  return { from: null, to: null };
 }
 
 export interface IpaperResult {
@@ -57,7 +70,7 @@ export interface IpaperResult {
 // Fetch an iPaper viewer URL and return its priced products.
 export async function extractIpaper(viewerUrl: string): Promise<IpaperResult> {
   const html = await (await fetch(viewerUrl, { headers: UA })).text();
-  const { from: validFrom, to: validTo } = datesFromHtml(html, viewerUrl);
+  const { from: validFrom, to: validTo } = parsePtDates(html, viewerUrl);
   const urls = enrichmentUrls(html);
   if (!urls.length) return { items: [], pageCount: 0, validFrom, validTo };
 

@@ -108,8 +108,20 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 @keyframes remixslide { 0% { margin-left: -35%; } 100% { margin-left: 100%; } }
 
 /* price trends */
-.legend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); margin-right: 10px; }
+.legend { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted);
+  margin-right: 10px; cursor: pointer; transition: opacity .12s; }
+.legend.dim { opacity: 0.35; }
+.legend.on { color: var(--text, #222); font-weight: 600; }
 .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-row { margin-top: 8px; flex-wrap: wrap; }
+/* interactive chart tooltip */
+.chart-wrap { position: relative; }
+.chart-tip { position: absolute; transform: translate(-50%, calc(-100% - 10px));
+  background: #222; color: #fff; font-size: 12px; line-height: 1.35; padding: 5px 8px;
+  border-radius: 6px; white-space: nowrap; pointer-events: none; z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.chart-tip::after { content: ""; position: absolute; left: 50%; top: 100%;
+  transform: translateX(-50%); border: 5px solid transparent; border-top-color: #222; }
 .trend-empty { background: var(--surface); border: 1px dashed var(--line); border-radius: 10px; padding: 18px; }
 .match-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
 .match-table th, .match-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
@@ -145,12 +157,44 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .flyers-strip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
 .flyers-head { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
 .flyer-cards { display: flex; gap: 12px; flex-wrap: wrap; }
-.flyer-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 240px; }
+.flyer-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; width: 260px; }
 .flyer-card.expired { opacity: .55; }
 .flyer-store { font-weight: 600; }
 .flyer-exp { color: var(--muted); font-weight: 400; font-size: 12px; }
 .flyer-dates { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
-.flyer-sum { font-size: 13px; margin-bottom: 8px; }
+.fa-theme { display: inline-block; font-size: 12px; font-weight: 600; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 6px;
+  padding: 2px 8px; margin-bottom: 6px; }
+.flyer-sum { font-size: 13px; margin-bottom: 8px; color: var(--muted); }
+.flyer-analysis { margin-bottom: 10px; }
+.fa-top { background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 8px; padding: 7px 9px; margin-bottom: 9px; }
+.fa-top-label { font-size: 11px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 2px; }
+.fa-top-item .fa-name { font-weight: 600; }
+.fa-group { margin-bottom: 8px; }
+.fa-label { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--muted); margin-bottom: 3px; }
+.fa-item { display: flex; justify-content: space-between; gap: 8px; font-size: 13px;
+  line-height: 1.5; }
+.fa-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fa-meta { white-space: nowrap; color: var(--muted); }
+.fa-disc { color: var(--accent); font-weight: 600; }
+.fa-rec { font-size: 11px; }
+.flyer-track { padding: 4px 0 2px; }
+/* Cross-store best-deals overview — the "where the savings are" lead panel. */
+.best-deals { border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.bd-head { font-size: 12px; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .03em; margin-bottom: 7px; }
+.bd-row { display: grid; grid-template-columns: minmax(64px, auto) 1fr auto;
+  gap: 10px; align-items: baseline; font-size: 13px; line-height: 1.7; }
+.bd-store { font-size: 11px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.bd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bd-meta { white-space: nowrap; color: var(--muted); text-align: right; }
 .flyer-actions { display: flex; align-items: center; justify-content: space-between; }
 .btn.small { padding: 5px 10px; font-size: 13px; }
 .to-pantry { font-size: 14px; }
