@@ -10,7 +10,7 @@ const PROTEINS = ["chicken", "beef", "pork", "fish", "none"];
 type DealPick = { name: string; unit: string | null; price: number | null;
   normal_price: number | null; discount: number | null; saving: number | null; recipes?: number };
 type StoreDeal = DealPick & { store: string };
-type BestStore = { store: string; reason: string[]; deal_count: number };
+type BestStore = { store: string; reason: string; deal_count: number };
 type Analysis = { theme: string | null; top_pick: DealPick | null; for_you: DealPick[];
   stock_up: DealPick[]; cook_fresh: DealPick[] };
 
@@ -29,9 +29,7 @@ function BestDeals({ deals, best, onCook, cookingStore }:
       {best && (
         <div className="bd-best">
           <div className="bd-best-head">🏆 Best shop this week: <b>{best.store}</b></div>
-          <div className="bd-best-why">
-            {best.deal_count} deals on food you cook — {best.reason.join(", ")}
-          </div>
+          <div className="bd-best-why">{best.reason}.</div>
           <button className="btn small dark bd-cook" disabled={!!cookingStore}
             onClick={() => onCook(best.store)}>
             {cookingStore === best.store ? "Cooking up a menu…" : `🍳 Cook a menu from ${best.store}'s deals`}</button>
