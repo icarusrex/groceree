@@ -20,7 +20,9 @@ const pct = (d: number | null) => (d ? `-${Math.round(d * 100)}%` : "");
 // Cross-store overview: leads with the single best shop this week (scored on its
 // discounted, recipe-relevant, diet-friendly deals — ignoring sugar/alcohol/non-
 // food), then the strongest individual deals across all shops.
-function BestDeals({ deals, best }: { deals: StoreDeal[]; best: BestStore | null }) {
+function BestDeals({ deals, best, onCook, cookingStore }:
+  { deals: StoreDeal[]; best: BestStore | null;
+    onCook: (store: string) => void; cookingStore: string | null }) {
   if (!deals.length && !best) return null;
   return (
     <div className="best-deals">
@@ -30,6 +32,9 @@ function BestDeals({ deals, best }: { deals: StoreDeal[]; best: BestStore | null
           <div className="bd-best-why">
             {best.deal_count} deals on food you cook — {best.reason.join(", ")}
           </div>
+          <button className="btn small dark bd-cook" disabled={!!cookingStore}
+            onClick={() => onCook(best.store)}>
+            {cookingStore === best.store ? "Cooking up a menu…" : `🍳 Cook a menu from ${best.store}'s deals`}</button>
         </div>
       )}
       {deals.length > 0 && <>
@@ -45,6 +50,61 @@ function BestDeals({ deals, best }: { deals: StoreDeal[]; best: BestStore | null
           </div>
         ))}
       </>}
+    </div>
+  );
+}
+
+type GenRecipe = {
+  name: string; description?: string; cuisine?: string; primary_protein?: string;
+  total_time?: number; servings?: number; deal_used?: string[];
+  ingredients?: { name: string; quantity: number | null; unit: string; category: string }[];
+  instructions?: string[];
+};
+
+// Generated "cook from the deals" menu: full recipes built around a shop's sale
+// items. Read them here and save into the recipe DB to plan/remix like any recipe.
+function DealMenu({ data, onClose, onSaved }:
+  { data: { store: string; recipes: GenRecipe[] }; onClose: () => void; onSaved: () => void }) {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const saveAll = async () => {
+    setSaving(true);
+    for (const r of data.recipes) { try { await api.createRecipe(r); } catch { /* skip */ } }
+    setSaving(false); setSaved(true); onSaved();
+  };
+  return (
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal deal-menu" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-x" onClick={onClose}>✕</button>
+        <h2>Cook from {data.store}'s deals</h2>
+        <p className="muted small" style={{ marginTop: 2 }}>
+          {data.recipes.length} dinners generated around what's on sale this week.</p>
+        {data.recipes.map((r, i) => (
+          <div className="dm-recipe" key={i}>
+            <div className="dm-title">{i + 1}. {r.name}
+              {r.total_time ? <span className="muted small"> · {r.total_time} min</span> : null}</div>
+            {r.description && <div className="muted small">{r.description}</div>}
+            {r.deal_used && r.deal_used.length > 0 &&
+              <div className="dm-deals">🏷️ on sale: {r.deal_used.join(", ")}</div>}
+            <details>
+              <summary className="dm-sum">Ingredients & method</summary>
+              <ul className="dm-ings">
+                {(r.ingredients || []).map((it, k) => (
+                  <li key={k}>{it.quantity ? `${it.quantity} ` : ""}{it.unit ? `${it.unit} ` : ""}{it.name}</li>
+                ))}
+              </ul>
+              <ol className="dm-steps">
+                {(r.instructions || []).map((s, k) => <li key={k}>{s}</li>)}
+              </ol>
+            </details>
+          </div>
+        ))}
+        <div className="dm-actions">
+          <button className="btn" disabled={saving || saved} onClick={saveAll}>
+            {saved ? "Saved to your recipes ✓" : saving ? "Saving…" : "Save all to my recipes"}</button>
+          {saved && <span className="muted small">Now plannable and searchable like any recipe.</span>}
+        </div>
+      </div>
     </div>
   );
 }
@@ -87,6 +147,8 @@ export default function MealPlan() {
   const [flyers, setFlyers] = useState<any[]>([]);
   const [bestDeals, setBestDeals] = useState<StoreDeal[]>([]);
   const [bestStore, setBestStore] = useState<BestStore | null>(null);
+  const [dealMenu, setDealMenu] = useState<{ store: string; recipes: GenRecipe[] } | null>(null);
+  const [cookingStore, setCookingStore] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
   const [discoverOpen, setDiscoverOpen] = useState(false);
   const [discovering, setDiscovering] = useState(false);
@@ -325,7 +387,16 @@ export default function MealPlan() {
               )}
             </div>
 
-            <BestDeals deals={bestDeals} best={bestStore} />
+            <BestDeals deals={bestDeals} best={bestStore} cookingStore={cookingStore}
+              onCook={async (store) => {
+                setCookingStore(store);
+                try {
+                  const d = await api.dealPlan(store, s.settings.plan_days);
+                  if (d.recipes?.length) setDealMenu(d);
+                  else setFlyerMsg(d.error || "Couldn't generate a menu from these deals.");
+                } catch { setFlyerMsg("Menu generation failed."); }
+                setCookingStore(null);
+              }} />
 
             {compare && !compare.error && !compare.insufficient && (
               <div className="compare-card">
@@ -486,6 +557,8 @@ export default function MealPlan() {
       </aside>
 
       {open && <RecipeModal recipe={open} onClose={() => setOpen(null)} />}
+      {dealMenu && <DealMenu data={dealMenu} onClose={() => setDealMenu(null)}
+        onSaved={() => s.refreshRecipes()} />}
     </div>
   );
 }
