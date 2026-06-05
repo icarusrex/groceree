@@ -24,6 +24,11 @@ export const api = {
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
   prices: () => fetch("/api/prices").then(j),
+  basket: () => fetch("/api/basket").then(j),
+  basketSet: (item: string, store: string, price: number | null) =>
+    fetch("/api/basket", { method: "POST", body: JSON.stringify({ op: "set", item, store, price }) }).then(j),
+  basketItem: (op: "addItem" | "removeItem" | "renameItem", item: string, to?: string) =>
+    fetch("/api/basket", { method: "POST", body: JSON.stringify({ op, item, to }) }).then(j),
   generateImage: (recipe_id: string, name: string, description: string) =>
     fetch("/api/generate-image", { method: "POST", body: JSON.stringify({ recipe_id, name, description }) }).then(j),
   flyers: () => fetch("/api/flyers").then(j),
