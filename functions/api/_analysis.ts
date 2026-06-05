@@ -44,7 +44,9 @@ const BOOZE = /\bwine\b|\bbeer\b|whisk|vodka|\bgin\b|\brum\b|liqueur|licor|spiri
 // Snacks / confectionery: not meal ingredients a home cook plans around, and the
 // messy structured-feed names ("Buffalo Chicken Wings Pringles") cause false
 // recipe matches. Exclude from the personalised picks.
-const JUNK = /pringles|doritos|crisps|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr/i;
+// Snacks, confectionery and — per the user — plain sugar/sweeteners: things they
+// don't plan meals around, so they shouldn't sway the picks or the best-shop call.
+const JUNK = /pringles|doritos|crisps|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr|\bsugar\b|a[cç][uú]car|ado[cç]ante|sweetener|stevia/i;
 // Dietary exclusions. The user's diet prefs (user_settings.diet) are hard
 // filters on the picks: a dairy-free shopper shouldn't see yogurt in their deals.
 // categorize() already tags dairy/meat/fish; gluten has no category so we match
@@ -225,6 +227,38 @@ export function crossStoreDeals(
     if (out.length >= limit) break;
   }
   return out;
+}
+
+export interface BestStore { store: string; reason: string[]; deal_count: number; }
+
+// The single best shop this week: the store whose discounted, diet-friendly,
+// recipe-relevant deals add up to the most value (sum of its strongest few). The
+// reason is that store's top deal names, so the call is always grounded in real
+// offers rather than a vibe. Null until at least one store has 2+ qualifying deals.
+export function bestStore(
+  perStore: { store: string; rows: DealRow[] }[],
+  idx: IngredientIndex, diet: string[] = [],
+): BestStore | null {
+  const byStore: Record<string, { name: string; score: number }[]> = {};
+  for (const { store, rows } of perStore) {
+    for (const r of rows) {
+      const e = enrichItem(r, idx, diet);
+      if (!e || !e.cat || (e.discount ?? 0) < 0.15) continue;
+      (byStore[store] ||= []).push({ name: e.name, score: e.score });
+    }
+  }
+  let win: { store: string; score: number; items: { name: string; score: number }[] } | null = null;
+  for (const [store, items] of Object.entries(byStore)) {
+    const top = items.slice().sort((a, b) => b.score - a.score).slice(0, 6);
+    const score = top.reduce((s, i) => s + i.score, 0);
+    if (top.length >= 2 && (!win || score > win.score)) win = { store, score, items: top };
+  }
+  if (!win) return null;
+  return {
+    store: win.store,
+    deal_count: byStore[win.store].length,
+    reason: win.items.slice(0, 3).map((i) => i.name),
+  };
 }
 
 export function analyzeFlyer(rows: DealRow[], idx: IngredientIndex, diet: string[] = []): FlyerAnalysis {

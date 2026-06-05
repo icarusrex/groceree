@@ -10,29 +10,41 @@ const PROTEINS = ["chicken", "beef", "pork", "fish", "none"];
 type DealPick = { name: string; unit: string | null; price: number | null;
   normal_price: number | null; discount: number | null; saving: number | null; recipes?: number };
 type StoreDeal = DealPick & { store: string };
+type BestStore = { store: string; reason: string[]; deal_count: number };
 type Analysis = { theme: string | null; top_pick: DealPick | null; for_you: DealPick[];
   stock_up: DealPick[]; cook_fresh: DealPick[] };
 
 const eur = (n: number | null) => (n == null ? "" : "€" + n.toFixed(2));
 const pct = (d: number | null) => (d ? `-${Math.round(d * 100)}%` : "");
 
-// Cross-store overview: the most compelling discounts across all the user's
-// shops this week, each tagged with its store. The "where the savings are" lead.
-function BestDeals({ deals }: { deals: StoreDeal[] }) {
-  if (!deals.length) return null;
+// Cross-store overview: leads with the single best shop this week (scored on its
+// discounted, recipe-relevant, diet-friendly deals — ignoring sugar/alcohol/non-
+// food), then the strongest individual deals across all shops.
+function BestDeals({ deals, best }: { deals: StoreDeal[]; best: BestStore | null }) {
+  if (!deals.length && !best) return null;
   return (
     <div className="best-deals">
-      <div className="bd-head">💰 Best deals across your shops</div>
-      {deals.map((d, i) => (
-        <div className="bd-row" key={i}>
-          <span className="bd-store">{d.store}</span>
-          <span className="bd-name">{d.name}</span>
-          <span className="bd-meta">
-            {eur(d.price)} {d.discount ? <b className="fa-disc">{pct(d.discount)}</b> : null}
-            {d.recipes ? <span className="fa-rec"> · in {d.recipes} recipes</span> : null}
-          </span>
+      {best && (
+        <div className="bd-best">
+          <div className="bd-best-head">🏆 Best shop this week: <b>{best.store}</b></div>
+          <div className="bd-best-why">
+            {best.deal_count} deals on food you cook — {best.reason.join(", ")}
+          </div>
         </div>
-      ))}
+      )}
+      {deals.length > 0 && <>
+        <div className="bd-head">Top deals across your shops</div>
+        {deals.map((d, i) => (
+          <div className="bd-row" key={i}>
+            <span className="bd-store">{d.store}</span>
+            <span className="bd-name">{d.name}</span>
+            <span className="bd-meta">
+              {eur(d.price)} {d.discount ? <b className="fa-disc">{pct(d.discount)}</b> : null}
+              {d.recipes ? <span className="fa-rec"> · in {d.recipes} recipes</span> : null}
+            </span>
+          </div>
+        ))}
+      </>}
     </div>
   );
 }
@@ -59,18 +71,6 @@ function FlyerAnalysis({ a }: { a: Analysis }) {
     ) : null;
   return (
     <div className="flyer-analysis">
-      {a.top_pick && (
-        <div className="fa-top">
-          <div className="fa-top-label">★ Top pick for you</div>
-          <div className="fa-item fa-top-item">
-            <span className="fa-name">{a.top_pick.name}</span>
-            <span className="fa-meta">
-              {eur(a.top_pick.price)} {a.top_pick.discount ? <b className="fa-disc">{pct(a.top_pick.discount)}</b> : null}
-            </span>
-          </div>
-          {a.top_pick.recipes ? <div className="fa-rec">in {a.top_pick.recipes} of your recipes</div> : null}
-        </div>
-      )}
       <Group label="Stock up" items={a.stock_up} />
       <Group label="Cook fresh now" items={a.cook_fresh} />
     </div>
@@ -86,6 +86,7 @@ export default function MealPlan() {
   const [saveMsg, setSaveMsg] = useState("");
   const [flyers, setFlyers] = useState<any[]>([]);
   const [bestDeals, setBestDeals] = useState<StoreDeal[]>([]);
+  const [bestStore, setBestStore] = useState<BestStore | null>(null);
   const [sources, setSources] = useState<any[]>([]);
   const [discoverOpen, setDiscoverOpen] = useState(false);
   const [discovering, setDiscovering] = useState(false);
@@ -104,7 +105,7 @@ export default function MealPlan() {
   const reloadFlyers = React.useCallback(async () => {
     await Promise.all([
       api.flyers().then(setFlyers).catch(() => {}),
-      api.bestDeals().then((r) => setBestDeals(r.deals || [])).catch(() => {}),
+      api.bestDeals().then((r) => { setBestDeals(r.deals || []); setBestStore(r.best || null); }).catch(() => {}),
     ]);
   }, []);
   React.useEffect(() => { reloadFlyers(); }, [reloadFlyers]);
@@ -324,7 +325,7 @@ export default function MealPlan() {
               )}
             </div>
 
-            <BestDeals deals={bestDeals} />
+            <BestDeals deals={bestDeals} best={bestStore} />
 
             {compare && !compare.error && !compare.insufficient && (
               <div className="compare-card">
