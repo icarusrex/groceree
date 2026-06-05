@@ -1,5 +1,5 @@
 import { json, uid, type Env } from "./_helpers.ts";
-import { crossStoreDeals, buildIngredientIndex, type DealRow, type StoreDeal } from "./_analysis.ts";
+import { crossStoreDeals, bestStore, buildIngredientIndex, type DealRow, type StoreDeal } from "./_analysis.ts";
 
 // GET /api/best-deals — the cross-store overview: the most compelling discounted,
 // diet-friendly, recipe-relevant offers across ALL of the user's active flyers,
@@ -38,5 +38,6 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   }));
 
   const deals = crossStoreDeals(perStore, idx, diet, 8);
-  return json({ deals, store_count: flyers.length });
+  const best = bestStore(perStore, idx, diet);
+  return json({ deals, best, store_count: flyers.length });
 };
