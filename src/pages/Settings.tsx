@@ -14,6 +14,7 @@ export default function Settings() {
   return (
     <div className="settings">
       <h1>Settings</h1>
+      <div className="panel">
       <label className="field">
         <span>Number of people</span>
         <input type="number" min={1} max={12} value={s.settings.household_size}
@@ -42,6 +43,7 @@ export default function Settings() {
           <option value="off">Off — cook every meal</option>
         </select>
       </label>
+      </div>
     </div>
   );
 }
