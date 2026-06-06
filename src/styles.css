@@ -1,7 +1,7 @@
 :root {
-  --coral: #f47b7b; --coral-deep: #ee6a6a;
-  --bg: #f47b7b; --surface: #ffffff; --line: #eceef1; --text: #2c3742;
-  --muted: #5e6a76; --accent: #16a34a; --dark: #2c3742;
+  --brand: #41b06a; --brand-deep: #36a25e;
+  --bg: #41b06a; --surface: #ffffff; --line: #eceef1; --text: #2c3742;
+  --muted: #5e6a76; --accent: #138a40; --dark: #2c3742;
   --border: #36414d; --radius: 18px; --shadow: 0 8px 20px rgba(36,41,49,.16);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -306,7 +306,7 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
    Appended last so it wins the cascade over earlier rules.
    ============================================================ */
 body { background:
-  radial-gradient(1200px 600px at 20% -10%, var(--coral) 0%, var(--coral-deep) 90%) fixed; }
+  radial-gradient(1200px 600px at 20% -10%, var(--brand) 0%, var(--brand-deep) 90%) fixed; }
 
 /* sidebar floats on coral; nav is white, active = white pill */
 .sidebar { background: transparent; border-right: 0; padding: 22px 14px; }
@@ -350,7 +350,7 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 .field input, .field select, .recipe-rail input, .add-row input, .ai-edit input, .bk-input {
   border: 2px solid var(--line); border-radius: 10px; }
 .field input:focus, .recipe-rail input:focus, .add-row input:focus,
-.ai-edit input:focus, .bk-input:focus { border-color: var(--coral); outline: none; }
+.ai-edit input:focus, .bk-input:focus { border-color: var(--brand); outline: none; }
 
 /* slots stay lighter (nested inside .day cards) */
 .slot { border: 1.5px solid var(--line); border-radius: 12px; }
