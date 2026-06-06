@@ -43,9 +43,8 @@ export default function App() {
                 Two views: this week's flyer deals (promotional), and your own staple basket
                 (regular prices) for an honest store-vs-store price level.
               </p>
-              <PriceTrends />
-              <div style={{ height: 28 }} />
-              <BasketTracker />
+              <div className="panel"><PriceTrends /></div>
+              <div className="panel"><BasketTracker /></div>
             </div>
           )}
           {view === "settings" && <Settings />}

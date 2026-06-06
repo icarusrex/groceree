@@ -1,11 +1,13 @@
 :root {
-  --bg: #f7f8fa; --surface: #fff; --line: #e7e9ee; --text: #1a1d24;
-  --muted: #6b7280; --accent: #16a34a; --dark: #111827;
+  --coral: #f47b7b; --coral-deep: #ee6a6a;
+  --bg: #f47b7b; --surface: #ffffff; --line: #eceef1; --text: #2c3742;
+  --muted: #5e6a76; --accent: #16a34a; --dark: #2c3742;
+  --border: #36414d; --radius: 18px; --shadow: 0 8px 20px rgba(36,41,49,.16);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); }
-h1 { font-size: 26px; margin: 0 0 4px; }
+h1 { font-size: 26px; margin: 0 0 4px; color: #fff; letter-spacing: -.01em; }
 h3 { font-size: 15px; margin: 18px 0 8px; }
 .muted { color: var(--muted); } .small { font-size: 13px; }
 .meta { color: var(--muted); font-size: 12px; }
@@ -298,3 +300,85 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
 .cs-chip { background: var(--bg); border: 1px solid var(--line); border-radius: 999px;
   padding: 2px 8px; font-size: 11px; color: var(--text); }
 @media (max-width: 520px) { .compare-stores { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   v0.18 restyle — coral theme, chunky bordered cards (playful)
+   Appended last so it wins the cascade over earlier rules.
+   ============================================================ */
+body { background:
+  radial-gradient(1200px 600px at 20% -10%, var(--coral) 0%, var(--coral-deep) 90%) fixed; }
+
+/* sidebar floats on coral; nav is white, active = white pill */
+.sidebar { background: transparent; border-right: 0; padding: 22px 14px; }
+.brand { color: #fff; font-size: 20px; }
+.nav { color: rgba(255,255,255,.92); font-weight: 600; border-radius: 12px; }
+.nav:hover { background: rgba(255,255,255,.16); }
+.nav.active { background: #fff; color: var(--dark); box-shadow: var(--shadow); }
+.version { color: rgba(255,255,255,.78); }
+.content { padding: 30px 34px; }
+h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
+/* loose helper text sitting directly on the coral reads light */
+.content > .muted, .content > p.muted, .content > div > h1 + .muted,
+.content > div > p.muted, .place-banner, .ai-edit + .banner { color: #fff; }
+.content > div > p.muted.small { color: rgba(255,255,255,.92); }
+
+/* the signature card: white, dark border, rounded, soft shadow */
+.day, .recipe-rail, .shop-group, .pantry-row, .modal, .best-deals, .flyer-card,
+.compare-card, .trend-empty, .bk-index, .deal-menu {
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.recipe-rail { background: #fff; }
+
+/* buttons: chunky, bordered, with a playful lift on hover */
+.btn { border: 2px solid var(--border); border-radius: 12px; font-weight: 600;
+  box-shadow: 0 3px 0 rgba(54,65,77,.16); transition: transform .08s, box-shadow .08s; }
+.btn:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 0 rgba(54,65,77,.2); }
+.btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(54,65,77,.2); }
+.btn.dark { background: var(--dark); color: #fff; border-color: var(--dark); }
+.btn.dark:hover { background: #222c35; }
+.btn.small { box-shadow: 0 2px 0 rgba(54,65,77,.16); }
+
+/* chips / pills: rounded, bordered, active = dark */
+.chip { border: 2px solid var(--border); border-radius: 999px; font-weight: 600; }
+.chip.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+
+/* nav tabs inside Prices etc. (chips used as tabs) keep the same treatment */
+
+/* inputs: friendlier */
+.field input, .field select, .recipe-rail input, .add-row input, .ai-edit input, .bk-input {
+  border: 2px solid var(--line); border-radius: 10px; }
+.field input:focus, .recipe-rail input:focus, .add-row input:focus,
+.ai-edit input:focus, .bk-input:focus { border-color: var(--coral); outline: none; }
+
+/* slots stay lighter (nested inside .day cards) */
+.slot { border: 1.5px solid var(--line); border-radius: 12px; }
+.slot.active { border-color: var(--dark); box-shadow: 0 0 0 3px rgba(44,55,66,.1); }
+
+/* modal a touch rounder */
+.modal { border-radius: 20px; }
+
+/* the points-style top accent isn't present; give page titles room */
+.header-row h1 { margin-bottom: 0; }
+
+/* fix: var(--bg) is now coral — keep these light where it was a near-white tint */
+.rail-item:hover { background: #f6f7f9; }
+.shop-row { border-bottom-color: var(--line); }
+.cs-chip { background: #f3f4f6; color: var(--text); }
+.banner { border-radius: 12px; }
+
+/* header wraps gracefully; segmented control sized for the chunky theme */
+.header-row { flex-wrap: wrap; gap: 12px; }
+.actions { flex-wrap: wrap; gap: 8px; }
+.header-row > h1 { white-space: nowrap; margin-right: auto; }
+.seg { flex-shrink: 0; border: 2px solid var(--border); border-radius: 10px; }
+.seg-btn { padding: 7px 12px; white-space: nowrap; font-weight: 600; }
+.seg-btn + .seg-btn { border-left: 2px solid var(--border); }
+.btn.ghost { white-space: nowrap; }
+
+/* white content panel for pages whose body isn't already cards (Prices, Settings) */
+.panel { background: #fff; border: 2px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 18px; }
+.panel h1, .panel h2, .panel h3, .settings .panel h3 { color: var(--text); }
+@media (max-width: 520px) { .panel { padding: 16px 14px; } }
