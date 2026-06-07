@@ -151,7 +151,8 @@ export default function MealPlan() {
   const [discoverOpen, setDiscoverOpen] = useState(false);
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<any[]>([]);
-  const [fetchingUrl, setFetchingUrl] = useState("");
+  const [fetchingUrls, setFetchingUrls] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<{ done: number; total: number; stores: number } | null>(null);
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
   const [compare, setCompare] = useState<any>(null);
@@ -250,7 +251,7 @@ export default function MealPlan() {
   // One trigger: discover the selected stores' current flyers, then fetch+parse
   // every one automatically. No per-flyer clicking — the user waits, doesn't click.
   const autoLoad = async () => {
-    if (discovering || !!fetchingUrl) return;
+    if (discovering || loading) return;
     const ids = selectedStoreIds.length ? selectedStoreIds : allStoreIds;
     if (!ids.length) { setFlyerMsg("Pick at least one store first."); return; }
     setFlyerMsg("Finding this week's flyers…");
@@ -266,29 +267,42 @@ export default function MealPlan() {
     if (!jobs.length) { setFlyerMsg("No current grocery flyers found for the selected stores."); return; }
 
     const merged: Record<string, number> = { ...s.deals };
-    let loaded = 0, totalItems = 0;
+    let loaded = 0, totalItems = 0, done = 0;
     const fails: string[] = [];
     const storeCount = new Set(jobs.map((j) => j.store_id)).size;
+    setLoading(true);
     setProgress({ done: 0, total: jobs.length, stores: storeCount });
-    for (let i = 0; i < jobs.length; i++) {
-      const jb = jobs[i];
-      setFetchingUrl(jb.url);
-      setFlyerMsg(`Loading flyers… ${i + 1}/${jobs.length} · ${jb.store_name} (${jb.title})`);
-      try {
-        const res = await api.fetchFlyer({ store_id: jb.store_id, store_name: jb.store_name, flyer_url: jb.url });
-        if (res.error) fails.push(`${jb.store_name}: ${res.error}`);
-        else {
-          loaded++; totalItems += res.item_count || 0; Object.assign(merged, res.deals || {});
-          setLoadedUrls((prev) => new Set(prev).add(jb.url));
-        }
-      } catch { fails.push(`${jb.store_name}: fetch failed.`); }
-      setProgress({ done: i + 1, total: jobs.length, stores: storeCount });
-    }
-    setFetchingUrl("");
+    setFlyerMsg(`Loading ${jobs.length} flyers from ${storeCount} store${storeCount > 1 ? "s" : ""}…`);
+
+    // Image-OCR flyers take ~30-60s each; running them serially feels broken, so
+    // fetch a few at once (capped, to stay gentle on the vision API) and update
+    // progress as each finishes. One slow store no longer blocks the rest.
+    const CONCURRENCY = 3;
+    let next = 0;
+    const worker = async () => {
+      while (next < jobs.length) {
+        const jb = jobs[next++];
+        setFetchingUrls((prev) => new Set(prev).add(jb.url));
+        try {
+          const res = await api.fetchFlyer({ store_id: jb.store_id, store_name: jb.store_name, flyer_url: jb.url });
+          if (res.error) fails.push(`${jb.store_name}: ${res.error}`);
+          else {
+            loaded++; totalItems += res.item_count || 0; Object.assign(merged, res.deals || {});
+            setLoadedUrls((prev) => new Set(prev).add(jb.url));
+          }
+        } catch { fails.push(`${jb.store_name}: timed out or failed.`); }
+        setFetchingUrls((prev) => { const n = new Set(prev); n.delete(jb.url); return n; });
+        done++;
+        setProgress({ done, total: jobs.length, stores: storeCount });
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, jobs.length) }, worker));
+
     if (Object.keys(merged).length) s.setDeals(merged);
     await reloadFlyers();
     const tail = fails.length ? ` · couldn't load: ${fails.join("; ")}` : "";
     setFlyerMsg(`Loaded ${loaded}/${jobs.length} flyers · ${totalItems} grocery prices.${tail}`);
+    setLoading(false);
     setProgress(null);
   };
 
@@ -351,8 +365,8 @@ export default function MealPlan() {
                   {st.kind !== "ipaper" && <span className="muted small"> · manual</span>}
                 </label>
               ))}
-              <button className="btn small dark" disabled={discovering || !!fetchingUrl} onClick={autoLoad}>
-                {discovering || !!fetchingUrl ? "Loading…" : "Load this week's flyers"}</button>
+              <button className="btn small dark" disabled={discovering || loading} onClick={autoLoad}>
+                {discovering || loading ? "Loading…" : "Load this week's flyers"}</button>
             </div>
             {(discovering || progress) && (
               <div className="fetch-prog">
@@ -378,7 +392,7 @@ export default function MealPlan() {
                   <div className="ds-flyers">
                     {st.flyers.map((f: any) => (
                       <span className="flyer-chip" key={f.url}>
-                        {fetchingUrl === f.url ? "⏳ " : loadedUrls.has(f.url) ? "✓ " : "• "}{f.title}
+                        {fetchingUrls.has(f.url) ? "⏳ " : loadedUrls.has(f.url) ? "✓ " : "• "}{f.title}
                       </span>
                     ))}
                   </div>
