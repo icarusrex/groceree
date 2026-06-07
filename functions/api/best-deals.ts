@@ -39,5 +39,12 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   const deals = crossStoreDeals(perStore, idx, diet, 8);
   const best = bestStore(perStore, idx, diet);
-  return json({ deals, best, store_count: flyers.length });
+  // Validity window of the flyers these deals come from, so the UI can show the
+  // date and you can tell the data is current (or stale).
+  const froms = flyers.map((f) => f.valid_from).filter(Boolean).sort();
+  const tos = flyers.map((f) => f.valid_to).filter(Boolean).sort();
+  const dates = (froms.length || tos.length)
+    ? { from: froms[0] || null, to: tos[tos.length - 1] || null }
+    : null;
+  return json({ deals, best, dates, store_count: flyers.length });
 };

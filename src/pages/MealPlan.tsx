@@ -16,16 +16,22 @@ type Analysis = { theme: string | null; top_pick: DealPick | null; for_you: Deal
 
 const eur = (n: number | null) => (n == null ? "" : "€" + n.toFixed(2));
 const pct = (d: number | null) => (d ? `-${Math.round(d * 100)}%` : "");
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDay = (iso: string) => { const [, m, d] = iso.split("-").map(Number); return `${d} ${MON[m - 1]}`; };
+const fmtRange = (from: string | null, to: string | null) =>
+  from && to ? `${fmtDay(from)} – ${fmtDay(to)}` : from ? `from ${fmtDay(from)}` : to ? `until ${fmtDay(to)}` : "";
 
 // Cross-store overview: leads with the single best shop this week (scored on its
 // discounted, recipe-relevant, diet-friendly deals — ignoring sugar/alcohol/non-
 // food), then the strongest individual deals across all shops.
-function BestDeals({ deals, best, onCook, cookingStore }:
-  { deals: StoreDeal[]; best: BestStore | null;
+function BestDeals({ deals, best, dates, onCook, cookingStore }:
+  { deals: StoreDeal[]; best: BestStore | null; dates: { from: string | null; to: string | null } | null;
     onCook: (store: string) => void; cookingStore: string | null }) {
   if (!deals.length && !best) return null;
+  const range = dates ? fmtRange(dates.from, dates.to) : "";
   return (
     <div className="best-deals">
+      {range && <div className="bd-dates">📅 Deals valid {range}</div>}
       {best && (
         <div className="bd-best">
           <div className="bd-best-head">🏆 Best shop this week: <b>{best.store}</b></div>
@@ -145,6 +151,7 @@ export default function MealPlan() {
   const [flyers, setFlyers] = useState<any[]>([]);
   const [bestDeals, setBestDeals] = useState<StoreDeal[]>([]);
   const [bestStore, setBestStore] = useState<BestStore | null>(null);
+  const [bestDates, setBestDates] = useState<{ from: string | null; to: string | null } | null>(null);
   const [dealMenu, setDealMenu] = useState<{ store: string; recipes: GenRecipe[] } | null>(null);
   const [cookingStore, setCookingStore] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
@@ -167,7 +174,7 @@ export default function MealPlan() {
   const reloadFlyers = React.useCallback(async () => {
     await Promise.all([
       api.flyers().then(setFlyers).catch(() => {}),
-      api.bestDeals().then((r) => { setBestDeals(r.deals || []); setBestStore(r.best || null); }).catch(() => {}),
+      api.bestDeals().then((r) => { setBestDeals(r.deals || []); setBestStore(r.best || null); setBestDates(r.dates || null); }).catch(() => {}),
     ]);
   }, []);
   React.useEffect(() => { reloadFlyers(); }, [reloadFlyers]);
@@ -419,7 +426,7 @@ export default function MealPlan() {
               )}
             </div>
 
-            <BestDeals deals={bestDeals} best={bestStore} cookingStore={cookingStore}
+            <BestDeals deals={bestDeals} best={bestStore} dates={bestDates} cookingStore={cookingStore}
               onCook={async (store) => {
                 setCookingStore(store);
                 try {
