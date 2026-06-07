@@ -40,5 +40,5 @@ export const api = {
   discoverFlyers: (store_ids?: string[]) =>
     fetch("/api/discover-flyers", { method: "POST", body: JSON.stringify({ store_ids }) }).then(j),
   fetchFlyer: (p: { store_id?: string; store_name?: string; flyer_url: string; valid_from?: string; valid_to?: string }) =>
-    fetch("/api/fetch-flyer", { method: "POST", body: JSON.stringify(p) }).then(j),
+    fetch("/api/fetch-flyer", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(150000) }).then(j),
 };
