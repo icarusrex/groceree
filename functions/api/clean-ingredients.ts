@@ -13,7 +13,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     `SELECT id, name, ingredients FROM recipes WHERE id IN (${placeholders})`,
   ).bind(...recipe_ids).all();
 
-  const model = "gemini-3.5-flash";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
   let updated = 0;
 

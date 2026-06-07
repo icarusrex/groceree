@@ -77,7 +77,7 @@ Return ONLY JSON, no prose:
 }]}
 Exactly ${days} recipes. Each recipe's main ingredients should be mostly from the sale list.`;
 
-  const model = "gemini-3.5-flash";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
   const reqBody = JSON.stringify({
     contents: [{ role: "user", parts: [{ text: PROMPT }] }],
