@@ -1,0 +1,1804 @@
+[
+  {
+    "id": "peas-green-beans-home-salad",
+    "name": "Peas, Green Beans & Home Salad",
+    "description": "Recipe from Carla Lalli Music: Just-picked sugar snap peas are sweet, firm, and juicy, and have no starchiness to them. They’re completely enjoyable raw, but charring gives the edible pods a little unexpected smoky bitterness. This dish lets you have it both ways, along with plenty of creamy cheese to play up the crunchiness of the peas.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 6,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "none",
+    "ease_score": 0.575,
+    "ingredient_count": 10,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Mozzarella",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Sugar snap peas",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Crusty bread",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Green beans",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Crushed red pepper stirred into olive oil instead of Calabrian chiles At Home",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Flaky sea salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Lemon",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Crushed Calabrian chiles in oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Toasted sesame oil or hazelnut oil instead of Calabrian chiles or olive oil 2 (8-ounce) balls buffalo mozzarella or 1 (1-pound) ball salted fresh mozzarella Extra-virgin olive oil, for drizzling and brushing Flaky sea salt 1 pound sugar snap peas, trimmed",
+      "Kosher salt, freshly ground pepper",
+      "6 thick-cut slices crusty bread, such as miche",
+      "1 lemon",
+      "Crushed Calabrian chiles in oil, for serving",
+      "Place mozzarella on a serving platter, drizzle with olive oil, and season with flaky salt. Let sit at room temperature at least 1 hour before serving to take off the chill, which is key for creamy oozy insides and the best flavor. (In a perfect world, that mozzarella would never have been refrigerated, but these are imperfect times.) Prepare a grill for medium-high direct heat.",
+      "In a medium bowl, drizzle sugar snap peas with some olive oil and toss to coat. Season with salt and pepper. Set a wire rack or grill basket on grill, add half of peas, and grill, tossing occasionally, until charred in spots, about 3 minutes. (Or, char half the peas in a dry cast-iron skillet over high heat.) Return peas to bowl with raw ones and toss to combine.",
+      "Generously brush both sides of bread with olive oil. Grill until lightly toasted, about 2 minutes (or use a dry cast-iron skillet over medium-high heat). Holding the uncut lemon in one hand, rub the lemon peel vigorously against the surface of the toast to pick up some of the zest and release some essential oils. Cut the bread into quarters or rectangular soldiers.",
+      "Add peas to platter with cheese and drizzle more olive oil over everything. Spoon up some of the chiles and their oil and drizzle over.",
+      "Serve with spoons for the cheese, along with grilled bread and flaky salt for making perfect bites.",
+      "Hot to Trot",
+      "Jarred Calabrian chiles, from the southernmost region of Italy, are molto spicy and intensely",
+      "flavored. If you love hot stuff, they’re worth a try. You can find them at specialty grocers and online.",
+      "Savory summer melon salad",
+      "When some melons are at their peak, they can be insanely aromatic and very sweet. I’ve always loved savory preparations for that reason—think cantaloupe with prosciutto or lots of black pepper, watermelon with feta, honeydew with salt and olive oil. All delicious. This is in the same vein—the fish sauce adds saltiness and umami, the melon is sweet but also vegetal (it’s a gourd, like squash and cucumber), and the lime has the zing. You can skip the MSG if you want, but I wouldn’t."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 3
+  },
+  {
+    "id": "grapefruit-shallot-beets-bowl",
+    "name": "Grapefruit, Shallot & Beets Bowl",
+    "description": "Recipe from Carla Lalli Music: This is a riff on scallops with brown butter and lemon, but with beets instead of scallops and grapefruit in place of lemon. I prefer good old-fashioned white or oro blanco grapefruit for its high acidity; if you’re using a ruby red, which is sweeter, shake a few extra drops of cider vinegar over the dish right before serving.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 6,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "none",
+    "ease_score": 0.575,
+    "ingredient_count": 17,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Grapefruit",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Shallot",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Beets",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Mint",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Any color beets will work",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Cilantro instead of mint",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Ginger",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Flaky sea salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Cider vinegar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Toasted sesame oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Butter",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Unseasoned rice vinegar or sherry vinegar instead of cider vinegar 1 white grapefruit",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "inch piece fresh ginger",
+        "quantity": 4,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Kosher salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "cider vinegar",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "1 teaspoon toasted sesame oil, plus more for drizzling 3 softball-size beets (about 1½ pounds), trimmed, scrubbed, peeled, and cut into 1- to 1½-inch-thick wedges",
+      "2 tablespoons extra-virgin olive oil",
+      "Flaky sea salt",
+      "3 tablespoons unsalted butter",
+      "Mint leaves, for serving",
+      "Prep the grapefruit, which you’re going to use three ways: First, use a vegetable peeler to remove 3 or 4 long wide strips of zest, avoiding the bitter white pith underneath. Set zest aside. Next, take off a thin slice from the top and bottom of grapefruit and upend it on a cut side.",
+      "Using a thin sharp knife and following the curve of the fruit, cut away peel and pith to expose flesh. Slice off a 2-inch-thick round from one end of grapefruit and squeeze juice from that piece into a small bowl; you’ll have about 2 tablespoons. Slice remaining grapefruit crosswise into ½-inch-thick rounds and transfer to a platter. Pick out seeds.",
+      "Put ginger into a small mesh sieve set over bowl with grapefruit juice and press down on solids so that ginger juice drips into bowl. Set grapefruit-ginger juice aside (discard solids).",
+      "Place shallot slices in a small bowl, cover with cold water, and use your fingertips to separate into individual rings. Soak for 5 minutes, then drain and return to same bowl. Season with salt and add vinegar and 1 teaspoon sesame oil. Set pickled shallots aside.",
+      "Season beets with salt. In a large skillet, heat olive oil over medium-high heat until shimmering. Place beets in pan with a flat side down.",
+      "Cook until almost charred underneath, 6 to 8 minutes, shaking skillet occasionally to make sure they aren’t sticking. Turn beets and cook on",
+      "second flat side until golden brown, 4 to 5 minutes. Cut into one and taste to check doneness—it should be firm at the center, but no longer completely raw. Transfer to platter with grapefruit and tuck grapefruit slices between and around beet wedges. Season with flaky salt. Let skillet cool for 2 to 3 minutes.",
+      "Pour off any oil from skillet and carefully wipe out with paper towel.",
+      "Return to medium heat, add grapefruit-ginger juice, swirl, and cook just until mixture simmers (this will happen almost immediately).",
+      "Add butter and reserved zest and cook until butter is browned and smells nutty, about 4 minutes (if you’re using a pan with a dark surface, spoon a little onto a white plate to check color).",
+      "Spoon pan sauce over beets and grapefruit. Top with pickled shallots, along with any juices in bowl. Serve topped with mint.",
+      "Chicories with garlic bread croutons",
+      "When we first met, my husband claimed to not like bitter greens, and was skeptical of radicchio, escarole, arugula—",
+      "even endive. Because those are some of my most beloved leafy things, I felt it was my duty to show him The Way. This particular way is to create a booby trap of cheesy, garlicky croutons that tuck themselves inside the ruffled and resilient lettuces, creating unavoidable, forkable opportunities."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "pork-celery-green-cabbage-salad",
+    "name": "Pork, Celery & Green Cabbage Salad",
+    "description": "Recipe from Carla Lalli Music: Deploying bacon and peanuts seemed like a good place to start.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "pork",
+    "ease_score": 0.637,
+    "ingredient_count": 19,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Celery",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Green cabbage",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Fennel or Brussels sprouts for the celery",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Omit the celery and double the cabbage",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Kohlrabi or cauliflower for the cabbage At Home",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Bacon",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Peanuts",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Soy sauce",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Unseasoned rice vinegar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Chili oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Pancetta or pork sausage meat for the bacon",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Hot sauce for the chili oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "celery or 2 celery hearts",
+        "quantity": 0.5,
+        "unit": "bunch",
+        "unit_norm": "bunch",
+        "category": "produce"
+      },
+      {
+        "name": "ounces thick-cut bacon",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "green cabbage",
+        "quantity": 0.25,
+        "unit": "head",
+        "unit_norm": "head",
+        "category": "produce"
+      },
+      {
+        "name": "soy sauce",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "unseasoned rice vinegar",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "Chili oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Cut celery stalks crosswise on a long diagonal into ¼-inch pieces. Snap off the light green celery leaves from the innermost stalks and set those aside.",
+      "Place bacon in a large cold skillet, then place over medium heat.",
+      "Cook, stirring occasionally, until bacon renders most of its fat and starts to curl up and turn golden but is nowhere near crisp, about 5",
+      "minutes. Add peanuts, increase heat to medium-high, and cook, stirring frequently, until peanuts take on some color, about 2 minutes.",
+      "Add celery and cabbage, season lightly with salt, and cook, tossing, just until celery is browned in spots but still crunchy, and the cabbage is bright green and tender, but still has some bite to it, about 4 minutes.",
+      "Add soy sauce and vinegar and toss through.",
+      "Transfer to a serving platter. Drizzle with chili oil and top with reserved celery leaves.",
+      "Charred broccoli salad",
+      "Searing broccoli lets you straddle the line between raw and cooked in this crunchy salad. I like rich, buttery Marcona almonds against the rustic broccoli, but regular almonds will work, too. Because the broccoli is so sturdy, this dish holds well, and the dates will continue to soften and absorb flavor as time goes on. It’s a good one to make ahead for dinner, or take to a friend’s place."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 3
+  },
+  {
+    "id": "potatoes-lime-tahini-bowl",
+    "name": "Potatoes, Lime & Tahini Bowl",
+    "description": "Recipe from Carla Lalli Music: The first time I made this dish I wrote a note to myself that said “Yum! Not much to look at, but yum.” You will have extra tahini butter left over: Scrape it into a jar and chill it. It will keep for at least a week and is an easy dinner fixer. Toss it with warm grains, udon noodles, or a tray of roasted vegetables; spread it onto a seared steak while it rests, or use it to top broiled salmon or snapper.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 6,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "none",
+    "ease_score": 0.495,
+    "ingredient_count": 13,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Sweet potatoes",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Acorn or butternut squash",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Butter",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Tahini",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Soy sauce",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Toasted sesame oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Lime",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Flaky sea salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Sesame seeds",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Creamy peanut butter for tahini",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Walnut oil in place of sesame oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Unseasoned rice vinegar for lime juice",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Crushed toasted peanuts or pepitas for sesame seeds 3 pounds sweet potatoes, any color (6 small or 3 large), scrubbed 6 tablespoons unsalted butter, at room temperature 2 tablespoons tahini 1 tablespoon soy sauce",
+      "2 teaspoons toasted sesame oil",
+      "¼ cup fresh lime juice, plus wedges for serving Kosher salt, freshly ground pepper",
+      "Flaky sea salt and toasted sesame seeds, for serving Bring a few inches of water to a boil in a medium stockpot fitted with a steamer basket. Halve the sweet potatoes crosswise if large and place them in the steamer. Cover, reduce the heat to medium, and steam until potatoes are completely tender, about 30 minutes. I use a cake tester to check doneness, but the tines of a fork or tip of a paring knife would work, too.",
+      "Meanwhile, in a small bowl, combine the butter, tahini, soy sauce, sesame oil, and lime juice and use a spatula, spoon, or fork to smash them together (you will think the butter and the liquids will never fully combine, but don’t give up—it will happen). Season tahini butter with salt and a generous amount of pepper.",
+      "Use tongs to transfer cooked potatoes to a large plate or platter. When just cool enough to handle, split potatoes in half and spread tahini butter generously onto flesh. Don’t be skimpy: The tahini butter is a sauce, not a schmear. Top with a liberal coating of sesame seeds and season with flaky salt. Serve with more lime wedges—these really come alive with lots of bright citrus.",
+      "Egg-centric",
+      "These decidedly savory recipes prove that the addition of an egg is all that’s needed to push a side dish onto center stage.",
+      "Slow-cooked dozen-egg frittata",
+      "BLTs with bacon-fat fried eggs",
+      "Omelet with whipped ricotta for two",
+      "Poached egg and silky braised greens",
+      "Fried grains with bacon, mushrooms, and kimchi",
+      "Aioli and all the things for dipping",
+      "Carbonara stracciatella",
+      "Slow-cooked dozen-egg frittata",
+      "Until I came across the slow-cook frittata method from the legendary Brooklyn pizzeria Franny’s, I’d always cooked them over medium-high heat on the stovetop and then flashed them under the broiler to brown the top side at the end. This gentle-heat process creates a dense and creamy texture, and it made me an instant convert. A dozen eggs might seem like a lot, but it’s the right amount for six people."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "tendrils-ricotta-salad",
+    "name": "Tendrils & Ricotta Salad",
+    "description": "Recipe from Carla Lalli Music: Making one big omelet and folding it in half is easy, whereas making two smaller rolled omelets is hard. Even if you nail it, one person gets stuck with a not-quite-hot omelet. I probably wouldn’t mess with pea tendrils and a creamy ricotta filling on a weekday morning, but I’d serve this breakfast for dinner any night.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 2,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "none",
+    "ease_score": 0.575,
+    "ingredient_count": 2,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Ricotta",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Pea tendrils",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Small-curd cottage cheese or cream cheese for the ricotta Any other tender greens, such as baby kale or small watercress for the pea tendrils At Home",
+      "Parmigiano",
+      "Salt and pepper",
+      "Eggs",
+      "Olive oil",
+      "White wine vinegar",
+      "Cheddar, Monterey Jack, or Grana Padano can replace the Parm Sherry vinegar or cider vinegar for the white wine vinegar 4 ounces fresh ricotta ¼ cup grated Parmigiano",
+      "Kosher salt, freshly ground pepper",
+      "6 large eggs",
+      "3 tablespoons extra-virgin olive oil, divided",
+      "2 cups pea tendrils",
+      "1 tablespoon white wine vinegar In a small bowl, combine ricotta and Parmigiano and whisk energetically until mixture is very well blended and slightly aerated.",
+      "Season with salt and pepper and set aside.",
+      "In a medium bowl, whisk eggs until very smooth and no visible streaks of egg whites remain. Season with salt and pepper. Heat a medium nonstick skillet over medium heat with 1 tablespoon olive oil. Add eggs and cook, stirring slowly in long passes across entire surface of pan and all the way around edges, until large curds form and underside is set, 1 to 2 minutes. Rap pan firmly against stovetop a few times to settle eggs into skillet. Spoon ricotta mixture across eggs, over to one side of center line. Continue to cook eggs until underside is light golden brown, about 1 minute longer. Use a spatula to lift plain half of omelet up and over the other half (as though you were folding a tortilla in half to make a taco). Slide omelet onto a cutting board.",
+      "In a medium bowl, toss pea tendrils with vinegar and remaining 2",
+      "tablespoons oil. Season with salt and pepper. Halve omelet crosswise and serve with pea tendril salad on top.",
+      "Poached egg and silky braised greens",
+      "Listen up: Swiss chard stems and ribs are a treasure—earthy, sweet, and resilient—as desirable as the ruffly leaves that surround them. Give them a head start before adding the leaves so they can soften a bit, sending vegetal juices into the pan to mingle with the garlic and olive oil. Don’t balk at the amount of olive oil here, either. The leaves will melt into the saucy cooking liquid, creating a perfect soft landing for a runny egg."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "fish-parsley-aromatic-salad",
+    "name": "Fish, Parsley & Aromatic Salad",
+    "description": "Recipe from Carla Lalli Music: Even when there is nothing to eat, there is always spaghetti aglio e olio. There’s lots of parsley in this version—maybe enough to convince yourself you’re getting a serving of greens. Keep this dish in mind when you’re staring down a bunch of herbs in the crisper drawer.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": true,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "fish",
+    "ease_score": 0.575,
+    "ingredient_count": 10,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Parsley",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Basil would lend more aromatic",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "chives in place of parsley would amplify the garlicky and pungent flavors At Home",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Spaghetti",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Anchovy fillets",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "seafood"
+      },
+      {
+        "name": "Crushed red pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Parmigiano",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      }
+    ],
+    "instructions": [
+      "Any other long pasta, such as bucatini or linguine, can replace the spaghetti Kosher salt, freshly ground pepper",
+      "1 pound spaghetti",
+      "⅓ cup extra-virgin olive oil",
+      "10 garlic cloves, smashed",
+      "2 oil-packed anchovy fillets (optional)",
+      "½ teaspoon crushed red pepper, plus more for serving 1 cup lightly packed chopped fresh parsley leaves and tender stems",
+      "Parmigiano, for serving",
+      "Bring a large pot of salted water to a boil for pasta. Add pasta and set a timer for 2 to 3 minutes less than package instructions (it should be very al dente and will finish cooking in the sauce).",
+      "Meanwhile, in a large skillet or Dutch oven, heat oil and garlic over medium heat, stirring occasionally, until bubbles appear and garlic is starting to turn translucent, 2 to 3 minutes. Season garlic with salt and pepper (I like a lot of pepper, and I like how its flavor opens up in the oil). Continue cooking, breaking garlic into smaller pieces with the edge of a wooden spoon, until golden brown and softened, 3 to 4",
+      "minutes more. Add anchovies (if using) and crushed red pepper and stir until anchovies disintegrate, about 1 minute. If pasta is not yet done, slide skillet off heat.",
+      "Scoop out a cup of pasta cooking liquid, then drain spaghetti and transfer to skillet along with ½ cup pasta water. Bring to a simmer over medium heat, add parsley, and cook, tossing constantly with tongs and adding more pasta water as needed, until pasta is al dente and sauce is just thick enough to coat pasta but there’s still plenty of extra sauce in skillet, 2 to 3 minutes.",
+      "Serve with more crushed red pepper and Parmigiano for grating over.",
+      "Caprese mac and cheese",
+      "You probably didn’t think you needed a mac and cheese for summer months. Surprise! This is a nostalgic take on a room-temperature, portable pasta my mom used to make every August when I was a teenager: She’d toss together marinated tomatoes, milky fresh mozzarella, and basil with just-drained pasta that would melt the cheese on contact. My version is baked, but the way it tastes takes me back to those summers."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 4
+  },
+  {
+    "id": "chicken-beets-squash-salad",
+    "name": "Chicken, Beets & Squash Salad",
+    "description": "Recipe from Carla Lalli Music: 2 to",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "chicken",
+    "ease_score": 0.575,
+    "ingredient_count": 3,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Beets",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "inch pieces of butter-nut squash",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      }
+    ],
+    "instructions": [
+      "Fennel or acorn squash wedges, cauliflower florets, or whole Brussels sprouts for all or some of the beets",
+      "Torn radicchio or escarole leaves, savoy or napa cabbage leaves, or kale leaves for all or some of the beets",
+      "Add a thinly sliced lemon to the vegetables",
+      "Fennel seeds",
+      "Crushed red pepper",
+      "Salt and pepper",
+      "Olive oil",
+      "Aniseeds, cumin seeds, or coriander seeds can replace the fennel seeds 2 teaspoons fennel seeds",
+      "1 teaspoon crushed red pepper",
+      "1 whole chicken (3½ to 4½ pounds), backbone removed Kosher salt, freshly ground pepper",
+      "8 to 10 medium beets, any color, greens trimmed 4 tablespoons extra-virgin olive oil, divided",
+      "Set oven racks in upper third and lowest position of oven, place a 10-inch cast-iron skillet on lower rack, and preheat oven to 500°F. (A preheated skillet jump-starts the browning process and dramatically reduces cooking time.) Lightly crush fennel and crushed red pepper in a mortar and pestle or spice grinder. Season chicken on both sides with salt and black pepper, then with fennel–crushed red pepper mix-ture. Scrub and peel beets and cut into 2-inch wedges (quarters or sixths, depending on their size). Toss beets and 2 tablespoons oil on a rimmed baking sheet. Season with salt and pepper.",
+      "Carefully remove hot skillet from oven and place on the stovetop over high heat. Pour in remaining 2 tablespoons oil. Carefully lay chicken in skillet, skin side down. Use a spatula to press firmly down on chicken to make sure skin is in firm contact with pan. Cook until edges of skin are golden brown, about 2 minutes. Lay a sheet of foil over chicken, then place a second cast-iron pan, Dutch oven, or other heavy pot on top as a weight. This will help chicken maintain contact with the pan while it roasts, shortening the cooking time and helping the skin brown.",
+      "Return pan to lower rack and cook for 30 minutes. A thermometer inserted into thickest part of breast, avoiding bone, should register 150°F; temperature will continue to climb when chicken is resting.",
+      "Roast beets on upper rack until tender when pierced with a cake tester, 25 to 30 minutes.",
+      "Turn chicken skin side up and let rest for 20 minutes. Serve with beets and any accumulated juices in skillet.",
+      "Chicken cutlets with spicy coconut dressing",
+      "Don’t shake the can of coconut milk before opening it—",
+      "you’ll use the layer of cream on top in this sweet and spicy dressing, which is mellowed by the cooling iceberg lettuce and rich dark-meat chicken. Transfer the unused coconut milk to a clean jar and refrigerate it for making soup or a curry (it will hold for several days)."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "chicken-cherry-tomatoes-basil-salad",
+    "name": "Chicken, Cherry Tomatoes & Basil Salad",
+    "description": "Recipe from Carla Lalli Music: 2 to",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.575,
+    "ingredient_count": 11,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Cherry tomatoes",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Basil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Chicken thighs",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Green beans",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "0.5 roughly chopped tomatoes for the cherry tomatoes Replace half the basil with parsley",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "small fennel bulb",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "All-purpose flour",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Red wine vinegar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Half a small red onion, thinly sliced, for the garlic Lemon juice or white wine vinegar for the red wine vinegar 12 ounces cherry tomatoes, halved, divided 4 garlic cloves, 1 finely grated, 3 thinly sliced 2 tablespoons extra-virgin olive oil, divided",
+      "Handful of basil leaves",
+      "Kosher salt, freshly ground pepper",
+      "4 bone-in, skin-on chicken thighs, patted dry",
+      "¼ cup all-purpose flour, for dusting",
+      "8 ounces thin green beans, trimmed, halved crosswise 1 tablespoon red wine vinegar",
+      "Toss half of the cherry tomatoes with the grated garlic, 1 tablespoon olive oil, and basil. Season with salt and pepper. Let salsa sit so tomatoes release some juices and flavors can marry.",
+      "Meanwhile, debone the chicken thighs: Working with one thigh at a time, place a chicken on a cutting board, skin side down. Press your finger against the flesh to locate the thigh bone that runs from one end to the other. Using a sharp paring knife, make short swift cuts along the length of the bone on one side to separate the flesh. Rotate chicken 180° and repeat on other side of bone. Wiggle the tip of your knife underneath the bone, angle blade upward, and cut bone out completely. Place thigh on a large plate and repeat with remaining thighs.",
+      "Place flour on a dinner plate. Season chicken on both sides with salt and pepper, then dredge very lightly in flour, patting excess off until only a sheer coating remains. Heat a large skillet, preferably not cast-iron, over medium-high heat. Pour in remaining 1 tablespoon olive oil, then lay thighs into pan, skin side down.",
+      "Cook chicken, undisturbed, until skin is deep golden brown and flesh is cooked about halfway through, 6 to 8 minutes. Turn chicken and cook on second side until chicken is cooked through, about 4 minutes more. Transfer thighs to a platter.",
+      "Return pan to medium-high heat and cook green beans, shaking pan occasionally, until charred in spots, 4 to 5 minutes. Season with salt and pepper. Add sliced garlic and reserved (plain) tomatoes to pan.",
+      "Season again with salt and pepper and cook until tomatoes begin to soften and garlic is translucent, 1 to 2 minutes. Remove pan from heat and stir in vinegar, scraping up any browned bits in pan.",
+      "Serve chicken thighs with beans and tomatoes, with fresh tomato salsa spooned over.",
+      "Rosemary chicken ragu with pressure cooker polenta",
+      "The great thing about making a ragu from dark-meat chicken instead of red meat is that it takes a third of the time to cook, but it starts the same way—by browning the protein slowly and deliberately, and using that time to prep the vegetables that sweeten and deepen the sauce. In case that is all sounding too old-world for you, I’ve busted out my trusty pressure cooker to make a pot of polenta in less time than it takes to brown the chicken skin. Balance!"
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "chicken-basil-herbs-salad",
+    "name": "Chicken, Basil & Herbs Salad",
+    "description": "Recipe from Carla Lalli Music: 4 to",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 6,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "chicken",
+    "ease_score": 0.575,
+    "ingredient_count": 12,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Chicken wings",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Mint and/or basil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Chicken drumsticks for the wings",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Omit the herbs",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Oregano",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Granulated garlic",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Smoked paprika",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Sugar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "MSG",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Grapeseed oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Lime",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "The truly essential spices are the paprika, the sugar, and the granulated garlic. If you don’t have one of the others, don’t sweat it.",
+      "1 tablespoon kosher salt",
+      "1 teaspoon dried oregano",
+      "1 teaspoon granulated garlic",
+      "1 teaspoon smoked paprika",
+      "1 teaspoon sugar",
+      "½ teaspoon MSG, plus more for serving",
+      "4 pounds chicken wings",
+      "2 tablespoons grapeseed oil",
+      "1 cup small fresh mint and/or basil leaves",
+      "2 limes, cut into wedges",
+      "In a small bowl, combine salt, oregano, granulated garlic, smoked paprika, sugar, and MSG. Pat chicken wings dry and arrange on a rimmed baking sheet lined with foil. Season on both sides with spice mix. Let wings sit 30 minutes at room temperature, or transfer to a zip-top bag and refrigerate for up to 24 hours.",
+      "Place racks in center and top positions of oven and preheat to 375°F.",
+      "Drizzle wings with oil and toss to coat. Bake on center rack until wings are cooked through and skin is golden brown, about 30 minutes, turning with tongs halfway through. This initial cooking time renders some of the fat from the wings, which in turn allows the skin to crisp in next step.",
+      "Remove baking sheet from oven. Heat broiler. Broil wings on upper rack until skin is deeply browned and starting to char at edges, 5 to 7",
+      "minutes, turning wings every 2 to 3 minutes (because there is sugar in the rub, and because every broiler is different, this could happen very quickly; watch closely).",
+      "Transfer the wings to a platter and top with herbs. Serve with lime wedges for squeezing over.",
+      "My way duck confit",
+      "There was a day, many years ago, when I felt like preparing duck confit, but I didn’t want to make a special trip and shell out big bucks for the quart (or more) of duck fat that most recipes call for. “Won’t the duck make enough of its own fat?”",
+      "I thought lazily. I decided to try it. I added a splash of water to the pot with the duck legs to help the fat render early on, covered the pot, and took it very low and slow. Whaddya know —it worked. Traditionalists will say this is a hack recipe, and that’s fine. It’s a shortcut, but it works just as well as the original. Another word for that is…improvement."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "fish-chives-grapeseed",
+    "name": "Fish, Chives & Grapeseed",
+    "description": "Recipe from Carla Lalli Music: Dry scallops are fresh, unadulterated, highest-quality scallops, and they are the only ones to use in this dish. If they’re not labeled dry, that means they’ve been treated with a liquid preservative that will ruin any hope you have of getting a good crusty sear on them (and that stuff doesn’t taste so nice, either). Ask before you buy.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": true,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "fish",
+    "ease_score": 0.637,
+    "ingredient_count": 17,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Large dry sea scallops",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "seafood"
+      },
+      {
+        "name": "Chives",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Small bay scallops Parsley in place of chives",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "seafood"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Grapeseed oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Butter",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Hazelnuts",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Lemon",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil or canola oil for grapeseed",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Almonds or pine nuts for the hazelnuts",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Omit nuts altogether",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Unseasoned rice vinegar or fresh grapefruit juice for lemon juice 1 pound large dry sea scallops",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "seafood"
+      },
+      {
+        "name": "Kosher salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "grapeseed oil",
+        "quantity": 2,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "produce"
+      },
+      {
+        "name": "unsalted butter",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "dairy"
+      },
+      {
+        "name": "raw hazelnuts",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "fresh lemon juice",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Use your fingers to pull off the side muscle from the scallops and brush away any stray bits of shell or grit. Pat scallops dry with paper towels, then arrange on a large plate and season both sides with salt and pepper.",
+      "Heat a medium skillet, preferably stainless steel, over medium-high heat for a couple of minutes. When a drop of water dances on the surface of the skillet, add oil, which should immediately thin out and shimmer. Carefully place scallops into pan, flat side down, and cook, undisturbed, until you can see that they’re dark brown on the edge that’s in contact with the pan, about 4 minutes. Using a pair of tongs, a thin spatula, or a metal spoon, turn scallops onto second side and cook until just barely cooked through, about 1 minute more. Transfer to a serving plate.",
+      "Pour off any residual oil from skillet and place over medium heat.",
+      "Add butter and nuts to pan and cook, stirring often, until butter foams and then darkens, and nuts are lightly toasted, about 3 minutes.",
+      "Add lemon juice and cook, scraping up any browned bits with a wooden spoon, until sauce is slightly thickened, about 30 seconds. If sauce reduces too much or looks thick and greasy, stir in a couple tablespoons of water to loosen and reemulsify. Add chives and taste sauce; adjust with more lemon juice or salt as needed.",
+      "Spoon pan sauce and nuts over scallops to serve.",
+      "Crispy-skinned black sea bass with salt-and-butter radishes",
+      "The flavor of cooked radishes can be a bit gassy (they’re in the cabbage family, after all). Raw ones can be sharp and pungent. What’s a girl to do?! This recipe splits the difference, sautéing them enough to mellow their bite, but maintaining enough crunch to contrast with a delicate fish fillet. Starting the fillets in a barely warm skillet keeps the skin from curling up, which helps it brown and crisp, a trick I learned from my esteemed colleague Chris Morocco."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 4
+  },
+  {
+    "id": "fish-radishes-scallions-salad",
+    "name": "Fish, Radishes & Scallions Salad",
+    "description": "Recipe from Carla Lalli Music: The flavor of cooked radishes can be a bit gassy (they’re in the cabbage family, after all). Raw ones can be sharp and pungent. What’s a girl to do?! This recipe splits the difference, sautéing them enough to mellow their bite, but maintaining enough crunch to contrast with a delicate fish fillet. Starting the fillets in a barely warm skillet keeps the skin from curling up, which helps it brown and crisp, a trick I learned from my esteemed colleague Chris Morocco.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": true,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "fish",
+    "ease_score": 0.575,
+    "ingredient_count": 6,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Radishes",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Black sea bass",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "seafood"
+      },
+      {
+        "name": "Scallions",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Chives",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "watermelon radishes for small red ones",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "small piece daikon or kohlrabi for radishes",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      }
+    ],
+    "instructions": [
+      "Skin-on striped bass, red snapper, branzino, or trout for black sea bass Mint, basil, cilantro, or dill for chives",
+      "Grapeseed oil",
+      "Butter",
+      "Salt and pepper",
+      "Flaky sea salt",
+      "Lime",
+      "Ghee in place of oil and butter",
+      "Lemon or a wedge of grapefruit for lime",
+      "1 bunch small radishes, any type or color, tops removed, scrubbed 1 teaspoon grapeseed oil",
+      "2 tablespoons unsalted butter, divided",
+      "4 skin-on black sea bass fillets (6 to 8 ounces each) Kosher salt, freshly ground pepper",
+      "1 bunch scallions (white and pale-green parts only), thinly sliced crosswise Small handful of chives, thinly sliced",
+      "Flaky sea salt, for serving",
+      "1 lime, cut into wedges",
+      "Thinly slice radishes and soak them in a medium bowl of ice water for 5 minutes, which will firm them up and reduce their spiciness. Drain and blot dry with a clean kitchen towel or paper towels.",
+      "Put oil and 1 tablespoon butter in a large nonstick skillet and place over medium heat. Pat fish dry on both sides with paper towels, season with salt and pepper, and place, skin side down, into pan. Gently press on fillets with a flexible spatula to encourage skin to make contact with skillet’s surface. Cook, gently pressing down occasionally, until skin is very brown and crisp and flesh is opaque except for a thin strip down middle of flesh side, 6 to 8 minutes. Carefully turn fillets and cook on flesh side until just cooked through, about 1 minute longer. Transfer fillets to four plates or a serving platter.",
+      "Wipe out skillet and place over medium-high heat. Add remaining 1",
+      "tablespoon butter. When it begins to foam, add radishes and scallions, season with salt and pepper, and cook, tossing, until scallions are just wilted and radishes soften enough to be bendable but still have some crunch, about 2 minutes. Spoon radishes and pan sauce over and around fish and top with chives and a pinch of flaky sea salt. Serve with limes for squeezing over.",
+      "Pan-roasted salmon with cauli-tartar sauce and chive vinaigrette",
+      "When I crave salmon, I want the flesh rare in the middle, the skin to be sleek as glass, and the belly part of the fillet rich, fatty, and juicy. For me, only pan-roasting will do. It’s worth paying a little bit more for well-sourced salmon. If the price per pound is too good to be true, the fish is probably not too good."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 4
+  },
+  {
+    "id": "scallions-salad",
+    "name": "Scallions Salad",
+    "description": "Recipe from Carla Lalli Music: 4 to",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 6,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "fish",
+    "ease_score": 0.575,
+    "ingredient_count": 4,
+    "is_one_pot": true,
+    "ingredients": [
+      {
+        "name": "Serrano chile",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Scallions",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Clams",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Crusty bread",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Use a couple of shallots, a leek, or a handful of ramps in place of the scallions, and omit garnishing the finished dish with them raw 6 pounds mussels instead of clams At Home",
+      "Olive oil",
+      "Ginger",
+      "Garlic",
+      "Butter",
+      "A few slices of bacon, cut into pieces, a spoonful of black bean paste, or some miso can replace the ginger and/or garlic",
+      "2 tablespoons olive oil, plus more for drizzling 2-inch piece fresh ginger, peeled and crushed",
+      "3 garlic cloves, smashed",
+      "1 small serrano chile, thinly sliced",
+      "2 bunches scallions (white and pale-green parts only), thinly sliced, divided",
+      "4 dozen littleneck or Manila clams, scrubbed Thick slices of rustic country bread, for dipping 4 tablespoons (2 ounces) unsalted butter Prepare a grill for medium-high direct heat. (If you don’t have a grill, do everything as written on your stovetop.)",
+      "Place a large cast-iron or heavy stainless steel skillet on grill grates and add oil. When oil is hot, add ginger, garlic, chile, and half of scallions and stir until vegetables are sizzling, about 1 minute. Add clams and ½ cup water (or white wine, if you have a bottle open), toss to coat, and cover skillet with a lid, baking sheet, or large piece of foil. Cook, checking and stirring every few minutes, until the clams begin to open, 5 to 10 minutes. Transfer cooked clams to a large shallow bowl or platter with a slotted spoon as they open, but be quick about it. If you end up with a couple stubborn clams that refuse to open, discard them. They might be filled with sand, or they might be conscientious objectors. Either way, don’t eat them. Keep pan sauce warm, off to the side.",
+      "Drizzle bread generously with oil on both sides. Place over direct heat and grill until golden brown and delicious looking on both sides, 2 to 3 minutes (or toast in a toaster and then drizzle with oil). Set aside.",
+      "Add butter to pan sauce and slide skillet back over direct heat. As soon as butter is foaming, about 1 minute, return clams and any accumulated liquid to sauce, shower with remaining scallions, and toss to coat. Serve clams with bread and a large empty bowl for discarding the shells.",
+      "Grilled squid salad with cucumbers, herbs, and smoky chickpeas",
+      "Don’t be squeamish about squid: It is incredibly affordable, very accessible, mild flavored, and sustainable. The best ways to cook it are hot and fast or low and slow. This is an example of the first way—keep your paws off of it until grill marks appear on the first side, at which point it will be almost completely cooked through."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "pork-ribs-salad",
+    "name": "Pork & Ribs Salad",
+    "description": "Recipe from Carla Lalli Music: I like St. Louis ribs because they’ve got plenty of meat on top of the rib bone, and plenty of fat to prevent them from drying out. By teaming up your pressure cooker (or multicooker) and your broiler, you can have shreddy, falling-apart ribs on a weeknight. True story! If you don’t have a pressure cooker or a multicooker (yet), wrap the ribs in a double layer of foil and bake on a rimmed baking sheet in a 300°F oven until very tender, about three hours. The subsequent steps are the same.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": false,
+    "contains_dairy": true,
+    "primary_protein": "pork",
+    "ease_score": 0.557,
+    "ingredient_count": 17,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "St. Louis pork ribs",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Use baby back ribs instead",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Salt",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Fish sauce",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Cider vinegar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Brown sugar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Butter",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "Cayenne",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Mustard seeds",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Use white distilled vinegar instead of cider vinegar Use maple syrup instead of brown sugar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Ground mustard can replace mustard seeds",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "racks St. Louis pork ribs",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "kosher salt",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "cider vinegar",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "dark brown sugar",
+        "quantity": 3,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "unsalted butter",
+        "quantity": 6,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "dairy"
+      },
+      {
+        "name": "0.5 teaspoons mustard seeds",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Cut each rack of ribs in half between two center-most bones and season all over with 2 tablespoons salt.",
+      "Place a steamer insert in a pressure cooker and add 1 inch of water.",
+      "Add ribs to pot, seal lid, and cook at high pressure for 12 minutes.",
+      "Release pressure naturally. Transfer ribs to two foil-lined rimmed baking sheets. (At this stage ribs can be cooled, then covered and refrigerated for up to 2 days before proceeding, if you wish.) Heat broiler.",
+      "In a small bowl, whisk together fish sauce, cider vinegar, brown sugar, melted butter, cayenne, mustard seeds, and remaining 1 tablespoon salt until sugar and salt dissolve. Brush or spoon half of mixture over both sides of ribs. Turn ribs meaty side up and broil until glaze is golden brown, about 4 minutes. Brush with remaining glaze and broil until ribs are dark golden and crisp, about 4 minutes more.",
+      "Let cool 5 minutes, then cut into smaller pieces to serve.",
+      "Butter-basted rib eye with crunchy fennel salad",
+      "What do these classics have in common: Duck confit and frisée. Breaded veal cutlet and tomato-arugula salad. Barbecue and pickles. Chicago-style hot dogs and this sassy little steak and salad dinner. Rich marbled meats are extra-delicious when served with cool, crunchy, acidic vegetables. It’s a fact, and the combo never gets old.",
+      "3 to"
+    ],
+    "source": "rescued-named",
+    "cost_tier": 2
+  },
+  {
+    "id": "lamb-herbs-seeds",
+    "name": "Lamb, Herbs & Seeds",
+    "description": "Recipe from Carla Lalli Music: Lamb chops cut from the rib section aren’t cheap, so whenever I make this it feels like a special occasion, even when it’s a Saturday night in the summer with my family. Try to get small lamb chops that have not been Frenched, or trimmed of the layer of fat and deckle that sits on top of the bone. That’s the best part—lamb fat is king! This is a great springtime dinner with the asparagus on this page.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 4,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": false,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "lamb",
+    "ease_score": 0.495,
+    "ingredient_count": 7,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Lamb chops",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Mixed fresh herbs",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Lamb shoulder chops are good",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "meat"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Coriander seeds",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Red wine vinegar",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Fennel seeds, sumac, cumin seeds, or mustard seeds can replace coriander Use lemon wedges instead of vinegar",
+      "16 lamb rib chops, untrimmed (about 3 pounds)",
+      "Kosher salt, freshly ground pepper",
+      "1 teaspoon coriander seeds, lightly crushed",
+      "2 cups mixed chopped fresh herbs, such as rosemary, basil, mint, chives, dill, and/or parsley",
+      "½ cup extra-virgin olive oil",
+      "Red wine vinegar, for serving",
+      "Season lamb chops with salt, pepper, and coriander seeds and transfer to a glass baking dish or a large zip-top bag. Add herbs and olive oil and smush everything around to coat. Let sit at room temperature for 1 hour, or cover and refrigerate for up to 2 days.",
+      "Prepare a grill for medium-high direct heat. Lift chops out of marinade, letting excess drip off. Season lightly with salt. Grill, turning every 2 minutes, until chops are charred, fat is starting to render, and a thermometer inserted into center of chops registers 125°F for medium-rare to medium, 6 to 8 minutes. Transfer to a platter and season with a few dashes of red wine vinegar. Let rest for 10 minutes. I highly recommend eating these with your hands.",
+      "Slow-roasted lamb shoulder and beans with magic green sauce Slow-roasted lamb shoulder and beans with magic green sauce; Pomegranate-parsley tabbouleh (this page)",
+      "Despite a slightly hefty-looking ingredient list, this is a hands-off, minimal-effort meal, perfect for Sunday dinners when you’re not sure if four people or nine people will be at the table. The worst thing that can happen is that there will be shreddy meat leftovers and you’ll get to make tacos or sandwiches or fried rice during the week. The magic thing about the green sauce is that it works seamlessly with any combination of tender herbs, so you can tweak it to your preferences, or for the herbs you happen to have on hand."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 3
+  },
+  {
+    "id": "carrots-chickpeas-onion",
+    "name": "Carrots, Chickpeas & Onion",
+    "description": "Recipe from Carla Lalli Music: I spent two days with vegetable whisperer Jeremy Fox, the chef at Rustic Canyon Wine Bar in Santa Monica, California, on an assignment for Bon Appétit, and will be forever grateful for his advice on cooking beans: “If the broth tastes good,” he told me, “the beans will taste good.” Letting the beans sit in the flavorful stock they’ve helped to create infuses them with flavor to their very center. The other key to cooking beans is patience—lower the heat to maintain the barest possible simmer, which will help keep the skins intact as they slowly soften.",
+    "cuisine": null,
+    "meal_type": "dinner",
+    "difficulty": "medium",
+    "cook_time": 45,
+    "prep_time": null,
+    "total_time": 45,
+    "servings": 8,
+    "calories_per_serving": null,
+    "is_gluten_free": false,
+    "is_vegetarian": true,
+    "is_pescatarian": false,
+    "is_dairy_free": true,
+    "contains_dairy": false,
+    "primary_protein": "none",
+    "ease_score": 0.495,
+    "ingredient_count": 18,
+    "is_one_pot": false,
+    "ingredients": [
+      {
+        "name": "Carrots",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Thyme",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Sage",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "Dried chickpeas",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Yellow onion",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Garlic",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Salt and pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Olive oil",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Crushed red pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "Any dried bean",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "shallots for the onion",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "whole dried chile for the crushed red pepper",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "pound dried chickpeas",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "page)",
+        "quantity": null,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "carrots",
+        "quantity": 2,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "large yellow onion",
+        "quantity": 0.5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "garlic cloves",
+        "quantity": 5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "kosher salt",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      }
+    ],
+    "instructions": [
+      "Freshly ground pepper, extra-virgin olive oil, and crushed red pepper, to taste Handful of thyme sprigs",
+      "In a large stockpot, combine chickpeas, carrots, onion, garlic, and 1",
+      "tablespoon salt and cover with cold water by 3 inches. Bring to a boil over medium-high heat, then immediately reduce heat to medium-low. Set the lid askew, and let beans simmer very, very gently—adding water to the pot as needed to keep beans submerged—until they are completely tender but not mushy, about 1 hour 30 minutes. (This may go faster if the beans have been soaked, or could take longer, depending on the age of the beans.) Avoid the urge to stir the pot.",
+      "Agitation will cause the skins to split and the broth will be cloudy; occupy yourself with something else to do and let time do its thing.",
+      "Remove pot from heat and season bean liquid purposely and fearlessly with salt, black pepper, olive oil, and crushed red pepper.",
+      "The broth should be tasty enough to sip on its own. Squeeze the thyme in your hand to release its aromatic oils, then submerge into the broth and let the beans cool.",
+      "To serve, use a slotted spoon to scoop out onion, carrots, and thyme.",
+      "Return liquid to a simmer over medium. Taste and adjust seasoning one last time.",
+      "Yogi’s kitchari with sizzled spices",
+      "I was doing an Ayurvedic cleanse called panchakarma many years ago the first time I ever heard of, or made, kitchari, and it is to this day one of my essential feel-good foods. Mung beans, common in Indian and Chinese medicine, are detoxifying; the mix of spices is both warming and calming; white rice is easy to digest; and well-cooked vegetables (sans alliums or nightshade) are grounding and nourishing. If you feel off, or are coming back from a cold, or have been overindulging and want to give your system a break, this is what you should eat."
+    ],
+    "source": "rescued-named",
+    "cost_tier": 1
+  }
+]
