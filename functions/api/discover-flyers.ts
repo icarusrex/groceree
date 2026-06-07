@@ -50,12 +50,17 @@ function pickWeekly(src: StoreSource, links: string[]): { url: string; title: st
   }
   const now = new Date();
   const cur = isoWeek(now);
-  // Default: current week only. On Sundays, also surface next week's flyer
-  // (people plan the upcoming week, and next week's flyer is usually live by then).
-  const want = now.getDay() === 0 ? 2 : 1;
   const weeks = [...byWeek.keys()];
   const future = weeks.filter((w) => w >= cur).sort((a, b) => a - b);
-  const chosen = future.length ? future.slice(0, want) : weeks.sort((a, b) => b - a).slice(0, 1);
+  let chosen: number[];
+  if (now.getDay() === 0) {
+    // Sunday: the current week ends today, so plan NEXT week. Prefer next week's
+    // flyer; fall back to the current one only if next isn't published yet.
+    const next = future.filter((w) => w > cur);
+    chosen = next.length ? next.slice(0, 1) : future.slice(0, 1);
+  } else {
+    chosen = future.length ? future.slice(0, 1) : weeks.sort((a, b) => b - a).slice(0, 1);
+  }
   return chosen.map((w) => ({ url: byWeek.get(w)!, title: weekLabel(w, cur) }));
 }
 
@@ -90,9 +95,14 @@ function pickLeaflet(src: StoreSource, links: string[]): { url: string; title: s
   const started = dates.filter((t) => t <= today);
   const future = dates.filter((t) => t > today);
   const chosen: number[] = [];
-  if (started.length) chosen.push(started[started.length - 1]); // active flyer
-  else if (future.length) chosen.push(future[0]);               // nothing live yet
-  if (now.getDay() === 0 && future.length) chosen.push(future[0]); // Sunday: peek next
+  if (now.getDay() === 0 && future.length) {
+    chosen.push(future[0]);                          // Sunday: next week's leaflet
+  } else if (started.length) {
+    chosen.push(started[started.length - 1]);        // active flyer
+  } else if (future.length) {
+    chosen.push(future[0]);                          // nothing live yet
+  }
+  if (!chosen.length && started.length) chosen.push(started[started.length - 1]); // fallback
   const seen = new Set<number>();
   return chosen.filter((t) => !seen.has(t) && seen.add(t)).map((t) => {
     const label = t <= today ? "This week" : "Next week";
@@ -112,9 +122,11 @@ async function discover(src: StoreSource, key: string): Promise<Found> {
     // Fixed viewer URLs (Aldi: this-week / next-week pages are static).
     if (src.staticViewers) {
       const sunday = new Date().getDay() === 0;
-      base.flyers = src.staticViewers
-        .filter((v) => !v.sundayOnly || sunday)
-        .map((v) => ({ url: v.url, title: v.title }));
+      // On Sunday plan next week — use the next-week page only, if there is one;
+      // otherwise (and on other days) use the regular this-week page(s).
+      const nextOnly = src.staticViewers.filter((v) => v.sundayOnly);
+      const picked = sunday && nextOnly.length ? nextOnly : src.staticViewers.filter((v) => !v.sundayOnly);
+      base.flyers = picked.map((v) => ({ url: v.url, title: v.title }));
       return base;
     }
     // Render a catalogue page and rank the week-dated viewer links.
