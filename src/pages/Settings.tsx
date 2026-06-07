@@ -16,6 +16,20 @@ export default function Settings() {
       <h1>Settings</h1>
       <div className="panel">
       <label className="field">
+        <span>Country (which stores you'll see)</span>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <select value={s.settings.country}
+            onChange={(e) => set({ country: e.target.value })}>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="CZ">🇨🇿 Czech Republic</option>
+          </select>
+          <button className="btn small" onClick={() => {
+            const tz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch { return ""; } })();
+            set({ country: /Prague|Czech/i.test(tz) ? "CZ" : "PT" });
+          }}>📍 Detect</button>
+        </div>
+      </label>
+      <label className="field">
         <span>Number of people</span>
         <input type="number" min={1} max={12} value={s.settings.household_size}
           onChange={(e) => set({ household_size: Number(e.target.value) })} />

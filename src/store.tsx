@@ -28,10 +28,19 @@ interface Store {
 const Ctx = createContext<Store>(null as any);
 export const useStore = () => useContext(Ctx);
 
+// Guess the country once from the browser timezone (Europe/Prague → CZ), so a
+// Czech user lands on Czech stores without hunting for the setting. They can
+// still change it in Settings, and once saved it sticks.
+const guessCountry = (): "PT" | "CZ" => {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    return /Prague|Czech/i.test(tz) ? "CZ" : "PT";
+  } catch { return "PT"; }
+};
 const DEFAULTS: Settings = {
   household_size: 2, diet: [], exclude_cuisines: [],
   max_active_minutes: null, leftover_strategy: "auto",
-  plan_days: 4, selected_stores: [],
+  plan_days: 4, selected_stores: [], country: guessCountry(),
 };
 
 function mondayOf(d = new Date()) {

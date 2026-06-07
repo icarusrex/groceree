@@ -10,16 +10,19 @@ import { mediaFromUrls, ocrPages, VISION_MAX_PAGES } from "./_vision.ts";
 const MANIFEST = "https://endpoints.leaflets.schwarz/v4/flyer";
 
 // The flyer "identifier" is the slug in the viewer URL, e.g.
-//   https://www.lidl.pt/l/pt/folhetos/promocoes-a-partir-de-01-06/ar/0?lf=ABC
-//   https://www.lidl.pt/c/folhetos/promocoes-a-partir-de-01-06/view/flyer/page/1
-// In both shapes the segment after ".../folhetos/" is the identifier.
+//   PT: https://www.lidl.pt/l/pt/folhetos/promocoes-a-partir-de-01-06/ar/0?lf=ABC
+//   CZ: https://www.lidl.cz/l/cs/letak/akcni-letak-od-pondeli-8-6-10-6-2026
+// It's the segment right after the country-specific flyer marker.
 export function leafletSlug(viewerUrl: string): string | null {
   try {
     const segs = new URL(viewerUrl).pathname.split("/").filter(Boolean);
-    const i = segs.lastIndexOf("folhetos");
-    if (i >= 0 && segs[i + 1]) return segs[i + 1];
-  } catch { /* fall through */ }
-  return null;
+    for (const marker of ["folhetos", "letak", "letaky"]) {
+      const i = segs.lastIndexOf(marker);
+      if (i >= 0 && segs[i + 1]) return segs[i + 1];
+    }
+    const last = segs[segs.length - 1]; // fallback: a trailing date-bearing slug
+    return last && /\d/.test(last) ? last : null;
+  } catch { return null; }
 }
 
 const day = (s?: string | null) => (s ? s.slice(0, 10) : null);
@@ -37,11 +40,16 @@ export async function extractLeafletFlyer(
   const flyer = data?.flyer ?? data;
 
   const pages: any[] = flyer?.pages || [];
-  const urls = pages
+  const all = pages
     .map((p) => p?.image || p?.zoom || p?.thumbnail)
-    .filter((u): u is string => typeof u === "string")
-    .slice(0, VISION_MAX_PAGES);
-  if (!urls.length) throw new Error("leaflet manifest listed no page images");
+    .filter((u): u is string => typeof u === "string");
+  if (!all.length) throw new Error("leaflet manifest listed no page images");
+  // Big leaflets (Lidl runs 50+ pages, food often in the back half behind the
+  // non-food range) — sample evenly across the whole flyer rather than just the
+  // first N, so we don't miss the grocery section.
+  const urls = all.length <= VISION_MAX_PAGES
+    ? all
+    : Array.from({ length: VISION_MAX_PAGES }, (_, i) => all[Math.floor(i * all.length / VISION_MAX_PAGES)]);
 
   const media = await mediaFromUrls(urls);
   if (!media.length) throw new Error("leaflet page images did not load");

@@ -1,6 +1,12 @@
-import { json, type Env } from "./_helpers.ts";
+import { json, uid, type Env } from "./_helpers.ts";
 import { firecrawl } from "./_firecrawl.ts";
-import { SOURCES, sourceById, type StoreSource } from "./_sources.ts";
+import { SOURCES, sourceById, sourcesForCountry, type StoreSource } from "./_sources.ts";
+
+const userCountry = async (env: Env, user: string): Promise<string> => {
+  const row = await env.DB.prepare("SELECT country FROM user_settings WHERE user_id=?")
+    .bind(user).first<{ country: string }>().catch(() => null);
+  return row?.country || "PT";
+};
 
 // POST /api/discover-flyers  { store_id? }
 // Scrapes each store's landing page (via Firecrawl, which gets past anti-bot)
@@ -184,8 +190,10 @@ async function discover(src: StoreSource, key: string): Promise<Found> {
 }
 
 // GET — the source registry (for store-selection checkboxes; no scraping).
-export const onRequestGet: PagesFunction<Env> = async () =>
-  json({ sources: SOURCES.map((s) => ({ store_id: s.id, store_name: s.name, kind: s.kind })) });
+export const onRequestGet: PagesFunction<Env> = async (ctx) => {
+  const list = sourcesForCountry(await userCountry(ctx.env, uid(ctx)));
+  return json({ sources: list.map((s) => ({ store_id: s.id, store_name: s.name, kind: s.kind, landing: s.landing })) });
+};
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.FIRECRAWL_API_KEY) return json({ error: "FIRECRAWL_API_KEY not set" }, 500);
@@ -195,7 +203,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     : body.store_id ? [body.store_id] : [];
   const list = ids.length
     ? ids.map(sourceById).filter(Boolean) as StoreSource[]
-    : SOURCES;
+    : sourcesForCountry(await userCountry(ctx.env, uid(ctx)));
   const results = await Promise.all(list.map((s) => discover(s, ctx.env.FIRECRAWL_API_KEY)));
   return json({ stores: results });
 };

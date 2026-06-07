@@ -15,16 +15,27 @@ export function b64(buf: ArrayBuffer): string {
   return btoa(s);
 }
 
-// Fetch an explicit list of page-image URLs (e.g. from a manifest). Skips any
-// URL that doesn't return an image.
+// Fetch an explicit list of page-image URLs (e.g. from a manifest). The Schwarz
+// imgproxy CDN resets bursts of rapid requests (most fail as connection errors),
+// so fetch with a couple of retries and a small gap between pages rather than
+// hammering it. Skips any URL that genuinely doesn't return an image.
 export async function mediaFromUrls(urls: string[]): Promise<{ mime: string; data: string }[]> {
   const out: { mime: string; data: string }[] = [];
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   for (const u of urls) {
-    let res: Response;
-    try { res = await fetch(u, { headers: UA }); } catch { continue; }
-    const ct = (res.headers.get("content-type") || "").toLowerCase();
-    if (!res.ok || !ct.startsWith("image/")) continue;
-    out.push({ mime: ct.split(";")[0], data: b64(await res.arrayBuffer()) });
+    let got = false;
+    for (let attempt = 0; attempt < 3 && !got; attempt++) {
+      if (attempt) await sleep(250 * attempt);
+      try {
+        const res = await fetch(u, { headers: UA });
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        if (res.ok && ct.startsWith("image/")) {
+          out.push({ mime: ct.split(";")[0], data: b64(await res.arrayBuffer()) });
+          got = true;
+        }
+      } catch { /* retry */ }
+    }
+    await sleep(80); // gentle spacing so the CDN doesn't throttle the burst
   }
   return out;
 }

@@ -1,0 +1,1 @@
+ALTER TABLE user_settings ADD COLUMN country TEXT NOT NULL DEFAULT 'PT';
