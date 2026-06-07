@@ -131,7 +131,14 @@ export async function buildIngredientIndex(
 // after) before matching, so the product noun wins.
 const MEDIUM_TAIL = /\b(?:in|em|no|na|ao|à|au|with|com)\s+(?:extra\s+virgin\s+)?(?:olive\s+oil|sunflower\s+oil|vegetable\s+oil|oil|[oó]leo|azeite|brine|salmoura|spring\s+water|water|[aá]gua|au\s+naturel|natural|syrup|calda|tomato\s+sauce|sauce|molho|vinegar|vinagre|escabeche|jelly|gelatina)\b.*$/i;
 
+// Offal / specialty cuts are NOT interchangeable with the plain protein: "Chicken
+// Gizzards" is not "chicken" in 81 recipes. When a name carries one of these, don't
+// let it borrow the generic protein's recipe count — it stands on its own (usually
+// 0 of the user's recipes), so it won't fake relevance.
+const OFFAL = /gizzard|\bliver\b|\bheart\b|kidney|tripe|\btongue\b|\bfeet\b|trotter|\bsnout|\bear\b|brain|sweetbread|moela|figado|fressura|chamb|mão de vaca|rim\b|coração|língua|miudezas/i;
+
 function recipeHits(name: string, idx: IngredientIndex): TokenStat {
+  if (OFFAL.test(name)) return { count: 0, weight: 0 };
   const pick = (text: string): { best: TokenStat; eff: number } => {
     let best: TokenStat = { count: 0, weight: 0 };
     let bestEff = 0;
