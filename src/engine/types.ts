@@ -41,6 +41,7 @@ export interface Settings {
   leftover_strategy: "auto" | "off";
   plan_days: number;          // dinners to generate (4 or 7)
   selected_stores: string[];  // store ids to fetch flyers from; [] = all
+  country: "PT" | "CZ";       // which country's stores to show
 }
 
 export interface RecipeState {

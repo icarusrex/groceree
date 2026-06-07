@@ -54,18 +54,24 @@ steak, lamb, duck, pine nuts, saffron, aged cheese) are NOT good value just beca
 discounted — a small discount on an expensive item is still expensive. Only treat a
 premium item as a deal if the discount is 40%+.`;
 
-const PROMPT = `You are reading a supermarket flyer (Portugal). Extract the
-discounted grocery items. ${COST_RULE}
+const PROMPT = `You are reading a European supermarket flyer. It may be in any
+language — most often Portuguese or Czech. Extract the grocery FOOD items shown,
+especially discounted ones. ${COST_RULE}
+Translate every item name to plain English in "name", and keep the original-
+language text in "name_pt". Prices are plain numbers in the local currency
+(€ euros, or Kč / CZK in Czech flyers) — return the number only, no currency
+symbol, using a dot decimal (e.g. "29,90 Kč" → 29.9).
 Discounts appear several ways: a crossed-out original price next to a lower one
-("Desconto Direto" / "Poupe X€"), or a flat percentage badge ("-15%", "15% de
-desconto", sometimes "com Cartão"). Whenever a reduction is shown, set
-normal_price to the original price and discount to the fraction off (0..1). If
-only a "% desconto" badge is shown with one price, treat that price as the sale
-price and set discount from the badge (normal_price may be null).
-Return ONLY JSON, no prose, shaped:
+("Desconto Direto" / "Poupe X€" / "Sleva"), or a flat percentage badge ("-15%",
+"15% de desconto", "sometimes "com Cartão" / "s Lidl Plus"). Whenever a reduction
+is shown, set normal_price to the original price and discount to the fraction off
+(0..1). If only a "% off" badge is shown with one price, treat that price as the
+sale price and set discount from the badge (normal_price may be null).
+Ignore non-food pages (clothing, tools, household, toys). Return ONLY JSON, no
+prose, shaped:
 {"store": "<name>", "valid_from": "YYYY-MM-DD|null", "valid_to": "YYYY-MM-DD|null",
  "summary": "<one short sentence: notable cheap items / any theme>",
- "items": [{"name": "<english grocery name>", "name_pt": "<portuguese>",
+ "items": [{"name": "<english grocery name>", "name_pt": "<original-language name>",
             "price": <number>, "normal_price": <number|null>, "unit": "<e.g. kg|un>",
             "discount": <0..1>, "good_value": <true|false>}]}
 Set good_value=false for premium items with shallow discounts per the rule above.`;

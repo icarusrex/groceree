@@ -6,9 +6,11 @@
 //   "leaflet"      — Schwarz leaflet platform (Lidl); page images are individually
 //                    signed but an unauthenticated manifest API lists them; OCR with Gemini.
 //   "manual"       — no auto-parse wired; discovery lists it, user uploads.
+export type Country = "PT" | "CZ";
 export interface StoreSource {
   id: string;
   name: string;
+  country?: Country;      // which country's user sees this store (default PT)
   landing: string;        // page that links to the current flyers
   flyerHost?: string;     // host of individual flyer viewer URLs (for link filtering)
   kind: "ipaper" | "ipaper-image" | "leaflet" | "manual";
@@ -62,6 +64,32 @@ export const SOURCES: StoreSource[] = [
       { url: "https://www.aldi.pt/folheto/esta-semana.html", title: "This week" },
       { url: "https://www.aldi.pt/folheto/proxima-semana.html", title: "Next week", sundayOnly: true },
     ] },
+
+  // ---- Czech Republic ----
+  // Lidl CZ is the same Schwarz leaflet platform as Lidl PT; only the viewer-URL
+  // shape and date-slug differ ("akcni-letak-od-<day>-<D-M>-<D-M>-YYYY"). The
+  // Schwarz manifest serves it region-independently, so it's fully auto.
+  { id: "lidl-cz", name: "Lidl", country: "CZ", kind: "leaflet",
+    landing: "https://www.lidl.cz/c/akcni-letak/s10008644",
+    viewerLanding: "https://www.lidl.cz/c/akcni-letak/s10008644",
+    viewerRe: /https?:\/\/www\.lidl\.cz\/l\/cs\/letak\/akcni-letak-od-[a-z0-9-]+/i,
+    weeklyRe: /akcni-letak-od-/i,
+    excludeRe: /tematic|special/i,
+    // start date D-M from "akcni-letak-od-pondeli-8-6-10-6-2026" → recency rank
+    weekRe: /akcni-letak-od-[a-z]+-(\d{1,2}-\d{1,2})/i },
+  // Albert / Billa / Globus run bespoke viewers; auto-discovery per platform is a
+  // follow-up. For now they're manual: listed with a link, the user uploads the
+  // flyer PDF/images and Gemini vision OCR reads it (Czech → English item names).
+  { id: "albert-cz", name: "Albert", country: "CZ", kind: "manual",
+    landing: "https://www.albert.cz/letaky" },
+  { id: "billa-cz", name: "Billa", country: "CZ", kind: "manual",
+    landing: "https://www.billa.cz/letaky" },
+  { id: "globus-cz", name: "Globus", country: "CZ", kind: "manual",
+    landing: "https://www.globus.cz/letaky" },
 ];
+
+// Stores visible to a given country (defaults to PT when a source is untagged).
+export const sourcesForCountry = (country: string): StoreSource[] =>
+  SOURCES.filter((s) => (s.country || "PT") === (country === "CZ" ? "CZ" : "PT"));
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);
