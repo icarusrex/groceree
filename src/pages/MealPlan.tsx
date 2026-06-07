@@ -293,9 +293,10 @@ export default function MealPlan() {
     setFlyerMsg(`Loading ${jobs.length} flyers from ${storeCount} store${storeCount > 1 ? "s" : ""}…`);
 
     // Image-OCR flyers take ~30-60s each; running them serially feels broken, so
-    // fetch a few at once (capped, to stay gentle on the vision API) and update
-    // progress as each finishes. One slow store no longer blocks the rest.
-    const CONCURRENCY = 3;
+    // fetch a couple at once and update progress as each finishes. Capped low so
+    // the burst of Gemini calls stays under the free tier's rate limit (each flyer
+    // is several vision calls) — going wider here is what gets the API key flagged.
+    const CONCURRENCY = 2;
     let next = 0;
     const worker = async () => {
       while (next < jobs.length) {

@@ -61,8 +61,10 @@ export async function ocrPages(
   const seen = new Set<string>();
   let store = storeName, summary: string | null = null;
   let ok = 0; let lastErr = "";
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   for (let i = 0; i < media.length; i += BATCH) {
+    if (i > 0) await sleep(1200); // throttle: stay well under free-tier ~15 req/min
     let parsed: ParsedFlyer;
     try { parsed = await geminiParse(geminiKey, media.slice(i, i + BATCH)); ok++; }
     catch (e: any) { lastErr = e?.message || String(e); continue; }
