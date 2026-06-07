@@ -116,11 +116,23 @@ export function scoreAll(input: GenerateInput): Scored[] {
 const VARIETY_PROTEIN_PENALTY = 0.55; // same protein as yesterday's cook
 const VARIETY_CUISINE_PENALTY = 0.8;
 const SALAD_PENALTY = 0.8; // lunch-only de-emphasis (dinner hard-excludes salads)
+const STYLE_PENALTY = 0.12; // same dish *style* nearby (e.g. roast chicken twice)
 
 // salads stay manually pickable, but are never auto-suggested for dinner and
 // only show up at lunch when they carry a protein (so it's a real meal).
 const isSalad = (r: Recipe) => /\bsalad\b/i.test(r.name);
 const saladLunchOk = (r: Recipe) => !isSalad(r) || r.primary_protein !== "none";
+
+// Dish "style" = protein + dominant cooking method, from the name. Used to stop
+// the same kind of dish (e.g. roast chicken) landing on back-to-back meals — the
+// protein penalty alone allowed "Roasted Chicken …" then "… Roasted Chickens …".
+const COOK_METHODS = ["roast", "bake", "grill", "fried", "fry", "stew", "soup",
+  "curry", "stir", "braise", "casserole", "skillet", "traybake", "tray", "sheet",
+  "poach", "steam", "tagine", "risotto", "pasta", "noodle", "taco", "burrito",
+  "burger", "wrap", "bowl", "frittata", "omelet", "pie", "gratin", "meatball",
+  "kebab", "stroganoff", "chili", "chilli", "shakshuka", "stuffed"];
+const styleKey = (r: Recipe): string =>
+  `${r.primary_protein}|${COOK_METHODS.find((m) => r.name.toLowerCase().includes(m)) || ""}`;
 
 export function generatePlan(input: GenerateInput): PlanItem[] {
   const household = Math.max(1, input.settings.household_size);
@@ -133,6 +145,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   const items: PlanItem[] = [];
   let lastProtein = "";
   let lastCuisine = "";
+  let avoidStyles = new Set<string>(); // dish styles to keep off this pick
 
   // helper to pick the best not-yet-used recipe with variety + time penalties
   function pick(filter: (r: Recipe) => boolean): Scored | null {
@@ -144,6 +157,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
       if (s.recipe.primary_protein !== "none" &&
           s.recipe.primary_protein === lastProtein) adj *= VARIETY_PROTEIN_PENALTY;
       if (s.recipe.cuisine && s.recipe.cuisine === lastCuisine) adj *= VARIETY_CUISINE_PENALTY;
+      if (avoidStyles.has(styleKey(s.recipe))) adj *= STYLE_PENALTY; // no roast-chicken twice
       if (isSalad(s.recipe)) adj *= SALAD_PENALTY;
       if (maxMin && s.recipe.total_time > maxMin) adj *= 0.4;
       if (adj > bestAdj) { bestAdj = adj; best = s; }
@@ -156,6 +170,8 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   const lunch: (PlanItem | null)[] = Array(days + 1).fill(null);
 
   for (let day = 1; day <= days; day++) {
+    // avoid repeating the previous day's dinner style (roast → roast, etc.)
+    avoidStyles = new Set(day > 1 && dinner[day - 1] ? [styleKey(dinner[day - 1]!.recipe)] : []);
     // prefer dinners that yield leftovers (servings cover a 2nd household meal)
     let choice = autoLeftover
       ? pick((r) => r.servings >= 2 * household && !isSalad(r))
@@ -184,9 +200,13 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
       };
       continue;
     }
-    // otherwise a fresh, quick lunch (bias to easy + small)
+    // otherwise a fresh, quick lunch (bias to easy + small). Same protein as the
+    // same-day dinner is fine, but not the same dish *style* — avoid today's and
+    // yesterday's dinner styles so we don't get roast chicken at both meals.
     lastProtein = day > 1 ? (dinner[day - 1]?.recipe.primary_protein ?? "") : "";
     lastCuisine = day > 1 ? (dinner[day - 1]?.recipe.cuisine ?? "") : "";
+    avoidStyles = new Set([dinner[day], dinner[day - 1]]
+      .filter(Boolean).map((d) => styleKey(d!.recipe)));
     const fresh = pick((r) => r.ease_score >= 0.6 && saladLunchOk(r)) ?? pick(saladLunchOk);
     if (fresh) {
       used.add(fresh.recipe.id);

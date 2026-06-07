@@ -394,3 +394,10 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 
 /* best-deals validity date */
 .bd-dates { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+
+/* collapsible flyer card header */
+.flyer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.flyer-head.clickable { cursor: pointer; user-select: none; }
+.flyer-caret { color: var(--muted); font-size: 13px; padding-top: 2px; }
+/* bottom save button next to the plan */
+.plan-save-row { display: flex; align-items: center; gap: 12px; margin: 6px 0 4px; }
