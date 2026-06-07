@@ -44,12 +44,9 @@ export async function extractLeafletFlyer(
     .map((p) => p?.image || p?.zoom || p?.thumbnail)
     .filter((u): u is string => typeof u === "string");
   if (!all.length) throw new Error("leaflet manifest listed no page images");
-  // Big leaflets (Lidl runs 50+ pages, food often in the back half behind the
-  // non-food range) — sample evenly across the whole flyer rather than just the
-  // first N, so we don't miss the grocery section.
-  const urls = all.length <= VISION_MAX_PAGES
-    ? all
-    : Array.from({ length: VISION_MAX_PAGES }, (_, i) => all[Math.floor(i * all.length / VISION_MAX_PAGES)]);
+  // Grocery deals are front-loaded in these flyers — read the first N pages.
+  // (Sampling evenly across the whole flyer skips the food and breaks it.)
+  const urls = all.slice(0, VISION_MAX_PAGES);
 
   const media = await mediaFromUrls(urls);
   if (!media.length) throw new Error("leaflet page images did not load");

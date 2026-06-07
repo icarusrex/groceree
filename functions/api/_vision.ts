@@ -4,7 +4,14 @@
 // platform (Lidl — page URLs listed in a JSON manifest).
 import { geminiParse, type FlyerItem, type ParsedFlyer } from "./_flyer.ts";
 
-const UA = { "user-agent": "Mozilla/5.0 (compatible; GrocereeBot/1.0)" };
+// A real browser header set. The Schwarz imgproxy CDN (Lidl page images) bot-
+// blocks the obvious "GrocereeBot" UA — it serves a browser-looking request but
+// drops ours. Other stores tolerate either; this keeps them all working.
+const UA = {
+  "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+  "accept-language": "en-US,en;q=0.9,pt;q=0.8,cs;q=0.7",
+};
 export const VISION_MAX_PAGES = 20; // grocery deals are front-loaded; cap cost + latency
 const BATCH = 5;                    // page images per Gemini vision call
 
@@ -53,10 +60,12 @@ export async function ocrPages(
   const items: FlyerItem[] = [];
   const seen = new Set<string>();
   let store = storeName, summary: string | null = null;
+  let ok = 0; let lastErr = "";
 
   for (let i = 0; i < media.length; i += BATCH) {
     let parsed: ParsedFlyer;
-    try { parsed = await geminiParse(geminiKey, media.slice(i, i + BATCH)); } catch { continue; }
+    try { parsed = await geminiParse(geminiKey, media.slice(i, i + BATCH)); ok++; }
+    catch (e: any) { lastErr = e?.message || String(e); continue; }
     store = parsed.store || store;
     validFrom = validFrom || parsed.valid_from || null;
     validTo = validTo || parsed.valid_to || null;
@@ -69,6 +78,9 @@ export async function ocrPages(
       items.push(it);
     }
   }
+  // If every Gemini batch failed, surface why (rate limit, model error) instead
+  // of a silent "0 items" — otherwise the real cause is invisible to the caller.
+  if (ok === 0 && media.length && lastErr) throw new Error(`vision OCR failed: ${lastErr}`);
 
   return {
     store,
