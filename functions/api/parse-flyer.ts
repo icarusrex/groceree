@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { geminiParse, persistFlyer } from "./_flyer.ts";
 
 // POST /api/parse-flyer  { images: [{mime, data(base64)}], store_hint? }
@@ -16,7 +16,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   }
 
   const storeName = parsed.store || body.store_hint || "unknown";
-  const deals = await persistFlyer(ctx.env.DB, uid(ctx), { ...parsed, store: storeName });
+  const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
+  const deals = await persistFlyer(ctx.env.DB, user, country, { ...parsed, store: storeName });
 
   return json({ store: storeName, valid_from: parsed.valid_from,
                 valid_to: parsed.valid_to, summary: parsed.summary,

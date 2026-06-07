@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS stores (
 CREATE TABLE IF NOT EXISTS store_prices (
   id           INTEGER PRIMARY KEY AUTOINCREMENT,
   store_id     TEXT NOT NULL REFERENCES stores(id),
+  country      TEXT NOT NULL DEFAULT 'PT',   -- prices are shared per country
   item_name    TEXT NOT NULL,
   item_name_pt TEXT,
   unit         TEXT,
@@ -137,7 +138,8 @@ CREATE INDEX IF NOT EXISTS idx_prices_valid on store_prices(valid_from, valid_to
 -- Uploaded flyers (one row per flyer upload), with validity window + summary.
 CREATE TABLE IF NOT EXISTS flyers (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id     TEXT NOT NULL DEFAULT 'me',
+  user_id     TEXT NOT NULL DEFAULT 'me',   -- who last fetched it (audit)
+  country     TEXT NOT NULL DEFAULT 'PT',   -- flyers are shared per country
   store_id    TEXT,
   store_name  TEXT,
   valid_from  TEXT,
