@@ -142,6 +142,7 @@ export async function summariseFlyer(
 export async function persistFlyer(
   db: D1Database,
   user: string,
+  country: string,
   parsed: ParsedFlyer,
   storeId = storeIdOf(parsed.store || "unknown"),
 ): Promise<Record<string, number>> {
@@ -150,31 +151,34 @@ export async function persistFlyer(
     .bind(storeId, storeName).run();
 
   const day = parsed.valid_from || new Date().toISOString().slice(0, 10);
-  const source = `flyer:${storeId}:${day}`;
+  // source is country-namespaced so the same store/day in two countries (Lidl PT
+  // vs Lidl CZ) doesn't collide on the replace-before-insert.
+  const source = `flyer:${country}:${storeId}:${day}`;
   const deals: Record<string, number> = {};
 
-  // Re-fetching the same flyer replaces it rather than stacking duplicates.
+  // Re-fetching the same flyer replaces it rather than stacking duplicates — and
+  // it's shared per country, so any user's re-fetch supersedes the country's copy
+  // (user_id is kept only to record who last fetched it).
   await db.prepare("DELETE FROM store_prices WHERE source = ?").bind(source).run();
   await db.prepare(
-    "DELETE FROM flyers WHERE user_id=? AND store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')",
-  ).bind(user, storeId, parsed.valid_from ?? null).run();
+    "DELETE FROM flyers WHERE country=? AND store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')",
+  ).bind(country, storeId, parsed.valid_from ?? null).run();
 
-  // Chunk inserts so a large iPaper catalog (1000+ rows) stays within D1 limits.
   const items = (parsed.items || []).filter((it) => it && it.name);
   for (const it of items) {
     await db.prepare(
-      `INSERT INTO store_prices (store_id,item_name,item_name_pt,unit,price,normal_price,
-        discount,valid_from,valid_to,source) VALUES (?,?,?,?,?,?,?,?,?,?)`,
-    ).bind(storeId, it.name, it.name_pt ?? null, it.unit ?? null, it.price ?? null,
+      `INSERT INTO store_prices (store_id,country,item_name,item_name_pt,unit,price,normal_price,
+        discount,valid_from,valid_to,source) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+    ).bind(storeId, country, it.name, it.name_pt ?? null, it.unit ?? null, it.price ?? null,
            it.normal_price ?? null, it.discount ?? null,
            parsed.valid_from ?? null, parsed.valid_to ?? null, source).run();
     if (it.good_value && it.discount) deals[it.name.toLowerCase()] = it.discount;
   }
 
   await db.prepare(
-    `INSERT INTO flyers (user_id, store_id, store_name, valid_from, valid_to,
-       summary, item_count, deals) VALUES (?,?,?,?,?,?,?,?)`,
-  ).bind(user, storeId, storeName, parsed.valid_from ?? null,
+    `INSERT INTO flyers (user_id, country, store_id, store_name, valid_from, valid_to,
+       summary, item_count, deals) VALUES (?,?,?,?,?,?,?,?,?)`,
+  ).bind(user, country, storeId, storeName, parsed.valid_from ?? null,
          parsed.valid_to ?? null, parsed.summary ?? null,
          items.length, JSON.stringify(deals)).run();
 

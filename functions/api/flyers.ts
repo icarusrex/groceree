@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { analyzeFlyer, buildIngredientIndex, type DealRow, type IngredientIndex } from "./_analysis.ts";
 
 // GET /api/flyers — list stored flyers (most recent first), with active flag and
@@ -7,9 +7,10 @@ import { analyzeFlyer, buildIngredientIndex, type DealRow, type IngredientIndex 
 // rows + the user's recipe ingredients, recomputed on read so it stays current.
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
   const { results } = await ctx.env.DB.prepare(
-    "SELECT * FROM flyers WHERE user_id=? ORDER BY created_at DESC LIMIT 20",
-  ).bind(user).all();
+    "SELECT * FROM flyers WHERE country=? ORDER BY created_at DESC LIMIT 20",
+  ).bind(country).all();
   const today = new Date().toISOString().slice(0, 10);
 
   const rows = results as any[];
@@ -30,8 +31,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     if (!expired) {
       const pr = await ctx.env.DB.prepare(
         `SELECT item_name, item_name_pt, unit, price, normal_price, discount
-           FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
-      ).bind(f.store_id, f.valid_from ?? null).all();
+           FROM store_prices WHERE store_id=? AND country=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
+      ).bind(f.store_id, country, f.valid_from ?? null).all();
       const deal = analyzeFlyer((pr.results as unknown as DealRow[]) || [], idx, diet);
       // Only surface the analysis when the store actually has discounts. Stores
       // with no offers (e.g. full-catalogue feeds) are tracked for the cross-store
@@ -52,16 +53,16 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 // flyer removes it from the price comparison/trend, not just the card list.
 export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
   const id = new URL(ctx.request.url).searchParams.get("id");
-  const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, uid(ctx));
   const f = await ctx.env.DB.prepare(
-    "SELECT store_id, valid_from FROM flyers WHERE id=? AND user_id=?",
-  ).bind(id, user).first<{ store_id: string; valid_from: string | null }>();
+    "SELECT store_id, valid_from FROM flyers WHERE id=? AND country=?",
+  ).bind(id, country).first<{ store_id: string; valid_from: string | null }>();
   if (f) {
     await ctx.env.DB.prepare(
-      "DELETE FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')",
-    ).bind(f.store_id, f.valid_from ?? null).run();
+      "DELETE FROM store_prices WHERE store_id=? AND country=? AND IFNULL(valid_from,'')=IFNULL(?,'')",
+    ).bind(f.store_id, country, f.valid_from ?? null).run();
   }
-  await ctx.env.DB.prepare("DELETE FROM flyers WHERE id=? AND user_id=?")
-    .bind(id, user).run();
+  await ctx.env.DB.prepare("DELETE FROM flyers WHERE id=? AND country=?")
+    .bind(id, country).run();
   return json({ ok: true });
 };

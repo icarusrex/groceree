@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { geminiParse, persistFlyer, summariseFlyer, type ParsedFlyer } from "./_flyer.ts";
 import { extractIpaper, looksLikeIpaper } from "./_ipaper.ts";
 import { extractImageFlyer } from "./_imageflyer.ts";
@@ -29,6 +29,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const src = body.store_id ? sourceById(body.store_id) : undefined;
   const storeName = body.store_name || src?.name || "unknown";
   const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
 
   // Image-only iPaper viewers (Intermarché, Aldi): render → page images → Gemini
   // vision. No structured feed, so we OCR the pages.
@@ -44,7 +45,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     if (body.valid_from) parsed.valid_from = body.valid_from;
     if (body.valid_to) parsed.valid_to = body.valid_to;
     if (!(parsed.items || []).length) return json({ error: "No grocery deals found on this flyer" }, 502);
-    const deals = await persistFlyer(ctx.env.DB, user, parsed);
+    const deals = await persistFlyer(ctx.env.DB, user, country, parsed);
     return json({ method: "vision", store: parsed.store, item_count: parsed.items.length,
                   page_count: parsed.page_count, summary: parsed.summary, deals });
   }
@@ -62,7 +63,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     if (body.valid_from) parsed.valid_from = body.valid_from;
     if (body.valid_to) parsed.valid_to = body.valid_to;
     if (!(parsed.items || []).length) return json({ error: "No grocery deals found on this flyer" }, 502);
-    const deals = await persistFlyer(ctx.env.DB, user, parsed);
+    const deals = await persistFlyer(ctx.env.DB, user, country, parsed);
     return json({ method: "vision", store: parsed.store, item_count: parsed.items.length,
                   page_count: parsed.page_count, summary: parsed.summary, deals });
   }
@@ -89,7 +90,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
         summary: theme || `${items.length} products from this week's flyer (${pageCount} pages).`,
         items,
       };
-      const deals = await persistFlyer(ctx.env.DB, user, parsed);
+      const deals = await persistFlyer(ctx.env.DB, user, country, parsed);
       return json({ method: "ipaper", store: storeName, item_count: items.length,
                     page_count: pageCount, summary: parsed.summary, deals });
     }
@@ -108,7 +109,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       return json({ error: "gemini failed", detail: e.message }, 502);
     }
     parsed.store = parsed.store || storeName;
-    const deals = await persistFlyer(ctx.env.DB, user, parsed);
+    const deals = await persistFlyer(ctx.env.DB, user, country, parsed);
     return json({ method: "gemini", store: parsed.store, item_count: (parsed.items || []).length,
                   summary: parsed.summary, deals });
   }

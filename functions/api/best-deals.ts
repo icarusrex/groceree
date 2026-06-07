@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { crossStoreDeals, bestStore, buildIngredientIndex, type DealRow, type StoreDeal } from "./_analysis.ts";
 
 // GET /api/best-deals — the cross-store overview: the most compelling discounted,
@@ -9,12 +9,13 @@ import { crossStoreDeals, bestStore, buildIngredientIndex, type DealRow, type St
 // the savings are this week, not a dump of every catalogue.
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
   const today = new Date().toISOString().slice(0, 10);
 
   // Newest non-expired flyer per store (don't double-count re-uploads).
   const { results } = await ctx.env.DB.prepare(
-    "SELECT * FROM flyers WHERE user_id=? ORDER BY created_at DESC",
-  ).bind(user).all();
+    "SELECT * FROM flyers WHERE country=? ORDER BY created_at DESC",
+  ).bind(country).all();
   const byStore = new Map<string, any>();
   for (const f of results as any[]) {
     if (f.valid_to && f.valid_to < today) continue;
@@ -32,8 +33,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const perStore = await Promise.all(flyers.map(async (f) => {
     const pr = await ctx.env.DB.prepare(
       `SELECT item_name, item_name_pt, unit, price, normal_price, discount
-         FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
-    ).bind(f.store_id, f.valid_from ?? null).all();
+         FROM store_prices WHERE store_id=? AND country=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
+    ).bind(f.store_id, country, f.valid_from ?? null).all();
     return { store: f.store_name as string, rows: (pr.results as unknown as DealRow[]) || [] };
   }));
 

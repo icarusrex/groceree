@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { crossStoreDeals, type DealRow } from "./_analysis.ts";
 
 // POST /api/deal-plan { store_name?, days? }
@@ -10,13 +10,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
   const body = await ctx.request.json<any>().catch(() => ({}));
   const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
   const today = new Date().toISOString().slice(0, 10);
   const days = Math.min(7, Math.max(1, Number(body.days) || 4));
 
   // Newest non-expired flyer per store; narrow to the requested store if given.
   const { results } = await ctx.env.DB.prepare(
-    "SELECT * FROM flyers WHERE user_id=? ORDER BY created_at DESC",
-  ).bind(user).all();
+    "SELECT * FROM flyers WHERE country=? ORDER BY created_at DESC",
+  ).bind(country).all();
   const byStore = new Map<string, any>();
   for (const f of results as any[]) {
     if (f.valid_to && f.valid_to < today) continue;
@@ -39,8 +40,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // diet/sugar/alcohol/non-food filters still apply).
   const pr = await ctx.env.DB.prepare(
     `SELECT item_name, item_name_pt, unit, price, normal_price, discount
-       FROM store_prices WHERE store_id=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
-  ).bind(flyer.store_id, flyer.valid_from ?? null).all();
+       FROM store_prices WHERE store_id=? AND country=? AND IFNULL(valid_from,'')=IFNULL(?,'')`,
+  ).bind(flyer.store_id, country, flyer.valid_from ?? null).all();
   const deals = crossStoreDeals(
     [{ store: flyer.store_name, rows: (pr.results as unknown as DealRow[]) || [] }],
     new Map(), diet, 30,
@@ -54,7 +55,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     ? `Hard dietary constraints: ${diet.map((x) => x.replace("_", " ")).join(", ")}. EVERY recipe must comply.`
     : "No dietary restrictions.";
 
-  const PROMPT = `You are a thrifty home cook in Portugal. Design a ${days}-dinner menu for a
+  const PROMPT = `You are a thrifty home cook in ${country === "CZ" ? "the Czech Republic" : "Portugal"}. Design a ${days}-dinner menu for a
 household of ${people}, built PRIMARILY around this week's on-sale ingredients at
 ${flyer.store_name}. Lean hard on the sale items; fill gaps only with cheap pantry
 staples (oil, salt, pepper, garlic, onion, rice, pasta, flour, eggs, canned tomato,

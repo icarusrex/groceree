@@ -1,4 +1,4 @@
-import { json, uid, type Env } from "./_helpers.ts";
+import { json, uid, userCountry, type Env } from "./_helpers.ts";
 
 // POST /api/compare-stores
 //   body: { plan?: [{name, cuisine, primary_protein}], week_start?: string }
@@ -17,12 +17,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
   const body = await ctx.request.json<any>().catch(() => ({}));
   const user = uid(ctx);
+  const country = await userCountry(ctx.env.DB, user);
   const today = new Date().toISOString().slice(0, 10);
 
   // newest non-expired flyer per store
   const { results } = await ctx.env.DB.prepare(
-    "SELECT * FROM flyers WHERE user_id=? ORDER BY created_at DESC",
-  ).bind(user).all();
+    "SELECT * FROM flyers WHERE country=? ORDER BY created_at DESC",
+  ).bind(country).all();
   const byStore = new Map<string, any>();
   for (const f of results as any[]) {
     if (f.valid_to && f.valid_to < today) continue;        // skip expired
@@ -39,9 +40,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   for (const f of flyers) {
     const { results: items } = await ctx.env.DB.prepare(
       `SELECT item_name, price, normal_price, discount, unit FROM store_prices
-       WHERE store_id=? AND (valid_to IS NULL OR valid_to >= ?)
+       WHERE store_id=? AND country=? AND (valid_to IS NULL OR valid_to >= ?)
        ORDER BY discount DESC LIMIT 30`,
-    ).bind(f.store_id, today).all();
+    ).bind(f.store_id, country, today).all();
     stores.push({
       store: f.store_name,
       valid_from: f.valid_from, valid_to: f.valid_to,
