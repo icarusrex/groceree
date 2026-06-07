@@ -152,6 +152,10 @@ export default function MealPlan() {
   const [bestDeals, setBestDeals] = useState<StoreDeal[]>([]);
   const [bestStore, setBestStore] = useState<BestStore | null>(null);
   const [bestDates, setBestDates] = useState<{ from: string | null; to: string | null } | null>(null);
+  const [expandedFlyers, setExpandedFlyers] = useState<Set<number>>(new Set());
+  const toggleFlyer = (id: number) => setExpandedFlyers((p) => {
+    const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n;
+  });
   const [dealMenu, setDealMenu] = useState<{ store: string; recipes: GenRecipe[] } | null>(null);
   const [cookingStore, setCookingStore] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
@@ -212,6 +216,13 @@ export default function MealPlan() {
   const pickRecipe = (r: Recipe) => {
     if (activeSlot) { s.assignSlot(activeSlot.day, activeSlot.slot, r.id); setActiveSlot(null); }
     else setOpen(r);
+  };
+
+  const doSave = async () => {
+    setSaveMsg("Saving…");
+    try { await s.savePlan(); setSaveMsg("Plan saved ✓ — shopping list is on the Shop tab."); }
+    catch { setSaveMsg("Save failed."); }
+    setTimeout(() => setSaveMsg(""), 4000);
   };
 
   const runEdit = async () => {
@@ -347,12 +358,7 @@ export default function MealPlan() {
               ))}
             </div>
             <button className="btn" onClick={() => s.generate()}>Generate plan</button>
-            <button className="btn dark" onClick={async () => {
-              setSaveMsg("Saving…");
-              try { await s.savePlan(); setSaveMsg("Plan saved ✓ — shopping list is on the Shop tab."); }
-              catch { setSaveMsg("Save failed."); }
-              setTimeout(() => setSaveMsg(""), 4000);
-            }}>Save</button>
+            <button className="btn dark" onClick={doSave}>Save</button>
           </div>
         </div>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
@@ -475,20 +481,28 @@ export default function MealPlan() {
                 const upcoming = f.valid_from && f.valid_from > today;
                 const expired = f.valid_to && f.valid_to < today;
                 const status = expired ? "expired" : upcoming ? "upcoming" : "active";
+                const hasBody = !!(f.analysis || f.summary);
+                const open = expandedFlyers.has(f.id);
                 return (
                 <div className={"flyer-card" + (status === "expired" ? " expired" : "")
                   + (status === "upcoming" ? " upcoming" : "")} key={f.id}>
-                  <div className="flyer-store">{f.store_name}
-                    {status === "expired" && <span className="flyer-exp"> · expired</span>}
-                    {status === "upcoming" && <span className="flyer-soon"> · starts {f.valid_from}</span>}</div>
-                  <div className="flyer-dates">
-                    {f.valid_from || "?"} → {f.valid_to || "?"} · {f.item_count} items</div>
-                  {f.analysis?.theme && <div className="fa-theme">{f.analysis.theme}</div>}
-                  {f.summary && <div className="flyer-sum">{f.summary}</div>}
-                  {f.analysis
+                  <div className={"flyer-head" + (hasBody ? " clickable" : "")}
+                    onClick={hasBody ? () => toggleFlyer(f.id) : undefined}>
+                    <div>
+                      <div className="flyer-store">{f.store_name}
+                        {status === "expired" && <span className="flyer-exp"> · expired</span>}
+                        {status === "upcoming" && <span className="flyer-soon"> · starts {f.valid_from}</span>}</div>
+                      <div className="flyer-dates">
+                        {f.valid_from || "?"} → {f.valid_to || "?"} · {f.item_count} items</div>
+                    </div>
+                    {hasBody && <span className="flyer-caret">{open ? "▾" : "▸"}</span>}
+                  </div>
+                  {open && f.analysis?.theme && <div className="fa-theme">{f.analysis.theme}</div>}
+                  {open && f.summary && <div className="flyer-sum">{f.summary}</div>}
+                  {open && (f.analysis
                     ? <FlyerAnalysis a={f.analysis} />
                     : status === "active" &&
-                      <div className="flyer-track muted small">Prices tracked · no current discounts</div>}
+                      <div className="flyer-track muted small">Prices tracked · no current discounts</div>)}
                   <div className="flyer-actions">
                     <button className="btn small" onClick={() => {
                       s.setDeals(f.deals); s.generate();
@@ -555,6 +569,13 @@ export default function MealPlan() {
             </div>
           );
         })}
+
+        {s.plan.length > 0 && (
+          <div className="plan-save-row">
+            <button className="btn dark" onClick={doSave}>Save plan & build shopping list</button>
+            {saveMsg && <span className="muted small">{saveMsg}</span>}
+          </div>
+        )}
       </div>
 
       <aside className="recipe-rail">
