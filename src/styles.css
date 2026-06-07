@@ -3,7 +3,9 @@
   --bg: #41b06a; --surface: #ffffff; --line: #eceef1; --text: #2c3742;
   --muted: #5e6a76; --accent: #138a40; --dark: #2c3742;
   --border: #36414d; --radius: 18px;
-  --shadow: 0 10px 22px -4px rgba(24,33,43,.28), 0 4px 8px -2px rgba(24,33,43,.18);
+  /* hard offset "sticker" shadow — reads as the border being longer on the
+     bottom-right, like the reference (solid, no blur). */
+  --shadow: 5px 7px 0 0 rgba(54,65,77,.85);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 * { box-sizing: border-box; }
