@@ -385,3 +385,9 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
   box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 18px; }
 .panel h1, .panel h2, .panel h3, .settings .panel h3 { color: var(--text); }
 @media (max-width: 520px) { .panel { padding: 16px 14px; } }
+
+/* fetch-flyers progress bar */
+.fetch-prog { margin: 8px 0 2px; }
+.prog { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; margin-top: 5px; }
+.prog-bar { height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s ease; }
+.prog-bar.indet { width: 35%; animation: remixslide 1.1s ease-in-out infinite; }
