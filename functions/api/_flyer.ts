@@ -81,7 +81,7 @@ export async function geminiParse(
 ): Promise<ParsedFlyer> {
   const parts: any[] = [{ text: PROMPT }];
   for (const m of media) parts.push({ inline_data: { mime_type: m.mime || "image/jpeg", data: m.data } });
-  const model = "gemini-3.5-flash";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
@@ -117,7 +117,7 @@ export async function summariseFlyer(
     `In ONE short sentence (max 16 words) tell a home cook what's worth buying or ` +
     `any theme this week (e.g. "Mexican week", "great fish deals", "stock up on chicken"). ` +
     `Plain text only, no quotes, no preamble.`;
-  const model = "gemini-3.5-flash";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   try {
     const res = await fetch(url, {
