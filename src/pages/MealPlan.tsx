@@ -152,6 +152,7 @@ export default function MealPlan() {
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<any[]>([]);
   const [fetchingUrl, setFetchingUrl] = useState("");
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
   const [compare, setCompare] = useState<any>(null);
   const [comparing, setComparing] = useState(false);
@@ -253,7 +254,7 @@ export default function MealPlan() {
     const ids = selectedStoreIds.length ? selectedStoreIds : allStoreIds;
     if (!ids.length) { setFlyerMsg("Pick at least one store first."); return; }
     setFlyerMsg("Finding this week's flyers…");
-    setDiscovering(true); setDiscovered([]); setLoadedUrls(new Set());
+    setDiscovering(true); setDiscovered([]); setLoadedUrls(new Set()); setProgress(null);
     let stores: any[] = [];
     try { stores = (await api.discoverFlyers(ids)).stores || []; }
     catch { setFlyerMsg("Flyer discovery failed (Firecrawl key set?)."); setDiscovering(false); return; }
@@ -267,6 +268,7 @@ export default function MealPlan() {
     const merged: Record<string, number> = { ...s.deals };
     let loaded = 0, totalItems = 0;
     const fails: string[] = [];
+    setProgress({ done: 0, total: jobs.length });
     for (let i = 0; i < jobs.length; i++) {
       const jb = jobs[i];
       setFetchingUrl(jb.url);
@@ -279,12 +281,14 @@ export default function MealPlan() {
           setLoadedUrls((prev) => new Set(prev).add(jb.url));
         }
       } catch { fails.push(`${jb.store_name}: fetch failed.`); }
+      setProgress({ done: i + 1, total: jobs.length });
     }
     setFetchingUrl("");
     if (Object.keys(merged).length) s.setDeals(merged);
     await reloadFlyers();
     const tail = fails.length ? ` · couldn't load: ${fails.join("; ")}` : "";
     setFlyerMsg(`Loaded ${loaded}/${jobs.length} flyers · ${totalItems} grocery prices.${tail}`);
+    setProgress(null);
   };
 
   const onFlyer = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,7 +353,19 @@ export default function MealPlan() {
               <button className="btn small dark" disabled={discovering || !!fetchingUrl} onClick={autoLoad}>
                 {discovering || !!fetchingUrl ? "Loading…" : "Load this week's flyers"}</button>
             </div>
-            {discovering && <div className="muted small">Searching store sites…</div>}
+            {(discovering || progress) && (
+              <div className="fetch-prog">
+                <div className="muted small">
+                  {discovering ? "Searching store sites…"
+                    : `Loading flyers… ${progress!.done}/${progress!.total}`}
+                </div>
+                <div className="prog">
+                  {progress
+                    ? <div className="prog-bar" style={{ width: `${Math.round((progress.done / progress.total) * 100)}%` }} />
+                    : <div className="prog-bar indet" />}
+                </div>
+              </div>
+            )}
             {!discovering && discovered.map((st) => (
               <div className="discover-store" key={st.store_id}>
                 <div className="ds-name">{st.store_name}
