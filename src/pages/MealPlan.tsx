@@ -152,7 +152,7 @@ export default function MealPlan() {
   const [discovering, setDiscovering] = useState(false);
   const [discovered, setDiscovered] = useState<any[]>([]);
   const [fetchingUrl, setFetchingUrl] = useState("");
-  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number; stores: number } | null>(null);
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(new Set());
   const [compare, setCompare] = useState<any>(null);
   const [comparing, setComparing] = useState(false);
@@ -268,7 +268,8 @@ export default function MealPlan() {
     const merged: Record<string, number> = { ...s.deals };
     let loaded = 0, totalItems = 0;
     const fails: string[] = [];
-    setProgress({ done: 0, total: jobs.length });
+    const storeCount = new Set(jobs.map((j) => j.store_id)).size;
+    setProgress({ done: 0, total: jobs.length, stores: storeCount });
     for (let i = 0; i < jobs.length; i++) {
       const jb = jobs[i];
       setFetchingUrl(jb.url);
@@ -281,7 +282,7 @@ export default function MealPlan() {
           setLoadedUrls((prev) => new Set(prev).add(jb.url));
         }
       } catch { fails.push(`${jb.store_name}: fetch failed.`); }
-      setProgress({ done: i + 1, total: jobs.length });
+      setProgress({ done: i + 1, total: jobs.length, stores: storeCount });
     }
     setFetchingUrl("");
     if (Object.keys(merged).length) s.setDeals(merged);
@@ -357,7 +358,10 @@ export default function MealPlan() {
               <div className="fetch-prog">
                 <div className="muted small">
                   {discovering ? "Searching store sites…"
-                    : `Loading flyers… ${progress!.done}/${progress!.total}`}
+                    : `Loading flyers… ${progress!.done}/${progress!.total}` +
+                      (progress!.total > progress!.stores
+                        ? ` · ${progress!.total} flyers across ${progress!.stores} stores (incl. next week)`
+                        : ` · ${progress!.stores} store${progress!.stores > 1 ? "s" : ""}`)}
                 </div>
                 <div className="prog">
                   {progress
