@@ -29,7 +29,10 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const src = body.store_id ? sourceById(body.store_id) : undefined;
   const storeName = body.store_name || src?.name || "unknown";
   const user = uid(ctx);
-  const country = await userCountry(ctx.env.DB, user);
+  // A known store carries its own country (lidl-cz is Czech no matter who fetches
+  // it), so persist under the STORE's country. Only an unknown/generic flyer with
+  // no registered source falls back to the fetching user's country.
+  const country = src?.country ?? await userCountry(ctx.env.DB, user);
 
   // Image-only iPaper viewers (Intermarché, Aldi): render → page images → Gemini
   // vision. No structured feed, so we OCR the pages.
