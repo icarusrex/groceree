@@ -22,7 +22,8 @@ interface Store {
   assignSlot: (day: number, slot: string, recipeId: string) => void;
   clearSlot: (day: number, slot: string) => void;
   applyPlanChanges: (changes: { day_of_week: number; slot: string; recipe_id: string }[]) => void;
-  refreshRecipes: () => void;
+  replacePlanRecipe: (oldId: string, newId: string) => void;
+  refreshRecipes: () => Promise<void>;
 }
 
 const Ctx = createContext<Store>(null as any);
@@ -122,7 +123,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       next.sort((a, b) => a.day_of_week - b.day_of_week || (a.slot === "lunch" ? -1 : 1));
       persist(next);
     },
-    refreshRecipes: () => { api.recipes().then(setRecipes); },
+    // After a remix is saved as a new recipe, point every plan slot that used the
+    // original at the new recipe — so the meal plan AND the derived shopping list
+    // reflect the swap (e.g. the fennel-free version) instead of the original.
+    replacePlanRecipe: (oldId, newId) => {
+      if (!oldId || !newId || oldId === newId) return;
+      persist(plan.map((p) => (p.recipe_id === oldId ? { ...p, recipe_id: newId } : p)));
+    },
+    refreshRecipes: () => api.recipes().then(setRecipes),
   };
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;
 }

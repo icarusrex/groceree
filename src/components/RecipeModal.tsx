@@ -81,8 +81,22 @@ export default function RecipeModal({ recipe, onClose }:
   const save = async () => {
     setBusy(true);
     const res = await api.createRecipe({ ...draft, image_url: img });
+    if (res.ok) {
+      await s.refreshRecipes();
+      // If the recipe we remixed is in the current plan, swap the new version in
+      // so the plan and shopping list update (otherwise the old ingredients —
+      // e.g. fennel — linger in the list). Browsing-only remixes just save.
+      const inPlan = !!recipe.id && s.plan.some((p) => p.recipe_id === recipe.id);
+      if (inPlan && res.id) {
+        s.replacePlanRecipe(recipe.id, res.id);
+        setMsg("Saved and swapped into your plan — shopping list updated.");
+      } else {
+        setMsg("Saved to your recipes.");
+      }
+    } else {
+      setMsg(res.error || "Save failed.");
+    }
     setBusy(false);
-    if (res.ok) { s.refreshRecipes(); setMsg("Saved to your recipes."); }
   };
   const genImage = async () => {
     setBusy(true); setMsg("Generating image…");
