@@ -88,7 +88,15 @@ export async function geminiParse(
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       contents: [{ role: "user", parts }],
-      generationConfig: { temperature: 0.1, response_mime_type: "application/json" },
+      // thinkingBudget:0 turns OFF gemini-2.5-flash's default "thinking" pass.
+      // This is straight OCR/extraction, not reasoning — thinking only added
+      // latency (dense Czech leaflet pages ballooned per-batch time to minutes)
+      // and output-token cost. Disabling it makes every flyer fetch much faster.
+      generationConfig: {
+        temperature: 0.1,
+        response_mime_type: "application/json",
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     }),
   });
   if (!res.ok) throw new Error(`gemini ${res.status}: ${await res.text()}`);
@@ -125,7 +133,7 @@ export async function summariseFlyer(
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.4, maxOutputTokens: 60 },
+        generationConfig: { temperature: 0.4, maxOutputTokens: 60, thinkingConfig: { thinkingBudget: 0 } },
       }),
     });
     if (!res.ok) return null;
