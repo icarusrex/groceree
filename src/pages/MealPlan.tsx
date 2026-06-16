@@ -281,7 +281,7 @@ export default function MealPlan() {
     setDiscovering(false);
 
     const jobs = stores.flatMap((st: any) =>
-      (st.flyers || []).map((f: any) => ({ store_id: st.store_id, store_name: st.store_name, url: f.url, title: f.title })));
+      (st.flyers || []).map((f: any) => ({ store_id: st.store_id, store_name: st.store_name, kind: st.kind, url: f.url, title: f.title })));
     if (!jobs.length) { setFlyerMsg("No current grocery flyers found for the selected stores."); return; }
 
     const merged: Record<string, number> = { ...s.deals };
@@ -292,30 +292,57 @@ export default function MealPlan() {
     setProgress({ done: 0, total: jobs.length, stores: storeCount });
     setFlyerMsg(`Loading ${jobs.length} flyers from ${storeCount} store${storeCount > 1 ? "s" : ""}…`);
 
-    // Image-OCR flyers take ~30-60s each; running them serially feels broken, so
-    // fetch a couple at once and update progress as each finishes. Capped low so
-    // the burst of Gemini calls stays under the free tier's rate limit (each flyer
-    // is several vision calls) — going wider here is what gets the API key flagged.
-    const CONCURRENCY = 2;
-    let next = 0;
-    const worker = async () => {
-      while (next < jobs.length) {
-        const jb = jobs[next++];
-        setFetchingUrls((prev) => new Set(prev).add(jb.url));
-        try {
+    // Image-OCR flyers are parsed ONE PAGE PER REQUEST: a single Worker call that
+    // base64s + OCRs a whole 10-page flyer blows the free-plan CPU limit, so we
+    // list the pages (cheap), OCR each page in its own request (each stays under
+    // the limit), then save the merged items. Flyers run serially and pages run
+    // serially within them — concurrent heavy requests share one Pages isolate's
+    // CPU and trip "Worker exceeded CPU time limit". Slower but reliable.
+    const ocrFlyer = async (jb: any) => {
+      const pg = await api.flyerPages({ store_id: jb.store_id, flyer_url: jb.url });
+      if (pg.error || !(pg.pages || []).length) { fails.push(`${jb.store_name}: ${pg.error || "no pages found"}`); return; }
+      const seen = new Set<string>();
+      const items: any[] = [];
+      let vfrom = pg.from || null, vto = pg.to || null, summary: string | null = null;
+      for (let i = 0; i < pg.pages.length; i++) {
+        setFlyerMsg(`${jb.store_name}: reading page ${i + 1}/${pg.pages.length}…`);
+        let r: any;
+        try { r = await api.ocrPage({ image_url: pg.pages[i] }); } catch { continue; }
+        if (!r || r.error || !Array.isArray(r.items)) continue;
+        vfrom = vfrom || r.valid_from; vto = vto || r.valid_to; summary = summary || r.summary;
+        for (const it of r.items) {
+          if (!it?.name || typeof it.price !== "number") continue;
+          const k = `${it.name.toLowerCase()}|${it.price}`;
+          if (seen.has(k)) continue;
+          seen.add(k); items.push(it);
+        }
+      }
+      if (!items.length) { fails.push(`${jb.store_name}: no grocery deals found`); return; }
+      const saved = await api.saveFlyer({ store_id: jb.store_id, store_name: jb.store_name, valid_from: vfrom, valid_to: vto, summary, items, page_count: pg.pages.length });
+      if (saved.error) { fails.push(`${jb.store_name}: ${saved.error}`); return; }
+      loaded++; totalItems += saved.item_count || 0; Object.assign(merged, saved.deals || {});
+      setLoadedUrls((prev) => new Set(prev).add(jb.url));
+    };
+
+    for (const jb of jobs) {
+      setFetchingUrls((prev) => new Set(prev).add(jb.url));
+      try {
+        if (jb.kind === "ipaper-image" || jb.kind === "leaflet") {
+          await ocrFlyer(jb);
+        } else {
+          // Structured iPaper feed / generic upload: one cheap call, no OCR loop.
           const res = await api.fetchFlyer({ store_id: jb.store_id, store_name: jb.store_name, flyer_url: jb.url });
           if (res.error) fails.push(`${jb.store_name}: ${res.error}`);
           else {
             loaded++; totalItems += res.item_count || 0; Object.assign(merged, res.deals || {});
             setLoadedUrls((prev) => new Set(prev).add(jb.url));
           }
-        } catch { fails.push(`${jb.store_name}: timed out or failed.`); }
-        setFetchingUrls((prev) => { const n = new Set(prev); n.delete(jb.url); return n; });
-        done++;
-        setProgress({ done, total: jobs.length, stores: storeCount });
-      }
-    };
-    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, jobs.length) }, worker));
+        }
+      } catch { fails.push(`${jb.store_name}: timed out or failed.`); }
+      setFetchingUrls((prev) => { const n = new Set(prev); n.delete(jb.url); return n; });
+      done++;
+      setProgress({ done, total: jobs.length, stores: storeCount });
+    }
 
     if (Object.keys(merged).length) s.setDeals(merged);
     await reloadFlyers();

@@ -12,7 +12,7 @@ const UA = {
   "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
   "accept-language": "en-US,en;q=0.9,pt;q=0.8,cs;q=0.7",
 };
-export const VISION_MAX_PAGES = 20; // grocery deals are front-loaded; cap cost + latency
+export const VISION_MAX_PAGES = 10; // grocery deals are front-loaded; cap cost, latency + Worker CPU
 const BATCH = 5;                    // page images per Gemini vision call
 
 export function b64(buf: ArrayBuffer): string {

@@ -27,6 +27,30 @@ export function leafletSlug(viewerUrl: string): string | null {
 
 const day = (s?: string | null) => (s ? s.slice(0, 10) : null);
 
+// List a leaflet flyer's page-image URLs + dates from the manifest, without
+// OCRing them — cheap CPU. The browser OCRs one page per /api/ocr-page request.
+export async function listLeafletPages(
+  viewerUrl: string,
+): Promise<{ from: string | null; to: string | null; pages: string[] }> {
+  const slug = leafletSlug(viewerUrl);
+  if (!slug) throw new Error("could not parse leaflet identifier from viewer URL");
+  const url = `${MANIFEST}?flyer_identifier=${encodeURIComponent(slug)}&region_id=0&region_code=0`;
+  const res = await fetch(url, { headers: { accept: "application/json" } });
+  if (!res.ok) throw new Error(`leaflet manifest ${res.status}`);
+  const data = await res.json<any>();
+  const flyer = data?.flyer ?? data;
+  const all = (flyer?.pages || [])
+    .map((p: any) => p?.image || p?.zoom || p?.thumbnail)
+    .filter((u: any): u is string => typeof u === "string");
+  if (!all.length) throw new Error("leaflet manifest listed no page images");
+  return {
+    from: day(flyer?.offerStartDate || flyer?.startDate),
+    to: day(flyer?.offerEndDate || flyer?.endDate),
+    // Grocery deals are front-loaded; OCR the first N pages (matches the old path).
+    pages: all.slice(0, VISION_MAX_PAGES),
+  };
+}
+
 export async function extractLeafletFlyer(
   geminiKey: string, viewerUrl: string, storeName: string,
 ): Promise<ParsedFlyer> {
