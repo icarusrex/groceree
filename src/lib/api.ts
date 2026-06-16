@@ -41,4 +41,12 @@ export const api = {
     fetch("/api/discover-flyers", { method: "POST", body: JSON.stringify({ store_ids }) }).then(j),
   fetchFlyer: (p: { store_id?: string; store_name?: string; flyer_url: string; valid_from?: string; valid_to?: string }) =>
     fetch("/api/fetch-flyer", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(150000) }).then(j),
+  // Per-page flyer flow (keeps each Worker request under the CPU limit):
+  // flyerPages → loop ocrPage per page → saveFlyer with the merged items.
+  flyerPages: (p: { store_id?: string; flyer_url: string }) =>
+    fetch("/api/flyer-pages", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
+  ocrPage: (p: { image_url: string }) =>
+    fetch("/api/ocr-page", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(120000) }).then(j),
+  saveFlyer: (p: { store_id?: string; store_name: string; valid_from?: string | null; valid_to?: string | null; summary?: string | null; items: any[]; page_count?: number }) =>
+    fetch("/api/save-flyer", { method: "POST", body: JSON.stringify(p) }).then(j),
 };
