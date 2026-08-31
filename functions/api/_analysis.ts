@@ -46,7 +46,14 @@ const BOOZE = /\bwine\b|\bbeer\b|whisk|vodka|\bgin\b|\brum\b|liqueur|licor|spiri
 // recipe matches. Exclude from the personalised picks.
 // Snacks, confectionery and — per the user — plain sugar/sweeteners: things they
 // don't plan meals around, so they shouldn't sway the picks or the best-shop call.
-const JUNK = /pringles|doritos|crisps|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr|\bsugar\b|a[cç][uú]car|ado[cç]ante|sweetener|stevia/i;
+const JUNK = /pringles|doritos|crisp(?:s|ies|y)|\bchips\b|tortilla|batata frita|\blays?\b|\bsnack|gomas|gummy|\bcandy|rebucad|lollip|chewing|marshmallow|wafer|\bbar\b|chocolate bar|bombom|\bbolacha|biscuit|\bcookie|\bdoce\b|gelado|ice cream|sorvete|sobremesa|ben.?jerry|haagen|magnum|cornetto|\btempero|maggi|knorr|\bsugar\b|a[cç][uú]car|ado[cç]ante|sweetener|stevia|nugget|goujon|dipper|popper|\bfinger|kiev|cordon bleu|breaded|panko|empanado|panado/i;
+// Non-alcoholic soft drinks: categorize() files these under "pantry" (tea/coffee
+// aisle keyword hits) or "produce" (a flavour like "lime-lemon" trips the fruit
+// regex) — neither is right, and their flavour words then falsely match real
+// lemon/mango/peach recipe ingredients ("Iced Tea Peach Lemon Mango" reporting
+// "in 40 recipes" because it shares words with fruit dishes, not because it's
+// used in any). They're not something you cook with — drop them everywhere.
+const DRINKS = /\bsparkling\b|soft ?drink|\bsoda\b|\bpop\b|ice.?d?\s*tea\b|refrigerante|gasosa\b|\bnestea\b|\bfanta\b|\bsprite\b|\bpepsi\b|coca.?cola|\b7.?up\b|schweppes|\blipton\b|\bsumol\b|\bcompal\b|lemonade|limonada|tonic water|isotonic|sports drink|smoothie|\bice[ -]?tea\b/i;
 // Background staples you always have and don't shop deals for — olive oil above
 // all (it's in ~150 recipes, so it would otherwise dominate everything, yet a
 // discount on it is meaningless). Exclude oils, salt, vinegar, flour, water from
@@ -185,7 +192,7 @@ function enrichItem(r: DealRow, idx: IngredientIndex, diet: string[]): Enriched 
   let disc = r.discount ?? null;
   if ((disc == null || disc <= 0) && normal && price && normal > price) disc = (normal - price) / normal;
   const saving = normal && price && normal > price ? round2(normal - price) : null;
-  const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name) || STAPLE.test(r.item_name);
+  const excluded = BOOZE.test(r.item_name) || JUNK.test(r.item_name) || STAPLE.test(r.item_name) || DRINKS.test(r.item_name);
   const cat = excluded ? null : categorize(r.item_name);
   if (violatesDiet(r.item_name, cat, diet)) return null;
   // Only recipe-match real food. Non-food / snacks shouldn't borrow a stray

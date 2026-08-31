@@ -42,7 +42,7 @@ export function categorize(name: string): FoodCat | null {
   if (/fish|salmon|cod|tuna|prawn|shrimp|sardine|hake|squid|peixe|salmao|bacalhau|atum|camar|gambas|sardinh|pescada|lulas|polvo|dourada|robalo|marisco|delicias do mar/.test(n)) return "fish";
   if (/milk|cheese|yogurt|yoghurt|butter|cream|egg|leite|queijo|iogurte|manteiga|natas|ovo|requeijao|flamengo|barrar/.test(n)) return "dairy";
   if (/apple|banana|tomato|onion|potato|carrot|lettuce|pepper|fruit|veg\b|salad|orange|lemon|maca|tomate|cebola|batata|cenoura|alface|piment|fruta|legume|salada|laranja|limao|alho|couve|brocolo|espinafre|pera|uva|morango|melao|meloa|abacate|courgette|curgete|pepino|alface|cogumelo|abobora|nabo|alho frances/.test(n)) return "produce";
-  if (/rice|pasta|spaghetti|noodle|oil|olive|vinegar|coffee|tea\b|sugar|salt|flour|bean|lentil|chickpea|cereal|oat|bread|tin|tinned|canned|water|juice|soup|sauce|biscuit|cookie|chocolate|jam|honey|frozen|pizza|wine|beer|snack|crisps|chips|nuts|spice|ketchup|mayo|mustard|margarine|cracker|yeast|cocoa|\bmel\b|arroz|massa|esparguete|azeite|oleo|vinagre|cafe|cha\b|acucar|\bsal\b|farinha|feijao|grao|lentilha|bolacha|chocolate|compota|congelad|sumo|agua|sopa|molho|conserva|atum|cereais|aveia|\bpao\b|bolo|cerveja|vinho|aperitiv|snack|batata frita|frutos secos|especiaria|mostarda|maionese|margarina|levedura|cacau|leite condensado|tremoco|azeitona|piri|caldo|\bmel\b|gelado|iogurte|refrigerante|nestea|compal/.test(n)) return "pantry";
+  if (/rice|pasta|spaghetti|noodle|oil|olive|vinegar|coffee|tea\b|sugar|salt|flour|bean|lentil|chickpea|cereal|oat|bread|tin|tinned|canned|water|juice|soup|sauce|biscuit|cookie|chocolate|jam|honey|frozen|pizza|wine|beer|snack|crisps|chips|nuts|spice|ketchup|mayo|mustard|margarine|cracker|yeast|cocoa|\bmel\b|arroz|massa|esparguete|azeite|oleo|vinagre|cafe|cha\b|acucar|\bsal\b|farinha|feijao|grao|lentilha|bolacha|chocolate|compota|congelad|sumo|agua|sopa|molho|conserva|atum|cereais|aveia|\bpao\b|bolo|cerveja|vinho|aperitiv|snack|batata frita|frutos secos|especiaria|mostarda|maionese|margarina|levedura|cacau|leite condensado|tremoco|azeitona|piri|caldo|\bmel\b|gelado|iogurte/.test(n)) return "pantry";
   return null;
 }
 
@@ -64,9 +64,14 @@ function buildPrompt(): string {
   return `You are reading a supermarket flyer from Portugal or the Czech
 Republic. Today's date is ${today}. Extract the discounted grocery items. ${COST_RULE}
 The flyer text may be Portuguese or Czech: put a plain-English item name in
-"name" and the original-language text in "name_pt". Prices are numbers in the
-local currency (euros, or Kc in Czech flyers); return just the number with a dot
-decimal (29,90 becomes 29.9).
+"name" and the original-language text in "name_pt". Translate to the natural
+English CULINARY term a home cook would recognise, never a literal word-for-word
+translation - e.g. Portuguese "arroz agulha" is long-grain rice, NOT "needle
+rice" (agulha means needle, but that's not what the product is); "arroz
+carolino" is round/risotto-style rice; "leite meio-gordo" is semi-skimmed milk.
+When unsure, prefer the closest real English grocery-aisle name over a literal
+translation. Prices are numbers in the local currency (euros, or Kc in Czech
+flyers); return just the number with a dot decimal (29,90 becomes 29.9).
 Discounts appear several ways: a crossed-out original price next to a lower one
 ("Desconto Direto" / "Poupe X EUR" / "Sleva"), or a flat percentage badge ("-15%",
 "15% de desconto", "com Cartao", "s Lidl Plus"). Whenever a reduction is shown,
