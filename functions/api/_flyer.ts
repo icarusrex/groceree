@@ -54,8 +54,15 @@ steak, lamb, duck, pine nuts, saffron, aged cheese) are NOT good value just beca
 discounted — a small discount on an expensive item is still expensive. Only treat a
 premium item as a deal if the discount is 40%+.`;
 
-const PROMPT = `You are reading a supermarket flyer from Portugal or the Czech
-Republic. Extract the discounted grocery items. ${COST_RULE}
+// PROMPT is built per-call (not a module-level const) so it always carries the
+// real current date - flyers print date ranges without a year ("31 Ago - 6 Set"),
+// and with no anchor Gemini has to guess the year from its training data, which
+// drifts (seen defaulting years down to 2020). Giving it today's date and an
+// explicit resolution rule fixes that at the source.
+function buildPrompt(): string {
+  const today = new Date().toISOString().slice(0, 10);
+  return `You are reading a supermarket flyer from Portugal or the Czech
+Republic. Today's date is ${today}. Extract the discounted grocery items. ${COST_RULE}
 The flyer text may be Portuguese or Czech: put a plain-English item name in
 "name" and the original-language text in "name_pt". Prices are numbers in the
 local currency (euros, or Kc in Czech flyers); return just the number with a dot
@@ -66,6 +73,11 @@ Discounts appear several ways: a crossed-out original price next to a lower one
 set normal_price to the original price and discount to the fraction off (0..1). If
 only a "% off" badge is shown with one price, treat that price as the sale price
 and set discount from the badge (normal_price may be null).
+The flyer's validity dates (e.g. "valida de 31 agosto a 6 setembro", "6 - 12 ian")
+are almost always printed WITHOUT a year. You must supply the year yourself: pick
+whichever year (this one, or the next) makes the date closest to today (${today}).
+Never output a valid_from/valid_to year that is more than a few weeks before
+today's year-and-date, and never output a year before ${new Date().getFullYear()}.
 Return ONLY JSON, no prose, shaped:
 {"store": "<name>", "valid_from": "YYYY-MM-DD|null", "valid_to": "YYYY-MM-DD|null",
  "summary": "<one short sentence: notable cheap items / any theme>",
@@ -73,13 +85,35 @@ Return ONLY JSON, no prose, shaped:
             "price": <number>, "normal_price": <number|null>, "unit": "<e.g. kg|un>",
             "discount": <0..1>, "good_value": <true|false>}]}
 Set good_value=false for premium items with shallow discounts per the rule above.`;
+}
+
+// Belt-and-braces: even with the date anchor above, force any clearly-wrong year
+// (model slip, or a flyer that genuinely prints one) back onto the right one -
+// keep the parsed month/day, pick whichever nearby year puts the date closest to
+// today. Mirrors the same rule already used for Lidl/leaflet week-ranking in
+// discover-flyers.ts. Returns the input unchanged if it doesn't parse as a date.
+function fixYear(dateStr: string | null | undefined): string | null {
+  if (!dateStr) return dateStr ?? null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr.trim());
+  if (!m) return dateStr;
+  const [, , mm, dd] = m;
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  let best = dateStr, bestDiff = Infinity;
+  for (const yr of [now.getUTCFullYear() - 1, now.getUTCFullYear(), now.getUTCFullYear() + 1]) {
+    const t = Date.UTC(yr, Number(mm) - 1, Number(dd));
+    const diff = Math.abs(t - todayUTC);
+    if (diff < bestDiff) { bestDiff = diff; best = `${yr}-${mm}-${dd}`; }
+  }
+  return best;
+}
 
 // Accepts images and/or PDFs as inline base64 parts. Throws on failure.
 export async function geminiParse(
   apiKey: string,
   media: { mime: string; data: string }[],
 ): Promise<ParsedFlyer> {
-  const parts: any[] = [{ text: PROMPT }];
+  const parts: any[] = [{ text: buildPrompt() }];
   for (const m of media) parts.push({ inline_data: { mime_type: m.mime || "image/jpeg", data: m.data } });
   const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -102,7 +136,10 @@ export async function geminiParse(
   if (!res.ok) throw new Error(`gemini ${res.status}: ${await res.text()}`);
   const data = await res.json<any>();
   const txt = data.candidates[0].content.parts[0].text.replace(/^```(json)?|```$/gm, "").trim();
-  return JSON.parse(txt);
+  const parsed = JSON.parse(txt) as ParsedFlyer;
+  parsed.valid_from = fixYear(parsed.valid_from);
+  parsed.valid_to = fixYear(parsed.valid_to);
+  return parsed;
 }
 
 // Text-only theme summary for an already-parsed flyer (e.g. the iPaper feed,
