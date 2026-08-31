@@ -6,6 +6,7 @@ import Pantry from "./pages/Pantry.tsx";
 import Settings from "./pages/Settings.tsx";
 import PriceTrends from "./components/PriceTrends.tsx";
 import BasketTracker from "./components/BasketTracker.tsx";
+import ReceiptScan from "./components/ReceiptScan.tsx";
 
 type View = "plan" | "shop" | "pantry" | "prices" | "settings";
 
@@ -19,6 +20,7 @@ const NAV: { id: View; label: string }[] = [
 
 export default function App() {
   const [view, setView] = useState<View>("plan");
+  const [priceRefresh, setPriceRefresh] = useState(0);
   return (
     <StoreProvider>
       <div className="layout">
@@ -40,10 +42,12 @@ export default function App() {
             <div>
               <h1>Prices</h1>
               <p className="muted small" style={{ marginTop: 0, marginBottom: 18 }}>
-                Two views: this week's flyer deals (promotional), and your own staple basket
-                (regular prices) for an honest store-vs-store price level.
+                Three sources: this week's flyer deals (promotional), receipts you scan
+                (real prices paid, automatic), and your own staple basket (regular prices,
+                typed in) — for an honest store-vs-store price level.
               </p>
-              <div className="panel"><PriceTrends /></div>
+              <div className="panel"><ReceiptScan onScanned={() => setPriceRefresh((n) => n + 1)} /></div>
+              <div className="panel"><PriceTrends refreshKey={priceRefresh} /></div>
               <div className="panel"><BasketTracker /></div>
             </div>
           )}

@@ -42,14 +42,14 @@ function useTip() {
   return { ref, tip, show, hide };
 }
 
-export default function PriceTrends() {
+export default function PriceTrends({ refreshKey }: { refreshKey?: number } = {}) {
   const store = useStore();
   const [raw, setRaw] = useState<any>(null);
   const [tab, setTab] = useState<"compare" | "trend">("compare");
   // Which store is spotlighted (hovered in a chart or legend); dims the others.
   const [hov, setHov] = useState<string | null>(null);
 
-  useEffect(() => { api.prices().then(setRaw).catch(() => setRaw({ count: 0, points: [], items: [] })); }, []);
+  useEffect(() => { api.prices().then(setRaw).catch(() => setRaw({ count: 0, points: [], items: [] })); }, [refreshKey]);
 
   // Drop diet-excluded categories from the comparison (e.g. dairy when dairy-free).
   const data = useMemo(() => {

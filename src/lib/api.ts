@@ -15,6 +15,8 @@ export const api = {
     fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
   scanPantry: (images: any[]) =>
     fetch("/api/scan-pantry", { method: "POST", body: JSON.stringify({ images }) }).then(j),
+  scanReceipt: (images: any[]) =>
+    fetch("/api/scan-receipt", { method: "POST", body: JSON.stringify({ images }) }).then(j),
   compareStores: (plan: any[]) =>
     fetch("/api/compare-stores", { method: "POST", body: JSON.stringify({ plan }) }).then(j),
   remix: (recipe: any, instruction: string) =>
