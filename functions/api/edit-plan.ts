@@ -45,7 +45,7 @@ Return ONLY a JSON array of the slots you are changing, each:
 {"day_of_week":<1-7>,"slot":"lunch|dinner","recipe_id":"<exact id from the list>"}
 Return [] if nothing should change. No prose.`;
 
-  const model = "gemini-3.5-flash-lite";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
   const gres = await fetch(url, {
     method: "POST",

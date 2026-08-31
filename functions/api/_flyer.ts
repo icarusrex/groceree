@@ -120,14 +120,14 @@ export async function geminiParse(
 ): Promise<ParsedFlyer> {
   const parts: any[] = [{ text: buildPrompt() }];
   for (const m of media) parts.push({ inline_data: { mime_type: m.mime || "image/jpeg", data: m.data } });
-  const model = "gemini-3.5-flash-lite";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       contents: [{ role: "user", parts }],
-      // thinkingBudget:0 turns OFF the model's default "thinking" pass.
+      // thinkingBudget:0 turns OFF gemini-2.5-flash's default "thinking" pass.
       // This is straight OCR/extraction, not reasoning — thinking only added
       // latency (dense Czech leaflet pages ballooned per-batch time to minutes)
       // and output-token cost. Disabling it makes every flyer fetch much faster.
@@ -167,7 +167,7 @@ export async function summariseFlyer(
     `In ONE short sentence (max 16 words) tell a home cook what's worth buying or ` +
     `any theme this week (e.g. "Mexican week", "great fish deals", "stock up on chicken"). ` +
     `Plain text only, no quotes, no preamble.`;
-  const model = "gemini-3.5-flash-lite";
+  const model = "gemini-2.5-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   try {
     const res = await fetch(url, {
