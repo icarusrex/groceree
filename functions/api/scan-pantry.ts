@@ -18,7 +18,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   for (const im of images) {
     parts.push({ inline_data: { mime_type: im.mime || "image/jpeg", data: im.data } });
   }
-  const model = "gemini-2.5-flash";
+  const model = "gemini-3.5-flash-lite";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
   const gres = await fetch(url, {
     method: "POST",
