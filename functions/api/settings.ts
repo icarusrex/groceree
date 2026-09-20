@@ -27,7 +27,7 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
      country=?, notion_parent_id=?, updated_at=datetime('now')
      WHERE user_id=?`,
   ).bind(
-    b.household_size ?? 2, JSON.stringify(b.diet ?? []),
+    Math.max(1, Math.round(Number(b.household_size) || 2)), JSON.stringify(b.diet ?? []),
     JSON.stringify(b.exclude_cuisines ?? []),
     b.max_active_minutes ?? null, b.leftover_strategy ?? "auto",
     b.plan_days === 7 ? 7 : 4, JSON.stringify(b.selected_stores ?? []),

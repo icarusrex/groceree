@@ -31,8 +31,8 @@ export default function Settings() {
       </label>
       <label className="field">
         <span>Number of people</span>
-        <input type="number" min={1} max={12} value={s.settings.household_size}
-          onChange={(e) => set({ household_size: Number(e.target.value) })} />
+        <input type="number" min={1} max={12} step={1} value={s.settings.household_size}
+          onChange={(e) => set({ household_size: Math.round(Number(e.target.value)) || 1 })} />
       </label>
       <div className="field">
         <span>Diet limitations</span>

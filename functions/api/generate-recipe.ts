@@ -62,7 +62,11 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const prompt = String(body?.prompt || "").trim();
   if (!prompt) return json({ error: "prompt required" }, 400);
 
-  const want = Math.max(1, Math.min(20, Number(body?.servings) || 4));
+  // Rounded, not just clamped: household_size is INTEGER in the schema but
+  // SQLite is dynamically typed and a fractional value can get stored (found
+  // 4.5 in production), which would otherwise ask the model to cook "for
+  // exactly 4.5 people" and scale every quantity off that.
+  const want = Math.max(1, Math.min(20, Math.round(Number(body?.servings) || 4)));
   const diet: string[] = Array.isArray(body?.diet) ? body.diet : [];
   const maxMin = Number(body?.max_active_minutes) || null;
 
