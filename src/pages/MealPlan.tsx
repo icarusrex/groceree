@@ -172,6 +172,9 @@ export default function MealPlan() {
   const [editInstr, setEditInstr] = useState("");
   const [editBusy, setEditBusy] = useState(false);
   const [editMsg, setEditMsg] = useState("");
+  const [genPrompt, setGenPrompt] = useState("");
+  const [genBusy, setGenBusy] = useState(false);
+  const [genMsg, setGenMsg] = useState("");
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
 
   // Flyers and the cross-store best-deals overview move together — reload both.
@@ -216,6 +219,42 @@ export default function MealPlan() {
   const pickRecipe = (r: Recipe) => {
     if (activeSlot) { s.assignSlot(activeSlot.day, activeSlot.slot, r.id); setActiveSlot(null); }
     else setOpen(r);
+  };
+
+  // Prompt a brand-new recipe instead of picking one off the rail. It is
+  // generated at settings.household_size, saved, then placed into the waiting
+  // slot (or opened for review if no slot is targeted) — the same two-way
+  // behaviour as tapping an existing recipe.
+  const generateRecipe = async () => {
+    const p = genPrompt.trim();
+    if (!p) return;
+    setGenBusy(true);
+    setGenMsg("Writing a recipe…");
+    try {
+      const rec = await api.generateRecipe({
+        prompt: p,
+        servings: s.settings.household_size,
+        diet: s.settings.diet,
+        max_active_minutes: s.settings.max_active_minutes,
+        country: s.settings.country,
+      });
+      if (rec.error) { setGenMsg(rec.error); setGenBusy(false); return; }
+      const saved = await api.createRecipe(rec);
+      if (!saved.ok) { setGenMsg(saved.error || "Could not save the recipe."); setGenBusy(false); return; }
+      await s.refreshRecipes();
+      setGenPrompt("");
+      const people = `${s.settings.household_size} ${s.settings.household_size === 1 ? "person" : "people"}`;
+      if (activeSlot) {
+        s.assignSlot(activeSlot.day, activeSlot.slot, saved.id);
+        setGenMsg(`“${rec.name}” — ${rec.ingredients.length} ingredients for ${people} — placed in ${DAYS[activeSlot.day - 1]} ${activeSlot.slot}. Save the plan to keep it.`);
+        setActiveSlot(null);
+      } else {
+        setGenMsg(`“${rec.name}” — ${rec.ingredients.length} ingredients for ${people} — added to your recipes.`);
+      }
+    } catch {
+      setGenMsg("Generation failed (Gemini key set?).");
+    }
+    setGenBusy(false);
   };
 
   const doSave = async () => {
@@ -621,7 +660,19 @@ export default function MealPlan() {
               onClick={() => setProtein(protein === p ? "" : p)}>{p === "none" ? "veg" : p}</button>
           ))}
         </div>
-        <p className="muted small">Tap a slot, then tap a recipe to place it. On desktop you can also
+        <div className="gen-box">
+          <input placeholder={activeSlot ? "…or describe a dish to invent" : "Describe a dish to invent…"}
+            value={genPrompt} disabled={genBusy}
+            onChange={(e) => setGenPrompt(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") generateRecipe(); }} />
+          <button className="btn" disabled={genBusy || !genPrompt.trim()} onClick={generateRecipe}>
+            {genBusy ? "…" : "✨ Prompt"}
+          </button>
+        </div>
+        {genBusy && <div className="remix-progress"><div className="bar" /></div>}
+        {genMsg && <div className="banner">{genMsg}</div>}
+        <p className="muted small">Tap a slot, then tap a recipe to place it — or prompt a new one and it
+          drops straight into that slot, scaled to {s.settings.household_size}. On desktop you can also
           drag. Tap a recipe name (with no slot selected) to view / remix.</p>
         <div className="rail-list">
           {filtered.map((r) => {

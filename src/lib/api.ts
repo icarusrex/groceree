@@ -53,4 +53,6 @@ export const api = {
     fetch("/api/save-flyer", { method: "POST", body: JSON.stringify(p) }).then(j),
   exportNotion: (p: { title?: string; groups: { category: string; items: { name: string; amount?: string }[] }[] }) =>
     fetch("/api/export-notion", { method: "POST", body: JSON.stringify(p) }).then(j),
+  generateRecipe: (p: { prompt: string; servings: number; diet?: string[]; max_active_minutes?: number | null; country?: string }) =>
+    fetch("/api/generate-recipe", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
 };

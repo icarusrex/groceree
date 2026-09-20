@@ -55,7 +55,7 @@ destination belongs to each person on the Access allowlist:
    [notion.so/my-integrations](https://www.notion.so/my-integrations), copy its
    secret, then:
    ```bash
-   npx wrangler pages secret put NOTION_TOKEN --project-name groceree
+   npx wrangler pages secret put NOTION_TOKEN
    ```
    For local dev put it in `.dev.vars` instead. Leave it unset and the button
    simply reports that Notion is not configured — nothing else breaks.
@@ -63,7 +63,7 @@ destination belongs to each person on the Access allowlist:
 2. **Per-user destination.** In Notion, open the page you want lists to land in,
    **••• → Connections → add your integration** (easy to forget — without it the
    API returns 404 and the app tells you so). Then paste that page's URL into
-   **Settings → Notion page for shopping lists**. It must be a page, not a database.
+   **Settings → Notion page for shopping lists**.
 
 If your D1 database already exists, add the column that stores it:
 ```bash
@@ -115,13 +115,15 @@ users). Only Gemini flyer parsing bills to Google, and only when you upload a fl
 ## What works now vs. next
 Working: plan generation (seasonality × cost × ease × pantry × learning, auto
 leftovers), diet/people settings, favourite/hide learning, shopping list,
-shopping-list export to Notion, flyer upload → Gemini → deals + price history,
+shopping-list export to Notion, prompt-a-recipe into a slot (Gemini, generated
+at your household size), flyer upload → Gemini → deals + price history,
 per-user data via Access.
 
 Next iterations: drag-and-drop slot editing (currently click-a-slot then click a
-recipe), the Shop price-trend heatmap/line charts (need a few weeks of flyer data
-first), pantry photo scanning, and folding price history into a "deal vs its own
-median" check.
+recipe, or prompt one — **✨ Prompt** in the recipe rail invents a dish, scales it
+to `household_size`, saves it and drops it into the waiting slot), the Shop
+price-trend heatmap/line charts (need a few weeks of flyer data first), pantry
+photo scanning, and folding price history into a "deal vs its own median" check.
 
 ## Re-generating the recipe DB
 The 455-recipe seed is built from the source cookbook JSON by
