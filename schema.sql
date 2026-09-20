@@ -70,8 +70,14 @@ CREATE TABLE IF NOT EXISTS user_settings (
   plan_days          INTEGER NOT NULL DEFAULT 4,      -- meals to generate (4 or 7)
   selected_stores    TEXT NOT NULL DEFAULT '[]',      -- JSON array of store ids; [] = all
   country            TEXT NOT NULL DEFAULT 'PT',      -- which country's stores to show (PT/CZ)
+  notion_parent_id   TEXT,                            -- Notion page the shopping list exports into
   updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
 );
+-- NOTE: this file is CREATE TABLE IF NOT EXISTS throughout, so a column added
+-- here does NOT reach a database that already exists. For those, run once:
+--   npx wrangler d1 execute groceree --remote \
+--     --command "ALTER TABLE user_settings ADD COLUMN notion_parent_id TEXT"
+-- (and the same with --local for the dev database).
 
 -- ===================== PERSONAL: pantry =================================
 CREATE TABLE IF NOT EXISTS pantry_items (

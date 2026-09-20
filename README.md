@@ -43,6 +43,36 @@ npx wrangler pages secret put GEMINI_API_KEY     # paste your key when prompted
 For local dev, copy `.dev.vars.example` to `.dev.vars` and put the key there
 (`.dev.vars` is gitignored and never shipped).
 
+## 3b. Optional — Notion export for the shopping list
+Adds a **→ Notion** button to the Shopping List that creates a new sub-page of a
+page you choose, with a `to_do` per unticked item grouped by category, so it is
+tickable in the Notion phone app while you shop.
+
+Two separate pieces of config, because the integration belongs to the app but the
+destination belongs to each person on the Access allowlist:
+
+1. **Server secret (once).** Create an internal integration at
+   [notion.so/my-integrations](https://www.notion.so/my-integrations), copy its
+   secret, then:
+   ```bash
+   npx wrangler pages secret put NOTION_TOKEN --project-name groceree
+   ```
+   For local dev put it in `.dev.vars` instead. Leave it unset and the button
+   simply reports that Notion is not configured — nothing else breaks.
+
+2. **Per-user destination.** In Notion, open the page you want lists to land in,
+   **••• → Connections → add your integration** (easy to forget — without it the
+   API returns 404 and the app tells you so). Then paste that page's URL into
+   **Settings → Notion page for shopping lists**. It must be a page, not a database.
+
+If your D1 database already exists, add the column that stores it:
+```bash
+npx wrangler d1 execute groceree --remote \
+  --command "ALTER TABLE user_settings ADD COLUMN notion_parent_id TEXT"
+```
+(`schema.sql` is `CREATE TABLE IF NOT EXISTS` throughout, so a new column never
+reaches an existing database on its own. Fresh installs need nothing.)
+
 ## 4. Run locally
 ```bash
 npm run dev        # UI only (fast), API calls need the line below
@@ -84,8 +114,9 @@ users). Only Gemini flyer parsing bills to Google, and only when you upload a fl
 
 ## What works now vs. next
 Working: plan generation (seasonality × cost × ease × pantry × learning, auto
-leftovers), diet/people settings, favourite/hide learning, shopping list, flyer
-upload → Gemini → deals + price history, per-user data via Access.
+leftovers), diet/people settings, favourite/hide learning, shopping list,
+shopping-list export to Notion, flyer upload → Gemini → deals + price history,
+per-user data via Access.
 
 Next iterations: drag-and-drop slot editing (currently click-a-slot then click a
 recipe), the Shop price-trend heatmap/line charts (need a few weeks of flyer data

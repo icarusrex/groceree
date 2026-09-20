@@ -57,6 +57,18 @@ export default function Settings() {
           <option value="off">Off — cook every meal</option>
         </select>
       </label>
+      <label className="field">
+        <span>Notion page for shopping lists</span>
+        <input type="text" value={s.settings.notion_parent_id ?? ""}
+          placeholder="paste the Notion page URL"
+          onChange={(e) => set({ notion_parent_id: e.target.value })} />
+        <small className="muted">
+          Each export becomes a new sub-page here, so this must be a <b>page</b>,
+          not a database. Paste the full URL — the id is picked out of it. The page
+          must be shared with the Groceree integration in Notion (page → ••• →
+          Connections).
+        </small>
+      </label>
       </div>
     </div>
   );
