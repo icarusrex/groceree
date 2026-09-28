@@ -1,5 +1,6 @@
 import { json, uid, type Env } from "./_helpers.ts";
 import { firecrawl } from "./_firecrawl.ts";
+import { BROWSER } from "./_sfcc.ts";
 import { SOURCES, sourceById, sourcesForCountry, type StoreSource } from "./_sources.ts";
 
 const userCountry = async (env: Env, user: string): Promise<string> => {
@@ -164,6 +165,23 @@ async function discover(src: StoreSource, key: string): Promise<Found> {
       const all = [...new Set([...links, ...fromHtml])].filter((l) => src.viewerRe!.test(l));
       base.flyers = pickLeaflet(src, all);
       if (!base.flyers.length) base.note = "No current grocery flyer found on the folhetos page.";
+    } catch (e: any) {
+      base.note = `Discovery failed: ${e.message}`;
+    }
+    return base;
+  }
+
+  // Shop-grid flyer (Auchan): the hub links the weekly flyer category in plain
+  // HTML; take the highest week number (Auchan only lists the live one or two).
+  if (src.kind === "sfcc" && src.viewerRe) {
+    try {
+      const res = await fetch(src.landing, { headers: BROWSER });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      const re = new RegExp(src.viewerRe.source, "gi");
+      const best = [...html.matchAll(re)].sort((a, b) => Number(b[1]) - Number(a[1]))[0];
+      if (best) base.flyers = [{ url: new URL(best[0], src.landing).href, title: `Week ${best[1]}` }];
+      else base.note = "No weekly flyer found on the folhetos page.";
     } catch (e: any) {
       base.note = `Discovery failed: ${e.message}`;
     }

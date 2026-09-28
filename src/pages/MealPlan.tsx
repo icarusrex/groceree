@@ -353,9 +353,9 @@ export default function MealPlan() {
       const items: any[] = [];
       let vfrom = pg.from || null, vto = pg.to || null, summary: string | null = null;
       for (let i = 0; i < pg.pages.length; i++) {
-        setFlyerMsg(`${jb.store_name}: reading page ${i + 1}/${pg.pages.length}…`);
+        setFlyerMsg(`${jb.store_name}: reading ${pg.grid ? "products" : "page"} ${i + 1}/${pg.pages.length}…`);
         let r: any;
-        try { r = await api.ocrPage({ image_url: pg.pages[i] }); } catch { continue; }
+        try { r = pg.grid ? await api.gridPage({ url: pg.pages[i] }) : await api.ocrPage({ image_url: pg.pages[i] }); } catch { continue; }
         if (!r || r.error || !Array.isArray(r.items)) continue;
         vfrom = vfrom || r.valid_from; vto = vto || r.valid_to; summary = summary || r.summary;
         for (const it of r.items) {
@@ -375,7 +375,7 @@ export default function MealPlan() {
     for (const jb of jobs) {
       setFetchingUrls((prev) => new Set(prev).add(jb.url));
       try {
-        if (jb.kind === "ipaper-image" || jb.kind === "leaflet") {
+        if (jb.kind === "ipaper-image" || jb.kind === "leaflet" || jb.kind === "sfcc") {
           await ocrFlyer(jb);
         } else {
           // Structured iPaper feed / generic upload: one cheap call, no OCR loop.

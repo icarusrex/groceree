@@ -2,6 +2,7 @@ import { json, type Env } from "./_helpers.ts";
 import { sourceById } from "./_sources.ts";
 import { listImageFlyerPages } from "./_imageflyer.ts";
 import { listLeafletPages } from "./_leaflet.ts";
+import { listSfccChunks } from "./_sfcc.ts";
 
 // POST /api/flyer-pages  { store_id?, flyer_url }
 // Step 1 of the per-page flyer flow. Returns the list of page-image URLs for an
@@ -23,6 +24,10 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     }
     if (src?.kind === "leaflet") {
       return json(await listLeafletPages(flyerUrl));
+    }
+    // Shop-grid flyer (Auchan): "pages" are grid chunks for /api/grid-page, not images.
+    if (src?.kind === "sfcc") {
+      return json({ ...(await listSfccChunks(flyerUrl)), grid: true });
     }
   } catch (e: any) {
     return json({ error: `could not list flyer pages: ${e.message}` }, 502);

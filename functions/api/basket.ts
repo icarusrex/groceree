@@ -7,7 +7,7 @@ import { SOURCES } from "./_sources.ts";
 // averages, which only reflect what each store chose to promote). The index is
 // built only from items priced at 2+ stores, normalised so the cheapest store = 1.
 
-const STORE_ORDER = ["Lidl", "Aldi", "Pingo Doce", "Continente", "Intermarché"];
+const STORE_ORDER = ["Lidl", "Aldi", "Pingo Doce", "Continente", "Intermarché", "Auchan"];
 const storeNames = () => {
   const known = SOURCES.map((s) => s.name);
   // keep the preferred order, then any extra known stores.

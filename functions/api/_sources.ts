@@ -5,6 +5,8 @@
 //                    images); we render, derive every page image, OCR with Gemini.
 //   "leaflet"      — Schwarz leaflet platform (Lidl); page images are individually
 //                    signed but an unauthenticated manifest API lists them; OCR with Gemini.
+//   "sfcc"         — the flyer is a category on the store's shop (Auchan); exact
+//                    prices read from the product grid in chunks, no OCR.
 //   "manual"       — no auto-parse wired; discovery lists it, user uploads.
 export type Country = "PT" | "CZ";
 export interface StoreSource {
@@ -13,7 +15,7 @@ export interface StoreSource {
   country?: Country;      // which country's user sees this store (default PT)
   landing: string;        // page that links to the current flyers
   flyerHost?: string;     // host of individual flyer viewer URLs (for link filtering)
-  kind: "ipaper" | "ipaper-image" | "leaflet" | "manual";
+  kind: "ipaper" | "ipaper-image" | "leaflet" | "sfcc" | "manual";
   // Discovery noise control: a store lists dozens of flyers (regional editions,
   // thematic catalogues — pet food, beauty, beer). Keep only the weekly grocery
   // flyer for the mainland, most-recent week(s).
@@ -60,6 +62,10 @@ export const SOURCES: StoreSource[] = [
     excludeRe: /novidades|folheto-especial|tematic|fim-de-semana/i,
     // slug date DD-MM (e.g. promocoes-semanais-a-partir-de-28-09) → recency rank
     weekRe: /promocoes-(?:semanais-)?a-partir-de-(\d{2}-\d{2})/i },
+  // Auchan: weekly flyer = shop category /pt/folheto-semanal-<week>-<n>/ (Wed–Tue).
+  // The folhetos hub links it server-side, so a plain fetch finds it.
+  { id: "auchan", name: "Auchan", landing: "https://www.auchan.pt/pt/folhetos/", kind: "sfcc",
+    viewerRe: /\/pt\/folheto-semanal-(\d+)(?:-\d+)?\//i },
   { id: "aldi", name: "Aldi", landing: "https://www.aldi.pt/folheto/esta-semana.html",
     kind: "ipaper-image",
     staticViewers: [
