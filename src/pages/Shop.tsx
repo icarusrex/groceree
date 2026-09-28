@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { useStore } from "../store.tsx";
 import { buildShoppingList, tidyAmount } from "../engine/engine.ts";
-import { api } from "../lib/api.ts";
+
+// Where "→ Obsidian" writes the list: the vault Syncthing mirrors to the phone.
+const OBSIDIAN_VAULT = "vault";
+const OBSIDIAN_NOTE = "04-personal/Meal Plan/Shopping list";
 
 export default function Shop() {
   const s = useStore();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const [exporting, setExporting] = useState(false);
-  const [exportMsg, setExportMsg] = useState<{ text: string; url?: string } | null>(null);
+  const [exportMsg, setExportMsg] = useState<string | null>(null);
   const list = useMemo(
     () => buildShoppingList(s.plan, s.recipes, s.settings.household_size,
       s.pantry.map((p: any) => p.name || p.raw_text)),
@@ -37,16 +39,34 @@ export default function Shop() {
   };
   const remaining = exportGroups().reduce((n, g) => n + g.items.length, 0);
 
-  const sendToNotion = async () => {
-    setExporting(true);
-    setExportMsg(null);
+  // Markdown checklist, one "## category" per group — ticks off in Obsidian (and
+  // reads fine pasted into Keep / a chat).
+  const markdown = () => {
+    const lines = [`# Shopping list`, ``, `_${new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} · ${s.settings.household_size} people_`];
+    for (const g of exportGroups()) {
+      lines.push("", `## ${g.category}`);
+      for (const i of g.items) lines.push(`- [ ] ${i.name}${i.amount ? ` — ${i.amount}` : ""}`);
+    }
+    return lines.join("\n") + "\n";
+  };
+
+  // Overwrites the note in the vault via Obsidian's own URI (works from the Mac
+  // or the phone app); Syncthing carries it to the other device.
+  const sendToObsidian = () => {
+    const q = new URLSearchParams({ vault: OBSIDIAN_VAULT, file: OBSIDIAN_NOTE, content: markdown(), overwrite: "true" });
+    window.location.href = `obsidian://new?${q.toString().replace(/\+/g, "%20")}`;
+    setExportMsg(`Sent ${remaining} items to Obsidian → ${OBSIDIAN_NOTE}.md`);
+  };
+
+  // Phone: native share sheet (Keep, WhatsApp, …). Desktop: clipboard.
+  const share = async () => {
+    const text = markdown();
     try {
-      const r = await api.exportNotion({ groups: exportGroups() });
-      setExportMsg(r?.error ? { text: r.error } : { text: `Sent ${r.items} items to Notion.`, url: r.url });
+      if (navigator.share) { await navigator.share({ title: "Shopping list", text }); return; }
+      await navigator.clipboard.writeText(text);
+      setExportMsg(`Copied ${remaining} items to the clipboard.`);
     } catch (e: any) {
-      setExportMsg({ text: `Export failed: ${String(e?.message || e)}` });
-    } finally {
-      setExporting(false);
+      if (e?.name !== "AbortError") setExportMsg(`Share failed: ${String(e?.message || e)}`);
     }
   };
 
@@ -55,17 +75,16 @@ export default function Shop() {
       <h1>Shopping List</h1>
       <p className="muted">{done}/{buy.length} picked · scaled to {s.settings.household_size} people · leftovers excluded</p>
       <div className="shop-actions">
-        <button className="btn dark" disabled={exporting || !remaining} onClick={sendToNotion}
-          title="Create a Notion page with the unticked items, grouped by category">
-          {exporting ? "Sending…" : `→ Notion${remaining ? ` (${remaining})` : ""}`}
+        <button className="btn dark" disabled={!remaining} onClick={sendToObsidian}
+          title={`Write the unticked items to ${OBSIDIAN_NOTE}.md in Obsidian (syncs to the phone)`}>
+          {`→ Obsidian${remaining ? ` (${remaining})` : ""}`}
+        </button>
+        <button className="btn ghost" disabled={!remaining} onClick={share}
+          title="Share sheet on the phone (Keep, messages…); copies to the clipboard on desktop">
+          {"share" in navigator ? "Share…" : "Copy"}
         </button>
       </div>
-      {exportMsg && (
-        <div className="banner">
-          {exportMsg.text}
-          {exportMsg.url && <> <a href={exportMsg.url} target="_blank" rel="noreferrer">Open it</a></>}
-        </div>
-      )}
+      {exportMsg && <div className="banner">{exportMsg}</div>}
       {Object.entries(groups).map(([cat, items]) => (
         <div className="shop-group" key={cat}>
           <h3>{cat}</h3>

@@ -1,6 +1,6 @@
 import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { persistFlyer, type ParsedFlyer } from "./_flyer.ts";
-import { sourceById } from "./_sources.ts";
+import { sourceById, sourcesForCountry } from "./_sources.ts";
 
 // POST /api/save-flyer
 //   { store_id?, store_name, valid_from?, valid_to?, summary?, items[], page_count? }
@@ -13,11 +13,16 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const items = Array.isArray(body.items) ? body.items : [];
   if (!items.length) return json({ error: "No grocery deals found on this flyer" }, 502);
 
-  const src = body.store_id ? sourceById(body.store_id) : undefined;
+  const user = uid(ctx);
+  // Uploaded flyers carry no store_id — match the name the model read ("LIDL")
+  // against this user's country's stores so it lands on the same store.
+  const readName = String(body.store_name || "").trim().toLowerCase();
+  const src = body.store_id ? sourceById(body.store_id)
+    : readName ? sourcesForCountry(await userCountry(ctx.env.DB, user)).find((s) => s.name.toLowerCase() === readName)
+    : undefined;
   // Always persist under the canonical store name (the model may write "ALDI" vs
   // "Aldi", which would fork the store id and split its prices).
   const storeName = src?.name || body.store_name || "unknown";
-  const user = uid(ctx);
   // A known store carries its own country (lidl-cz is Czech no matter who fetches
   // it); an unknown/generic flyer falls back to the fetching user's country.
   const country = src?.country ?? await userCountry(ctx.env.DB, user);

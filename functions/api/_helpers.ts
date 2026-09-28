@@ -3,7 +3,6 @@ export interface Env {
   DB: D1Database;
   GEMINI_API_KEY: string;
   FIRECRAWL_API_KEY: string;
-  NOTION_TOKEN?: string; // optional: shopping-list export is skipped if unset
 }
 
 export const json = (data: unknown, status = 200) =>

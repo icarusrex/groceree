@@ -16,6 +16,13 @@ const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "
 const COUNT_WORDS = new Set(["unit", "units", "whole", "x", "un", "piece", "pieces", "each", "ea", "count"]);
 const dispUnit = (u: string) => (COUNT_WORDS.has((u || "").toLowerCase().trim()) ? "" : u || "");
 
+// Scaled quantities read like a recipe: whole grams, quarter-steps for small
+// amounts ("1.5 tbsp", "0.25 tsp"), never "1.3333".
+const fmtQty = (q: number) => {
+  const r = q >= 10 ? Math.round(q) : Math.round(q * 4) / 4 || Math.round(q * 100) / 100;
+  return String(r);
+};
+
 function Timer({ seconds, label }: { seconds: number; label: string }) {
   const [left, setLeft] = useState<number | null>(null);
   const ref = useRef<any>(null);
@@ -46,8 +53,11 @@ function Timer({ seconds, label }: { seconds: number; label: string }) {
   );
 }
 
-export default function RecipeModal({ recipe, onClose }:
-  { recipe: Recipe; onClose: () => void }) {
+// cookFor: opened from a plan slot → show amounts for what that slot actually
+// cooks (a dinner feeding tomorrow's lunch is cooked double), matching what the
+// shopping list bought.
+export default function RecipeModal({ recipe, onClose, cookFor }:
+  { recipe: Recipe; onClose: () => void; cookFor?: { servings: number; household: number } }) {
   const s = useStore();
   const [instruction, setInstruction] = useState("");
   const [busy, setBusy] = useState(false);
@@ -58,6 +68,8 @@ export default function RecipeModal({ recipe, onClose }:
 
   const view = draft || recipe;
   const steps: string[] = view.instructions || [];
+  const scale = cookFor && view.servings ? cookFor.servings / view.servings : 1;
+  const leftovers = cookFor ? Math.max(0, cookFor.servings - cookFor.household) : 0;
 
   const runRemix = async (instr: string) => {
     setBusy(true); setMsg("Adapting…");
@@ -112,7 +124,9 @@ export default function RecipeModal({ recipe, onClose }:
     <>
       {img && <img className="recipe-img" src={img} alt={view.name} />}
       <h2>{view.name}</h2>
-      <p className="meta">{view.total_time} min · serves {view.servings}
+      <p className="meta">{view.total_time} min · {cookFor && scale !== 1
+          ? <>cook for {cookFor.servings}{leftovers ? ` (${cookFor.household} now + ${leftovers} leftovers)` : ""} · recipe serves {view.servings}</>
+          : <>serves {view.servings}{leftovers ? ` (${cookFor!.household} now + ${leftovers} leftovers)` : ""}</>}
         {view.primary_protein ? ` · ${view.primary_protein === "none" ? "veg" : view.primary_protein}` : ""}
         {draft ? " · remixed (unsaved)" : ""}</p>
 
@@ -128,7 +142,7 @@ export default function RecipeModal({ recipe, onClose }:
           <h3>Ingredients</h3>
           <ul className="ing-list">
             {(view.ingredients || []).map((i: any, k: number) => (
-              <li key={k}>{i.quantity ? `${i.quantity}${dispUnit(i.unit) ? " " + dispUnit(i.unit) : ""} ` : ""}{i.name}</li>))}
+              <li key={k}>{i.quantity ? `${fmtQty(i.quantity * scale)}${dispUnit(i.unit) ? " " + dispUnit(i.unit) : ""} ` : ""}{i.name}</li>))}
           </ul>
         </div>
         {steps.length > 0 && (

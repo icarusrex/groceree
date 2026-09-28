@@ -53,21 +53,9 @@ export default function Settings() {
         <span>Leftovers</span>
         <select value={s.settings.leftover_strategy}
           onChange={(e) => set({ leftover_strategy: e.target.value })}>
-          <option value="auto">Auto — reuse big dinners as next-day lunch</option>
+          <option value="auto">Auto — double dinners that reheat well, eat as next-day lunch</option>
           <option value="off">Off — cook every meal</option>
         </select>
-      </label>
-      <label className="field">
-        <span>Notion page for shopping lists</span>
-        <input type="text" value={s.settings.notion_parent_id ?? ""}
-          placeholder="paste the Notion page URL"
-          onChange={(e) => set({ notion_parent_id: e.target.value })} />
-        <small className="muted">
-          Each export becomes a new sub-page here, so this must be a <b>page</b>,
-          not a database. Paste the full URL — the id is picked out of it. The page
-          must be shared with the Groceree integration in Notion (page → ••• →
-          Connections).
-        </small>
       </label>
       </div>
     </div>

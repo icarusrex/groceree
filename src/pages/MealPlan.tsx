@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
+import { uploadedPages } from "../lib/flyerPages.ts";
 import RecipeModal from "../components/RecipeModal.tsx";
 import type { Slot, Recipe } from "../engine/types.ts";
 
@@ -147,6 +148,7 @@ export default function MealPlan() {
   const [protein, setProtein] = useState("");
   const [flyerMsg, setFlyerMsg] = useState("");
   const [open, setOpen] = useState<Recipe | null>(null);
+  const [openServings, setOpenServings] = useState<number | null>(null); // set when opened from a slot
   const [saveMsg, setSaveMsg] = useState("");
   const [flyers, setFlyers] = useState<any[]>([]);
   const [bestDeals, setBestDeals] = useState<StoreDeal[]>([]);
@@ -204,6 +206,13 @@ export default function MealPlan() {
 
   const cell = (day: number, slot: Slot) =>
     s.plan.find((p) => p.day_of_week === day && p.slot === slot);
+  // What a slot's recipe is cooked for: its own servings, or — for a leftover —
+  // the servings of the dinner it came from (you open the card to cook that).
+  const cookedServings = (it: any): number | null => {
+    if (!it) return null;
+    const src = it.is_leftover && it.leftover_of ? cell(it.leftover_of.day_of_week, it.leftover_of.slot) : it;
+    return src?.servings ?? null;
+  };
 
   const onDrop = (day: number, slot: Slot, e: React.DragEvent) => {
     e.preventDefault();
@@ -218,7 +227,7 @@ export default function MealPlan() {
 
   const pickRecipe = (r: Recipe) => {
     if (activeSlot) { s.assignSlot(activeSlot.day, activeSlot.slot, r.id); setActiveSlot(null); }
-    else setOpen(r);
+    else { setOpen(r); setOpenServings(null); }
   };
 
   // Prompt a brand-new recipe instead of picking one off the rail. It is
@@ -391,21 +400,46 @@ export default function MealPlan() {
     setProgress(null);
   };
 
+  // Uploads go through the same per-page flow as fetched flyers: the browser
+  // renders + downscales each page (a 45 MB Lidl PDF → ~10 small JPEGs), OCRs
+  // one page per request, merges, then saves. Sending the raw file blew past
+  // Gemini's 20 MB inline limit.
   const onFlyer = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    e.target.value = ""; // allow re-uploading the same file
     if (!files.length) return;
+    setLoading(true);
     setFlyerMsg("Reading flyer…");
-    const images = await Promise.all(files.map(async (f) => ({
-      mime: f.type || "application/pdf",
-      data: btoa(new Uint8Array(await f.arrayBuffer()).reduce((a, b) => a + String.fromCharCode(b), "")),
-    })));
     try {
-      const res = await api.parseFlyer(images);
-      if (res.deals) { s.setDeals(res.deals);
-        setFlyerMsg(`${res.store}: ${Object.keys(res.deals).length} good-value deals added.${res.summary ? " " + res.summary : ""}`);
-        reloadFlyers(); }
-      else setFlyerMsg(res.error || "Could not parse flyer.");
-    } catch { setFlyerMsg("Flyer parsing failed."); }
+      const seen = new Set<string>();
+      const items: any[] = [];
+      let store: string | null = null, vfrom: string | null = null, vto: string | null = null, summary: string | null = null;
+      let pages = 0;
+      for await (const image of uploadedPages(files)) {
+        pages++;
+        setFlyerMsg(`Reading page ${pages}…`);
+        let r: any;
+        try { r = await api.ocrPage({ image }); } catch { continue; }
+        if (!r || r.error || !Array.isArray(r.items)) continue;
+        store = store || r.store; vfrom = vfrom || r.valid_from; vto = vto || r.valid_to; summary = summary || r.summary;
+        for (const it of r.items) {
+          if (!it?.name || typeof it.price !== "number") continue;
+          const k = `${it.name.toLowerCase()}|${it.price}`;
+          if (seen.has(k)) continue;
+          seen.add(k); items.push(it);
+        }
+      }
+      if (!items.length) { setFlyerMsg(pages ? "No grocery deals found on this flyer." : "Could not read that file."); return; }
+      const res = await api.saveFlyer({ store_name: store || "unknown", valid_from: vfrom, valid_to: vto, summary, items, page_count: pages });
+      if (res.error) { setFlyerMsg(res.error); return; }
+      s.setDeals(res.deals || {});
+      setFlyerMsg(`${res.store}: ${res.item_count} prices from ${pages} pages · ${Object.keys(res.deals || {}).length} good-value deals added.${res.summary ? " " + res.summary : ""}`);
+      reloadFlyers();
+    } catch (err: any) {
+      setFlyerMsg(`Flyer parsing failed${err?.message ? `: ${err.message}` : "."}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -625,7 +659,7 @@ export default function MealPlan() {
                       </div>
                       {r ? <>
                         <div className="recipe-name link"
-                          onClick={(e) => { e.stopPropagation(); setOpen(r); }}>{r.name}</div>
+                          onClick={(e) => { e.stopPropagation(); setOpen(r); setOpenServings(cookedServings(it)); }}>{r.name}</div>
                         <div className="meta">{it?.is_leftover ? "leftovers" : `${r.total_time} min`}</div>
                       </> : <div className="muted drop-hint">
                         {isActive ? "tap a recipe →" : "tap to select, or drop a recipe"}</div>}
@@ -695,7 +729,8 @@ export default function MealPlan() {
         </div>
       </aside>
 
-      {open && <RecipeModal recipe={open} onClose={() => setOpen(null)} />}
+      {open && <RecipeModal recipe={open} onClose={() => setOpen(null)}
+        cookFor={openServings ? { servings: openServings, household: s.settings.household_size } : undefined} />}
       {dealMenu && <DealMenu data={dealMenu} onClose={() => setDealMenu(null)}
         onSaved={() => s.refreshRecipes()} />}
     </div>

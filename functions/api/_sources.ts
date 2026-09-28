@@ -50,14 +50,16 @@ export const SOURCES: StoreSource[] = [
     weekRe: /semana-(\d+)/i },
   // Schwarz/Lidl: page images are individually signed (no derivable list), but the
   // platform's manifest API lists them. Discovery renders the folhetos hub and
-  // ranks the week-dated viewer slugs (promocoes-a-partir-de-DD-MM).
+  // ranks the week-dated viewer slugs. Lidl renamed these from
+  // promocoes-a-partir-de-DD-MM to promocoes-semanais-a-partir-de-DD-MM (Sep 2026);
+  // accept both. promocoes-fim-de-semana-* (weekend-only) is deliberately excluded.
   { id: "lidl", name: "Lidl", landing: "https://www.lidl.pt/folhetos", kind: "leaflet",
     viewerLanding: "https://www.lidl.pt/folhetos",
     viewerRe: /https?:\/\/www\.lidl\.pt\/[^"'\s)<>\\]*folhetos\/[a-z0-9\-]+[^"'\s)<>\\]*/i,
-    weeklyRe: /promocoes-a-partir-de/i,
-    excludeRe: /novidades|folheto-especial|tematic/i,
-    // slug date DD-MM (e.g. promocoes-a-partir-de-01-06) → recency rank
-    weekRe: /promocoes-a-partir-de-(\d{2}-\d{2})/i },
+    weeklyRe: /promocoes-(?:semanais-)?a-partir-de/i,
+    excludeRe: /novidades|folheto-especial|tematic|fim-de-semana/i,
+    // slug date DD-MM (e.g. promocoes-semanais-a-partir-de-28-09) → recency rank
+    weekRe: /promocoes-(?:semanais-)?a-partir-de-(\d{2}-\d{2})/i },
   { id: "aldi", name: "Aldi", landing: "https://www.aldi.pt/folheto/esta-semana.html",
     kind: "ipaper-image",
     staticViewers: [

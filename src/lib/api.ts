@@ -47,12 +47,10 @@ export const api = {
   // flyerPages → loop ocrPage per page → saveFlyer with the merged items.
   flyerPages: (p: { store_id?: string; flyer_url: string }) =>
     fetch("/api/flyer-pages", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
-  ocrPage: (p: { image_url: string }) =>
+  ocrPage: (p: { image_url: string } | { image: { mime: string; data: string } }) =>
     fetch("/api/ocr-page", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(120000) }).then(j),
   saveFlyer: (p: { store_id?: string; store_name: string; valid_from?: string | null; valid_to?: string | null; summary?: string | null; items: any[]; page_count?: number }) =>
     fetch("/api/save-flyer", { method: "POST", body: JSON.stringify(p) }).then(j),
-  exportNotion: (p: { title?: string; groups: { category: string; items: { name: string; amount?: string }[] }[] }) =>
-    fetch("/api/export-notion", { method: "POST", body: JSON.stringify(p) }).then(j),
   generateRecipe: (p: { prompt: string; servings: number; diet?: string[]; max_active_minutes?: number | null; country?: string }) =>
     fetch("/api/generate-recipe", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
 };

@@ -4,8 +4,8 @@
 //   1. eligibleRecipes() — hard filters (diet, hidden, excluded cuisine).
 //   2. scoreRecipe()     — season × affordability × ease × pantry, then a
 //                          learning multiplier (favorite ↑, skipped ↓, recency ↓).
-//   3. generatePlan()    — fills 7×{lunch,dinner}; big dinners auto-backfill the
-//                          next day's lunch as leftovers; variety penalties keep
+//   3. generatePlan()    — fills 7×{lunch,dinner}; dinners that reheat well are cooked
+//                          double and backfill the next day's lunch; variety penalties keep
 //                          proteins/cuisines from repeating.
 //   4. buildShoppingList() — aggregates non-leftover meals, scaled to household.
 
@@ -134,6 +134,22 @@ const COOK_METHODS = ["roast", "bake", "grill", "fried", "fry", "stew", "soup",
 const styleKey = (r: Recipe): string =>
   `${r.primary_protein}|${COOK_METHODS.find((m) => r.name.toLowerCase().includes(m)) || ""}`;
 
+// Dish "family" = the name up to its first "with"/comma/paren. Remixes are saved
+// as new recipes ("Two Whole Roasted Chickens with Leeks…" beside "…with
+// Fennel…"), so de-duping by id alone let three variants of one dish fill a
+// week. A plan gets at most one member of each family (its leftovers aside).
+export const dishFamily = (r: Recipe): string =>
+  r.name.toLowerCase().split(/\s+with\s+|,|\s+\(/)[0].replace(/[^a-z0-9]+/g, " ").trim();
+
+// Leftovers are for dishes that reheat well — stews, curries, bakes, braises —
+// not fish (reheated fish is grim), crispy/seared cuts, eggs or lettuce cups.
+// So leftover lunches come and go through the week rather than every day.
+const REHEATS = /stew|curry|masala|soup|chil+i|braise|slow|bolognese|rag[uù]|casserole|tagine|\bdal\b|dahl|lentil|chickpea|bean|roast|traybake|tray|sheet|bake|pulled|shredded|tinga|brisket|meatball|goulash|feijoada|cacciatore|arroz|rice|risotto|\bpie\b|lasagn|cozido|chow mein|bowl|mince|picadillo|stuffed/i;
+const NO_REHEAT = /crispy|lettuce|\beggs?\b|frittata|shakshuka|huevos|salad/i;
+export const makesLeftovers = (r: Recipe): boolean =>
+  r.primary_protein !== "fish" && r.primary_protein !== "seafood" &&
+  !NO_REHEAT.test(r.name) && REHEATS.test(r.name);
+
 export function generatePlan(input: GenerateInput): PlanItem[] {
   const household = Math.max(1, input.settings.household_size);
   const maxMin = input.settings.max_active_minutes;
@@ -142,6 +158,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   const ranked = scoreAll(input);
 
   const used = new Set<string>();
+  const usedFamilies = new Set<string>();
   const items: PlanItem[] = [];
   let lastProtein = "";
   let lastCuisine = "";
@@ -152,7 +169,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
     let best: Scored | null = null;
     let bestAdj = -1;
     for (const s of ranked) {
-      if (used.has(s.recipe.id) || !filter(s.recipe)) continue;
+      if (used.has(s.recipe.id) || usedFamilies.has(dishFamily(s.recipe)) || !filter(s.recipe)) continue;
       let adj = s.score;
       if (s.recipe.primary_protein !== "none" &&
           s.recipe.primary_protein === lastProtein) adj *= VARIETY_PROTEIN_PENALTY;
@@ -172,13 +189,13 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   for (let day = 1; day <= days; day++) {
     // avoid repeating the previous day's dinner style (roast → roast, etc.)
     avoidStyles = new Set(day > 1 && dinner[day - 1] ? [styleKey(dinner[day - 1]!.recipe)] : []);
-    // prefer dinners that yield leftovers (servings cover a 2nd household meal)
-    let choice = autoLeftover
-      ? pick((r) => r.servings >= 2 * household && !isSalad(r))
-      : null;
-    if (!choice) choice = pick((r) => !isSalad(r));
+    // A recipe's native serving count doesn't decide leftovers: sizePlanForLeftovers
+    // scales a leftover-making dinner up to cover the next day's lunch. (Filtering
+    // on servings let the few 10-serving recipes crowd out everything else.)
+    const choice = pick((r) => !isSalad(r));
     if (!choice) break;
     used.add(choice.recipe.id);
+    usedFamilies.add(dishFamily(choice.recipe));
     dinner[day] = choice;
     lastProtein = choice.recipe.primary_protein;
     lastCuisine = choice.recipe.cuisine ?? "";
@@ -189,9 +206,11 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   }
 
   for (let day = 1; day <= days; day++) {
-    // does yesterday's dinner have spare servings for today's lunch?
+    // yesterday's dinner, if it reheats well, is cooked double → today's lunch —
+    // but never three leftover lunches running; a fresh lunch breaks the streak.
     const prev = dinner[day - 1];
-    if (autoLeftover && prev && prev.recipe.servings >= 2 * household) {
+    const streak = lunch[day - 1]?.is_leftover && lunch[day - 2]?.is_leftover;
+    if (autoLeftover && prev && makesLeftovers(prev.recipe) && !streak) {
       lunch[day] = {
         day_of_week: day, slot: "lunch", recipe_id: prev.recipe.id,
         is_leftover: true,
@@ -210,6 +229,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
     const fresh = pick((r) => r.ease_score >= 0.6 && saladLunchOk(r)) ?? pick(saladLunchOk);
     if (fresh) {
       used.add(fresh.recipe.id);
+      usedFamilies.add(dishFamily(fresh.recipe));
       lunch[day] = {
         day_of_week: day, slot: "lunch", recipe_id: fresh.recipe.id,
         is_leftover: false, leftover_of: null, servings: household,
