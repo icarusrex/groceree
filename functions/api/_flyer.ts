@@ -1,3 +1,4 @@
+import { geminiUrl, MIN_THINKING } from "./_gemini.ts";
 // Shared flyer persistence. Underscore prefix = not routed.
 // Both the Gemini vision parser (parse-flyer) and the structured iPaper
 // extractor (fetch-flyer) normalise to this shape, then call persistFlyer.
@@ -120,21 +121,19 @@ export async function geminiParse(
 ): Promise<ParsedFlyer> {
   const parts: any[] = [{ text: buildPrompt() }];
   for (const m of media) parts.push({ inline_data: { mime_type: m.mime || "image/jpeg", data: m.data } });
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const url = geminiUrl(apiKey);
   const res = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       contents: [{ role: "user", parts }],
-      // thinkingBudget:0 turns OFF gemini-2.5-flash's default "thinking" pass.
-      // This is straight OCR/extraction, not reasoning — thinking only added
+      // Minimal thinking: this is straight OCR/extraction, not reasoning — thinking only added
       // latency (dense Czech leaflet pages ballooned per-batch time to minutes)
       // and output-token cost. Disabling it makes every flyer fetch much faster.
       generationConfig: {
         temperature: 0.1,
         response_mime_type: "application/json",
-        thinkingConfig: { thinkingBudget: 0 },
+        ...MIN_THINKING,
       },
     }),
   });
@@ -167,15 +166,14 @@ export async function summariseFlyer(
     `In ONE short sentence (max 16 words) tell a home cook what's worth buying or ` +
     `any theme this week (e.g. "Mexican week", "great fish deals", "stock up on chicken"). ` +
     `Plain text only, no quotes, no preamble.`;
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const url = geminiUrl(apiKey);
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.4, maxOutputTokens: 60, thinkingConfig: { thinkingBudget: 0 } },
+        generationConfig: { temperature: 0.4, maxOutputTokens: 60, ...MIN_THINKING },
       }),
     });
     if (!res.ok) return null;

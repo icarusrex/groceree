@@ -1,4 +1,5 @@
 import { json, uid, type Env } from "./_helpers.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/scan-pantry  { images: [{mime, data(base64)}] }
 // Identifies food items in a fridge/pantry/grocery photo and stores them as pantry rows.
@@ -18,8 +19,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   for (const im of images) {
     parts.push({ inline_data: { mime_type: im.mime || "image/jpeg", data: im.data } });
   }
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const gres = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },

@@ -1,4 +1,5 @@
 import { json, type Env } from "./_helpers.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/clean-ingredients { recipe_ids: [...] }
 // For each recipe, ask Gemini to turn messy ingredients into clean buy-items,
@@ -13,8 +14,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     `SELECT id, name, ingredients FROM recipes WHERE id IN (${placeholders})`,
   ).bind(...recipe_ids).all();
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   let updated = 0;
 
   for (const row of results as any[]) {

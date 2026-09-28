@@ -1,5 +1,6 @@
 import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { storeIdOf } from "./_flyer.ts";
+import { geminiUrl, MIN_THINKING } from "./_gemini.ts";
 
 // POST /api/scan-receipt  { images: [{mime, data(base64)}] }
 // Photo of a grocery till receipt -> Gemini vision -> store, date, and the real
@@ -32,8 +33,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const parts: any[] = [{ text: PROMPT }];
   for (const im of images) parts.push({ inline_data: { mime_type: im.mime || "image/jpeg", data: im.data } });
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const gres = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -41,7 +41,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       contents: [{ role: "user", parts }],
       generationConfig: {
         temperature: 0.1, response_mime_type: "application/json",
-        thinkingConfig: { thinkingBudget: 0 },
+        ...MIN_THINKING,
       },
     }),
   });

@@ -1,5 +1,6 @@
 import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { crossStoreDeals, type DealRow } from "./_analysis.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/deal-plan { store_name?, days? }
 // The "cook from this week's deals" mode: instead of matching deals to the recipe
@@ -77,8 +78,7 @@ Return ONLY JSON, no prose:
 }]}
 Exactly ${days} recipes. Each recipe's main ingredients should be mostly from the sale list.`;
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const reqBody = JSON.stringify({
     contents: [{ role: "user", parts: [{ text: PROMPT }] }],
     generationConfig: { temperature: 0.6, response_mime_type: "application/json" },

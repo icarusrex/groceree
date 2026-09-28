@@ -1,4 +1,5 @@
 import { json, uid, userCountry, type Env } from "./_helpers.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/compare-stores
 //   body: { plan?: [{name, cuisine, primary_protein}], week_start?: string }
@@ -78,8 +79,7 @@ no fluff. Return ONLY JSON, no prose, shaped:
  "stores":[{"store":"<name>","best_for":["<cheap item or category>","..."],
             "verdict":"<one short line>"}]}`;
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const gres = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },

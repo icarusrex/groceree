@@ -67,9 +67,32 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
   const [img, setImg] = useState<string | null>((recipe as any).image_url || null);
 
   const view = draft || recipe;
-  const steps: string[] = view.instructions || [];
   const scale = cookFor && view.servings ? cookFor.servings / view.servings : 1;
   const leftovers = cookFor ? Math.max(0, cookFor.servings - cookFor.household) : 0;
+
+  // Cooking a different batch size → Gemini rewrites the method (amounts inside
+  // steps, pans, batching, a keep-the-leftovers step). Cached per recipe+batch
+  // in localStorage so it's one call, ever; the original shows until it lands.
+  const scaleKey = cookFor && scale !== 1 && !draft && view.id ? `scaled-method:${view.id}:${cookFor.servings}:${leftovers}` : null;
+  const [scaledSteps, setScaledSteps] = useState<string[] | null>(null);
+  const [scaling, setScaling] = useState(false);
+  useEffect(() => {
+    setScaledSteps(null);
+    if (!scaleKey) return;
+    try { const hit = localStorage.getItem(scaleKey); if (hit) { setScaledSteps(JSON.parse(hit)); return; } } catch {}
+    let live = true;
+    setScaling(true);
+    api.scaleMethod({ recipe: view, servings: cookFor!.servings, leftovers })
+      .then((r) => {
+        if (!live || !r?.instructions?.length) return;
+        setScaledSteps(r.instructions);
+        try { localStorage.setItem(scaleKey, JSON.stringify(r.instructions)); } catch {}
+      })
+      .catch(() => {})
+      .finally(() => live && setScaling(false));
+    return () => { live = false; };
+  }, [scaleKey]);
+  const steps: string[] = scaledSteps || view.instructions || [];
 
   const runRemix = async (instr: string) => {
     setBusy(true); setMsg("Adapting…");
@@ -147,7 +170,8 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
         </div>
         {steps.length > 0 && (
           <div>
-            <h3>Method</h3>
+            <h3>Method{scaledSteps ? <small className="muted"> · adjusted for {cookFor!.servings}</small>
+              : scaling ? <small className="muted"> · adjusting for {cookFor!.servings}…</small> : null}</h3>
             <ol className="steps">
               {steps.map((st, k) => {
                 const t = stepTimer(st);

@@ -19,6 +19,8 @@ export const api = {
     fetch("/api/scan-receipt", { method: "POST", body: JSON.stringify({ images }) }).then(j),
   compareStores: (plan: any[]) =>
     fetch("/api/compare-stores", { method: "POST", body: JSON.stringify({ plan }) }).then(j),
+  scaleMethod: (p: { recipe: any; servings: number; leftovers?: number }) =>
+    fetch("/api/scale-method", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
   remix: (recipe: any, instruction: string) =>
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
   editPlan: (plan: any[], instruction: string) =>

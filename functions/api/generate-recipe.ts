@@ -1,4 +1,5 @@
 import { json, type Env } from "./_helpers.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/generate-recipe { prompt, servings, diet?, max_active_minutes?, country? }
 // Invents a recipe from a free-text prompt, in the same shape /api/recipes POST
@@ -95,8 +96,7 @@ Return ONLY JSON, no prose, shaped:
 
 REQUEST: ${prompt}`;
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const gres = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },

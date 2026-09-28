@@ -1,4 +1,5 @@
 import { json, type Env } from "./_helpers.ts";
+import { geminiUrl } from "./_gemini.ts";
 
 // POST /api/edit-plan { plan, instruction }
 // Natural-language editing of the whole week. The model picks replacement
@@ -45,8 +46,7 @@ Return ONLY a JSON array of the slots you are changing, each:
 {"day_of_week":<1-7>,"slot":"lunch|dinner","recipe_id":"<exact id from the list>"}
 Return [] if nothing should change. No prose.`;
 
-  const model = "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${ctx.env.GEMINI_API_KEY}`;
+  const url = geminiUrl(ctx.env.GEMINI_API_KEY);
   const gres = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
