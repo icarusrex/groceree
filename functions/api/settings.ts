@@ -10,6 +10,7 @@ const shape = (r: any) => ({
   selected_stores: JSON.parse(r.selected_stores || "[]"),
   country: r.country ?? "PT",
   notion_parent_id: r.notion_parent_id ?? "",
+  monthly_food_budget: r.monthly_food_budget ?? null,
 });
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
@@ -24,7 +25,7 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
   await ctx.env.DB.prepare(
     `UPDATE user_settings SET household_size=?, diet=?, exclude_cuisines=?,
      max_active_minutes=?, leftover_strategy=?, plan_days=?, selected_stores=?,
-     country=?, notion_parent_id=?, updated_at=datetime('now')
+     country=?, notion_parent_id=?, monthly_food_budget=?, updated_at=datetime('now')
      WHERE user_id=?`,
   ).bind(
     Math.max(1, Math.round(Number(b.household_size) || 2)), JSON.stringify(b.diet ?? []),
@@ -32,7 +33,8 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
     b.max_active_minutes ?? null, b.leftover_strategy ?? "auto",
     b.plan_days === 7 ? 7 : 4, JSON.stringify(b.selected_stores ?? []),
     b.country === "CZ" ? "CZ" : "PT",
-    (b.notion_parent_id ?? "").trim() || null, user,
+    (b.notion_parent_id ?? "").trim() || null,
+    Number(b.monthly_food_budget) > 0 ? Math.round(Number(b.monthly_food_budget)) : null, user,
   ).run();
   return json({ ok: true });
 };

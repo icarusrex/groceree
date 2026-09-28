@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "./lib/api.ts";
-import { generatePlan, sizePlanForLeftovers } from "./engine/engine.ts";
+import { sizePlanForLeftovers } from "./engine/engine.ts";
+import { toBuyItem } from "./engine/normalise.ts";
+import { generateWithinBudget, weekBudget, type PriceBook } from "./engine/cost.ts";
 import type { Recipe, Settings, PlanItem, RecipeState } from "./engine/types.ts";
 
 interface Store {
@@ -24,6 +26,10 @@ interface Store {
   applyPlanChanges: (changes: { day_of_week: number; slot: string; recipe_id: string }[]) => void;
   replacePlanRecipe: (oldId: string, newId: string) => void;
   refreshRecipes: () => Promise<void>;
+  prices: PriceBook;
+  pricing: { done: number; total: number } | null; // background price-book fill
+  spend: { week: { spent: number; receipts: number }; month: { spent: number; receipts: number } } | null;
+  refreshSpend: () => Promise<void>;
 }
 
 const Ctx = createContext<Store>(null as any);
@@ -58,6 +64,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     () => JSON.parse(localStorage.getItem("plan") || "[]"));
   const [deals, setDeals] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [prices, setPrices] = useState<PriceBook>({});
+  const [pricing, setPricing] = useState<{ done: number; total: number } | null>(null);
+  const [spend, setSpend] = useState<Store["spend"]>(null);
+  const refreshSpend = () => api.spend(mondayOf()).then((r) => { if (!r?.error) setSpend(r); }).catch(() => {});
 
   useEffect(() => {
     Promise.all([api.recipes(), api.settings(), api.states(), api.pantry()])
@@ -66,16 +76,59 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setPantry(p || []);
       })
       .finally(() => setLoading(false));
+    refreshSpend();
   }, []);
+
+  // Price book: load it, then quietly fill whatever the recipes need that it
+  // lacks — a few ingredients per request (Auchan search + Gemini), in the
+  // background while the app is open. One-off ~150 ingredients, then monthly.
+  useEffect(() => {
+    if (!recipes.length) return;
+    let live = true;
+    (async () => {
+      const book = await api.priceBook().catch(() => null);
+      if (!live || !book || book.error) return;
+      setPrices(book.prices || {});
+      const known = new Set<string>([...Object.keys(book.prices || {}), ...(book.fresh || [])]);
+      const need = new Set<string>();
+      for (const r of recipes) for (const i of r.ingredients) {
+        const b = toBuyItem(i.name, i.quantity ?? null, i.unit ?? "", i.category);
+        if (b.name && !b.staple && b.quantity != null && !known.has(b.name)) need.add(b.name);
+      }
+      const todo = [...need];
+      if (!todo.length) return;
+      setPricing({ done: 0, total: todo.length });
+      let fails = 0;
+      for (let i = 0; i < todo.length && live && fails < 3; i += 8) {
+        const r = await api.priceFill(todo.slice(i, i + 8)).catch(() => null);
+        if (!r || r.error) { fails++; continue; }
+        fails = 0;
+        setPrices((prev) => {
+          const next = { ...prev };
+          for (const p of r.priced || []) if ((p.per_kg ?? p.per_item) != null && next[p.item]?.source !== "receipt")
+            next[p.item] = { per_kg: p.per_kg, per_item: p.per_item, source: "shelf" };
+          return next;
+        });
+        setPricing({ done: Math.min(todo.length, i + 8), total: todo.length });
+      }
+      if (live) setPricing(null);
+    })();
+    return () => { live = false; };
+  }, [recipes.length]);
 
   const persist = (p: PlanItem[]) => { setPlan(p); localStorage.setItem("plan", JSON.stringify(p)); };
 
   const store: Store = {
-    recipes, settings, states, pantry, plan, deals, loading,
+    recipes, settings, states, pantry, plan, deals, loading, prices, pricing, spend, refreshSpend,
+    // With a budget set, pick the best-liked of many candidate weeks that fits
+    // the week's target (month carry-over included); otherwise a normal plan.
     generate: (days?: number) => {
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
-      persist(generatePlan({ recipes, settings, states, pantry: pantryNames, deals,
-        days, seed: Math.floor(Math.random() * 1e9) }));
+      const planDays = days ?? settings.plan_days ?? 4;
+      const target = settings.monthly_food_budget
+        ? weekBudget(settings.monthly_food_budget, spend?.month.spent ?? 0, planDays).planTarget : null;
+      persist(generateWithinBudget({ recipes, settings, states, pantry: pantryNames, deals,
+        days, seed: Math.floor(Math.random() * 1e9) }, prices, target).plan);
     },
     setSettings: (s) => { setSettingsState(s); api.saveSettings(s); },
     signal: (id, sig) => {

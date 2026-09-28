@@ -51,6 +51,10 @@ export const api = {
     fetch("/api/flyer-pages", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
   ocrPage: (p: { image_url: string } | { image: { mime: string; data: string } }) =>
     fetch("/api/ocr-page", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(120000) }).then(j),
+  priceBook: () => fetch("/api/price-book").then(j),
+  priceFill: (items: string[]) =>
+    fetch("/api/price-fill", { method: "POST", body: JSON.stringify({ items }), signal: AbortSignal.timeout(90000) }).then(j),
+  spend: (week_start: string) => fetch(`/api/spend?week_start=${week_start}`).then(j),
   gridPage: (p: { url: string }) =>
     fetch("/api/grid-page", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
   saveFlyer: (p: { store_id?: string; store_name: string; valid_from?: string | null; valid_to?: string | null; summary?: string | null; items: any[]; page_count?: number }) =>

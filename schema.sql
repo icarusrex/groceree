@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS user_settings (
   selected_stores    TEXT NOT NULL DEFAULT '[]',      -- JSON array of store ids; [] = all
   country            TEXT NOT NULL DEFAULT 'PT',      -- which country's stores to show (PT/CZ)
   notion_parent_id   TEXT,                            -- Notion page the shopping list exports into
+  monthly_food_budget REAL,                           -- € / month; plan + receipts compare against it
   updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
 );
 -- NOTE: this file is CREATE TABLE IF NOT EXISTS throughout, so a column added
@@ -168,3 +169,37 @@ CREATE TABLE IF NOT EXISTS basket_prices (
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
   PRIMARY KEY (user_id, item, store)
 );
+
+-- ============== Price book: one live unit price per ingredient ==============
+-- item = the canonical ingredient name the shopping list uses (toBuyItem), so a
+-- recipe line prices by arithmetic. Two sources, kept side by side:
+--   'shelf'   — Auchan's online shop (regular price per kg/L), refreshed monthly
+--   'receipt' — what you actually paid (overrides shelf while recent)
+-- A shelf row with no price marks "searched, not found" so it isn't retried daily.
+CREATE TABLE IF NOT EXISTS price_book (
+  country    TEXT NOT NULL DEFAULT 'PT',
+  item       TEXT NOT NULL,
+  source     TEXT NOT NULL,       -- shelf | receipt
+  per_kg     REAL,                -- € per kg (or per litre)
+  per_item   REAL,                -- € per piece, for things sold by count
+  store      TEXT,
+  product    TEXT,                -- what was matched, for sanity checks
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  PRIMARY KEY (country, item, source)
+);
+
+-- One row per scanned receipt: the trip total, for month-to-date food spend.
+CREATE TABLE IF NOT EXISTS receipts (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id       TEXT NOT NULL DEFAULT 'me',
+  country       TEXT NOT NULL DEFAULT 'PT',
+  store         TEXT,
+  date          TEXT NOT NULL,     -- purchase date YYYY-MM-DD
+  total         REAL,              -- amount paid (whole bill)
+  grocery_total REAL,              -- sum of the food/grocery lines
+  item_count    INTEGER,
+  source        TEXT,              -- matches store_prices.source for its lines
+  created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_receipts_user_date on receipts(user_id, date);
+

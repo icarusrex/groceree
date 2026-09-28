@@ -43,6 +43,7 @@ export interface Settings {
   selected_stores: string[];  // store ids to fetch flyers from; [] = all
   country: "PT" | "CZ";       // which country's stores to show
   notion_parent_id?: string;  // Notion page the shopping list exports into
+  monthly_food_budget?: number | null; // € per month; the plan and receipts compare against it
 }
 
 export interface RecipeState {

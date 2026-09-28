@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useStore } from "../store.tsx";
 import { buildShoppingList, tidyAmount } from "../engine/engine.ts";
+import { dealsByItem, lineCost } from "../engine/cost.ts";
 
 // Where "→ Obsidian" writes the list: the vault Syncthing mirrors to the phone.
 const OBSIDIAN_VAULT = "vault";
@@ -17,7 +18,13 @@ export default function Shop() {
 
   if (!s.plan.length) return <div><h1>Shopping List</h1><p className="muted">Generate a meal plan first.</p></div>;
 
-  const buy = list.map((i) => ({ ...i, amt: tidyAmount(i) })).filter((i) => !i.amt.staple);
+  // Estimated € per line from the price book (flyer deals applied); staples aren't priced.
+  const dealMap = dealsByItem(s.deals);
+  const buy = list.map((i) => ({ ...i, amt: tidyAmount(i), est: lineCost(i.name, i.quantity, i.unit, s.prices, dealMap) }))
+    .filter((i) => !i.amt.staple);
+  const estLeft = buy.filter((i) => !checked[i.name + i.unit]);
+  const estTotal = estLeft.reduce((a, i) => a + (i.est ?? 0), 0);
+  const estMissing = estLeft.filter((i) => i.est == null).length;
   const staples = list.filter((i) => tidyAmount(i).staple);
 
   const groups: Record<string, typeof buy> = {};
@@ -73,7 +80,8 @@ export default function Shop() {
   return (
     <div>
       <h1>Shopping List</h1>
-      <p className="muted">{done}/{buy.length} picked · scaled to {s.settings.household_size} people · leftovers excluded</p>
+      <p className="muted">{done}/{buy.length} picked · scaled to {s.settings.household_size} people · leftovers excluded
+        {estTotal > 0 && <> · <b>≈€{Math.round(estTotal)}</b> to go{estMissing ? ` (${estMissing} item${estMissing > 1 ? "s" : ""} not priced yet)` : ""}</>}</p>
       <div className="shop-actions">
         <button className="btn dark" disabled={!remaining} onClick={sendToObsidian}
           title={`Write the unticked items to ${OBSIDIAN_NOTE}.md in Obsidian (syncs to the phone)`}>
@@ -95,7 +103,8 @@ export default function Shop() {
                 <input type="checkbox" checked={!!checked[key]}
                   onChange={() => setChecked({ ...checked, [key]: !checked[key] })} />
                 <span className={checked[key] ? "struck" : ""}>
-                  {i.name}{i.amt.text && <em> · {i.amt.text}</em>}</span>
+                  {i.name}{i.amt.text && <em> · {i.amt.text}</em>}
+                  {i.est != null && <span className="muted small cost-chip"> ≈€{i.est.toFixed(2)}</span>}</span>
                 <button className="icon to-pantry" title="move to pantry"
                   onClick={(e) => { e.preventDefault();
                     s.addPantry(`${i.amt.text ? i.amt.text + " " : ""}${i.name}`);

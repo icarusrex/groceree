@@ -404,3 +404,16 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 .flyer-caret { color: var(--muted); font-size: 13px; padding-top: 2px; }
 /* bottom save button next to the plan */
 .plan-save-row { display: flex; align-items: center; gap: 12px; margin: 6px 0 4px; }
+
+/* weekly food budget bar (Meal Plan) */
+.budget { background: var(--surface); border: 2px solid var(--border); border-radius: 14px;
+  padding: 10px 14px; margin: 0 0 14px; display: grid; gap: 6px; }
+.budget.muted { background: rgba(255,255,255,.85); }
+.budget-line { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.budget-track { position: relative; height: 10px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.budget-track > div { position: absolute; inset: 0 auto 0 0; border-radius: 6px; }
+.budget-planned { background: repeating-linear-gradient(45deg, #a7dcb9 0 6px, #c9ead5 6px 12px); }
+.budget-spent { background: var(--accent); }
+.budget-track.over .budget-planned { background: repeating-linear-gradient(45deg, #f4b0a8 0 6px, #f9d2cd 6px 12px); }
+.budget-track.over .budget-spent { background: #c0392b; }
+.cost-chip { font-variant-numeric: tabular-nums; }

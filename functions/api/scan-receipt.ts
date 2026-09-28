@@ -1,6 +1,8 @@
 import { json, uid, userCountry, type Env } from "./_helpers.ts";
 import { storeIdOf } from "./_flyer.ts";
 import { geminiUrl, MIN_THINKING } from "./_gemini.ts";
+import { upsertStatements, type Priced } from "./_pricebook.ts";
+import { toBuyItem } from "../../src/engine/normalise.ts";
 
 // POST /api/scan-receipt  { images: [{mime, data(base64)}] }
 // Photo of a grocery till receipt -> Gemini vision -> store, date, and the real
@@ -14,15 +16,23 @@ Republic (a photo of a printed till receipt). Extract:
   "Pingo Doce", "Lidl", "Aldi", "Intermarche", "Auchan", "Billa", "Albert", "Tesco"),
   not the branch address or a store code.
 - the purchase date, if printed, as YYYY-MM-DD.
+- the TOTAL amount paid for the whole receipt (the final total line), as a number.
 - every purchased GROCERY line item: a plain English name, and the price actually
   paid for that line (after any in-store discount already applied on the receipt -
   this is what was paid, not a shelf/before-discount price).
+- for each line, its unit price when the receipt shows or implies it:
+  weighed lines print a weight and a price per kg ("0,532 kg x 6,49 €/kg") → unit_price
+  6.49, unit_basis "kg"; a pack size in the name ("ARROZ 1KG", "LEITE 1L", "IOGURTE 4X125G")
+  → price divided by the total pack weight/volume, basis "kg" (litres count as kg);
+  several of the same item ("2 x 0,89") → the price of one, basis "un".
+  Leave unit_price null when it can't be worked out.
 Ignore non-food lines: carrier bags, bottle/can deposits and refunds, loyalty-card
 notes, and the subtotal/tax/total/payment/change lines at the bottom.
 Return ONLY JSON, no prose, shaped:
-{"store": "<name|null>", "date": "YYYY-MM-DD|null",
+{"store": "<name|null>", "date": "YYYY-MM-DD|null", "total": <number|null>,
  "items": [{"name": "<english grocery name>", "name_pt": "<original receipt text>",
-            "price": <number>, "unit": "<e.g. kg|un|null>"}]}`;
+            "price": <number>, "unit": "<e.g. kg|un|null>",
+            "unit_price": <number|null>, "unit_basis": "kg|un|null"}]}`;
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
@@ -79,7 +89,29 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       ).bind(storeId, country, it.name, it.name_pt ?? null, it.unit ?? null, it.price,
              it.price, 0, date, date, source)),
   ];
+  // The trip itself (for weekly / monthly spend) …
+  const groceryTotal = Math.round(items.reduce((a: number, it: any) => a + it.price, 0) * 100) / 100;
+  const total = typeof parsed.total === "number" && parsed.total > 0 ? parsed.total : null;
+  stmts.push(ctx.env.DB.prepare(
+    `INSERT INTO receipts (user_id,country,store,date,total,grocery_total,item_count,source)
+     VALUES (?,?,?,?,?,?,?,?)`,
+  ).bind(user, country, storeName, date, total, groceryTotal, items.length, source));
+  // … and what was actually paid per kg / per piece, which overrides the shelf
+  // price in the price book. Keyed by the same canonical names the recipes use;
+  // cupboard staples and anything without a unit price are skipped.
+  const paid = new Map<string, Priced>();
+  for (const it of items) {
+    if (typeof it.unit_price !== "number" || !(it.unit_price > 0)) continue;
+    const b = toBuyItem(it.name, null, "", "pantry");
+    if (!b.name || b.staple) continue;
+    const kg = it.unit_basis === "kg", un = it.unit_basis === "un";
+    if (!kg && !un) continue;
+    paid.set(b.name, { item: b.name, per_kg: kg ? it.unit_price : null, per_item: un ? it.unit_price : null,
+                       product: it.name_pt || it.name });
+  }
+  stmts.push(...upsertStatements(ctx.env.DB, country, "receipt", [...paid.values()], storeName, `${date} 12:00:00`));
   await ctx.env.DB.batch(stmts);
 
-  return json({ store: storeName, date, item_count: items.length, items });
+  return json({ store: storeName, date, total, grocery_total: groceryTotal, item_count: items.length,
+                prices_learned: paid.size, items });
 };

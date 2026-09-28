@@ -65,13 +65,35 @@ const DICT: { aliases: string[]; canon: Canon }[] = [
 
   // meat / seafood — weight. (beef & pork handled by meatCanon() for cut granularity.)
   { aliases: ["chicken breast", "chicken"], canon: { name: "chicken breast", category: "meat", sold: "weight", gramsPerItem: 180, gramsPerCup: 140 } },
-  { aliases: ["chicken thigh", "chicken leg", "chicken legs", "drumstick"], canon: { name: "chicken thighs", category: "meat", sold: "weight", gramsPerItem: 150 } },
+  { aliases: ["chicken thigh", "chicken leg", "chicken legs", "drumstick", "whole chicken leg"], canon: { name: "chicken thighs", category: "meat", sold: "weight", gramsPerItem: 150 } },
   { aliases: ["whole chicken"], canon: { name: "whole chicken", category: "meat", sold: "count", gramsPerItem: 1500 } },
   { aliases: ["lamb", "lamb shoulder", "lamb shank", "lamb chop"], canon: { name: "lamb", category: "meat", sold: "weight", gramsPerItem: 400 } },
   { aliases: ["bacon", "pancetta"], canon: { name: "bacon", category: "meat", sold: "weight", gramsPerItem: 25 } },
   { aliases: ["sausage", "chorizo", "chouriço", "chourico", "chicken sausage", "pork sausage", "italian sausage", "bratwurst", "kielbasa"], canon: { name: "sausage", category: "meat", sold: "count", gramsPerItem: 75 } },
+  // dairy
+  { aliases: ["parmesan", "parmigiano", "pecorino", "grana padano"], canon: { name: "parmesan", category: "dairy", sold: "weight", gramsPerCup: 100 } },
+  { aliases: ["cheddar", "monterey jack", "mexican cheese", "provolone", "gouda", "cheese", "cotija", "emmental", "gruyere", "flamengo"], canon: { name: "cheese", category: "dairy", sold: "weight", gramsPerCup: 113, gramsPerItem: 20 } },
+  { aliases: ["mozzarella"], canon: { name: "mozzarella", category: "dairy", sold: "weight", gramsPerCup: 113, gramsPerItem: 125 } },
+  { aliases: ["feta", "ricotta salata", "ricotta"], canon: { name: "feta", category: "dairy", sold: "weight", gramsPerCup: 150 } },
+  { aliases: ["cream cheese"], canon: { name: "cream cheese", category: "dairy", sold: "weight", gramsPerCup: 230 } },
+  { aliases: ["butter"], canon: { name: "butter", category: "dairy", sold: "weight", gramsPerCup: 227 } },
+  { aliases: ["heavy cream", "double cream", "single cream", "cream", "sour cream", "creme fraiche", "crème fraîche"], canon: { name: "cream", category: "dairy", sold: "weight", gramsPerCup: 240 } },
+  { aliases: ["yogurt", "yoghurt", "greek yogurt", "greek yoghurt"], canon: { name: "yogurt", category: "dairy", sold: "weight", gramsPerCup: 245 } },
+  { aliases: ["milk", "whole milk", "semi-skimmed milk"], canon: { name: "milk", category: "dairy", sold: "weight", gramsPerCup: 240 } },
+  // veg
+  { aliases: ["celery", "celery stalk", "celery rib"], canon: { name: "celery", category: "produce", sold: "weight", gramsPerCup: 100, gramsPerItem: 40 } },
+  { aliases: ["cucumber"], canon: { name: "cucumber", category: "produce", sold: "count", gramsPerCup: 120, gramsPerItem: 300 } },
+  { aliases: ["kale", "cavolo nero", "lacinato"], canon: { name: "kale", category: "produce", sold: "weight", gramsPerCup: 67, gramsPerItem: 200 } },
+  { aliases: ["lettuce", "romaine", "butter lettuce", "iceberg", "little gem"], canon: { name: "lettuce", category: "produce", sold: "count", gramsPerCup: 50, gramsPerItem: 300 } },
+  { aliases: ["broccoli", "broccolini", "tenderstem"], canon: { name: "broccoli", category: "produce", sold: "weight", gramsPerCup: 90, gramsPerItem: 350 } },
+  { aliases: ["aubergine", "eggplant"], canon: { name: "aubergine", category: "produce", sold: "count", gramsPerCup: 80, gramsPerItem: 300 } },
+  { aliases: ["fennel", "fennel bulb"], canon: { name: "fennel", category: "produce", sold: "count", gramsPerItem: 250 } },
+  { aliases: ["jalapeno", "jalapeño"], canon: { name: "chilli", category: "produce", sold: "count", gramsPerItem: 15 } },
+  { aliases: ["corn", "sweetcorn", "corn kernels", "frozen corn"], canon: { name: "sweetcorn", category: "pantry", sold: "weight", gramsPerCup: 150, gramsPerCan: 285 } },
+  { aliases: ["tofu", "silken tofu", "firm tofu"], canon: { name: "tofu", category: "pantry", sold: "weight", gramsPerCup: 250 } },
+  { aliases: ["ground turkey", "turkey mince", "minced turkey"], canon: { name: "turkey mince", category: "meat", sold: "weight", gramsPerCup: 225 } },
   { aliases: ["salmon", "salmon fillet"], canon: { name: "salmon", category: "seafood", sold: "weight", gramsPerItem: 150 } },
-  { aliases: ["cod", "haddock", "white fish", "hake"], canon: { name: "white fish", category: "seafood", sold: "weight", gramsPerItem: 150 } },
+  { aliases: ["cod", "haddock", "white fish", "hake", "trout", "sea bass", "seabass", "sea bream", "bream", "tilapia", "pollock", "sole", "fish fillet"], canon: { name: "white fish", category: "seafood", sold: "weight", gramsPerItem: 150 } },
   { aliases: ["tuna"], canon: { name: "tuna", category: "seafood", sold: "weight" } },
   { aliases: ["prawn", "shrimp", "king prawn"], canon: { name: "prawns", category: "seafood", sold: "weight", gramsPerCup: 145 } },
   { aliases: ["sardine"], canon: { name: "sardines", category: "seafood", sold: "count", gramsPerItem: 40 } },
@@ -82,14 +104,14 @@ const DICT: { aliases: string[]; canon: Canon }[] = [
   { aliases: ["salt", "pepper", "black pepper", "sea salt"], canon: { name: "salt & pepper", category: "pantry", sold: "pack" } },
   { aliases: ["coconut milk", "coconut cream"], canon: { name: "coconut milk", category: "pantry", sold: "weight", gramsPerCup: 240, gramsPerCan: 400 } },
   { aliases: ["rice", "basmati rice", "brown rice", "white rice"], canon: { name: "rice", category: "pantry", sold: "weight", gramsPerCup: 185 } },
-  { aliases: ["pasta", "spaghetti", "penne", "noodle"], canon: { name: "pasta", category: "pantry", sold: "weight", gramsPerCup: 100 } },
+  { aliases: ["pasta", "spaghetti", "penne", "noodle", "rigatoni", "fusilli", "macaroni", "linguine", "tagliatelle", "farfalle", "orzo", "lasagne", "lasagna", "gnocchi"], canon: { name: "pasta", category: "pantry", sold: "weight", gramsPerCup: 100 } },
   { aliases: ["lentil", "red lentil", "split lentil", "green lentil", "cooked lentil", "packet lentil"], canon: { name: "lentils", category: "pantry", sold: "weight", gramsPerCup: 200, gramsPerItem: 250, gramsPerCan: 400 } },
   { aliases: ["chickpea", "garbanzo"], canon: { name: "chickpeas", category: "pantry", sold: "weight", gramsPerCup: 160, gramsPerCan: 400 } },
   { aliases: ["flour", "plain flour", "self-raising flour"], canon: { name: "flour", category: "pantry", sold: "pack" } },
   { aliases: ["honey", "runny honey", "maple syrup", "sugar"], canon: { name: "honey/sugar", category: "pantry", sold: "pack" } },
   { aliases: ["soy sauce", "teriyaki sauce", "fish sauce", "oyster sauce", "coconut aminos", "vinegar", "curry paste", "tomato paste", "mustard", "tahini"], canon: { name: "", category: "pantry", sold: "pack" } },
   { aliases: ["bread", "ciabatta", "loaf", "pitta", "tortilla", "wrap"], canon: { name: "bread", category: "pantry", sold: "pack" } },
-  { aliases: ["sesame seed", "spice", "seed", "paprika", "cumin", "oregano", "ras el hanout", "garam masala", "cinnamon", "nutmeg", "turmeric", "cardamom", "ginger", "cayenne", "chili powder", "chilli powder", "curry powder"], canon: { name: "", category: "pantry", sold: "pack" } },
+  { aliases: ["garlic powder", "onion powder", "garlic salt", "chili paste", "chilli paste", "garlic granules", "sesame seed", "spice", "seed", "paprika", "cumin", "oregano", "ras el hanout", "garam masala", "cinnamon", "nutmeg", "turmeric", "cardamom", "ginger", "cayenne", "chili powder", "chilli powder", "curry powder"], canon: { name: "", category: "pantry", sold: "pack" } },
   { aliases: ["rosemary", "thyme", "bay leaf", "bay leaves", "sage", "chive"], canon: { name: "dried herbs", category: "pantry", sold: "pack" } },
   { aliases: ["cashew", "walnut", "almond", "pecan", "peanut", "pine nut", "hazelnut"], canon: { name: "nuts", category: "pantry", sold: "pack" } },
   { aliases: ["date", "medjool date", "raisin", "sultana", "dried apricot", "cranberry"], canon: { name: "dried fruit", category: "pantry", sold: "pack" } },
@@ -121,7 +143,7 @@ function meatCanon(raw: string): Canon | null {
     if (has("tenderloin", "loin", "fillet", "escalope")) return { name: "pork tenderloin", category: "meat", sold: "weight", gramsPerItem: 450 };
     if (has("rib")) return { name: "pork ribs", category: "meat", sold: "weight", gramsPerItem: 700 };
     if (has("belly")) return { name: "pork belly", category: "meat", sold: "weight", gramsPerItem: 500 };
-    if (has("shoulder", "butt", "shred", "pulled", "cheek")) return { name: "pork shoulder", category: "meat", sold: "weight", gramsPerItem: 1500 };
+    if (has("shoulder", "butt", "shred", "pulled", "cheek")) return { name: "pork shoulder", category: "meat", sold: "weight", gramsPerItem: 1500, gramsPerCup: 200 };
     return { name: "pork", category: "meat", sold: "weight", gramsPerItem: 300 };
   }
   return null;
@@ -129,15 +151,24 @@ function meatCanon(raw: string): Canon | null {
 
 const PREP = /\b(sliced|diced|chopped|minced|grated|shredded|crushed|cubed|cut|fresh|dried|cooked|raw|peeled|trimmed|halved|quartered|roasted|scraped|finely|roughly|thinly|small|large|medium|baby|mixed[- ]?colou?r|heritage|ripe|skinless|boneless|for garnish|for frying|to serve|to taste|extra|plus)\b/gi;
 
-function stripToCore(raw: string): string {
+function stripToCore(raw: string, cutComma = true): string {
   let n = raw.toLowerCase();
-  n = n.replace(/\([^)]*\)/g, " ").replace(/,.*$/, "");
+  n = n.replace(/\([^)]*\)/g, " ");
+  // "chicken thighs, diced" → drop the trailing prep clause; keepComma for
+  // leading adjectives ("boneless, skinless chicken thighs")
+  n = cutComma ? n.replace(/,.*$/, "") : n.replace(/,/g, " ");
   n = n.replace(/\bstrands?\b.*?\bfrom\b/g, "").replace(/\bfrom \d.*$/g, "");
   n = n.replace(/^[\s\d½¼¾⅓⅔.,x×-]+/, "");
   // leading measure words ("heaped tablespoons fennel seeds" -> "fennel seeds")
   n = n.replace(/^(heaped|level|rounded|\s)*(tablespoons?|teaspoons?|tbsp|tsp|cups?|pinch(es)?|handful|sprigs?|cloves?|sachets?|packets?|tins?|cans?|jars?|bunch(es)?|heads?)\s+(of\s+)?/gi, "");
   n = n.replace(PREP, " ").replace(/\s+/g, " ").trim();
   return n;
+}
+
+// Grams per piece for a canonical ingredient ("egg" → 55), so a € per kg price
+// can cost a counted line. Undefined when it isn't sold by the piece.
+export function gramsPerItemOf(name: string): number | undefined {
+  return DICT.find((e) => e.canon.name === name)?.canon.gramsPerItem;
 }
 
 function lookup(core: string): Canon | null {
@@ -166,6 +197,8 @@ const UNIT_SYNONYM: Record<string, string> = {
   lb: "lb", lbs: "lb", pound: "lb", pounds: "lb",
   oz: "oz", ounce: "oz", ounces: "oz",
   cup: "cup", cups: "cup",
+  tbsp: "tbsp", tablespoon: "tbsp", tablespoons: "tbsp", tbs: "tbsp",
+  tsp: "tsp", teaspoon: "tsp", teaspoons: "tsp",
   can: "can", cans: "can", tin: "can", tins: "can", jar: "can", jars: "can",
   clove: "", cloves: "", head: "", heads: "",
   unit: "", units: "", whole: "", each: "", x: "", un: "",
@@ -178,6 +211,9 @@ function normUnit(unit: string): string {
   const u = (unit || "").toLowerCase().trim();
   if (u in UNIT_SYNONYM) return UNIT_SYNONYM[u];
   if (u === "" || u === "ml") return u;
+  // compound units ("g can", "ml jar", "tbsp heaped"): the first real unit word
+  // wins — "400 g can" is 400 g, not 400 cans
+  for (const w of u.split(/[^a-z]+/)) if (w && w in UNIT_SYNONYM) return UNIT_SYNONYM[w];
   return ""; // unknown → treat as a whole count
 }
 
@@ -192,7 +228,7 @@ export function toBuyItem(
   }
 
   const core = stripToCore(rawName);
-  const canon = meatCanon(rawName) ?? lookup(core);
+  const canon = meatCanon(rawName) ?? lookup(core) ?? lookup(stripToCore(rawName, false));
   const u = normUnit(unit);
 
   if (!canon) {
@@ -213,6 +249,8 @@ export function toBuyItem(
     else if (u === "lb") grams = quantity * 454;
     else if (u === "oz") grams = quantity * 28;
     else if (u === "cup" && canon.gramsPerCup) grams = quantity * canon.gramsPerCup;
+    else if (u === "tbsp" && canon.gramsPerCup) grams = quantity * canon.gramsPerCup / 16;
+    else if (u === "tsp" && canon.gramsPerCup) grams = quantity * canon.gramsPerCup / 48;
     else if (u === "can" && canon.gramsPerCan) grams = quantity * canon.gramsPerCan;
     else if (u === "" && canon.gramsPerItem) grams = quantity * canon.gramsPerItem;
   }
@@ -231,7 +269,9 @@ export function toBuyItem(
   // sold by weight → grams, rounded sensibly. Always emit a weight unit (even
   // with no resolvable quantity) so every occurrence shares one shopping row.
   let g = grams;
-  if (g == null && quantity != null && canon.gramsPerItem) g = quantity * canon.gramsPerItem;
+  // a bare count of a weight-sold thing ("2 chicken breasts") → per-item weight;
+  // never for volumes ("4 cups" of pork is not 4 whole shoulders)
+  if (g == null && quantity != null && u === "" && canon.gramsPerItem) g = quantity * canon.gramsPerItem;
   if (g == null) return { name: canon.name, display: titleCase(canon.name), quantity: null,
     unit: "g", category: canon.category, staple: false };
   const rounded = g >= 1000 ? Math.round(g / 250) * 250 : Math.max(50, Math.round(g / 50) * 50);

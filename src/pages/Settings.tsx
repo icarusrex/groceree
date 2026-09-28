@@ -50,6 +50,16 @@ export default function Settings() {
           onChange={(e) => set({ max_active_minutes: e.target.value ? Number(e.target.value) : null })} />
       </label>
       <label className="field">
+        <span>Monthly food budget (€)</span>
+        <input type="number" min={0} step={10} value={s.settings.monthly_food_budget ?? ""}
+          placeholder="not set"
+          onChange={(e) => set({ monthly_food_budget: e.target.value ? Number(e.target.value) : null })} />
+        <small className="muted">
+          The meal plan shows its estimated cost against this, and scanned receipts
+          show what's been spent this month.
+        </small>
+      </label>
+      <label className="field">
         <span>Leftovers</span>
         <select value={s.settings.leftover_strategy}
           onChange={(e) => set({ leftover_strategy: e.target.value })}>

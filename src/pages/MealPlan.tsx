@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
 import { uploadedPages } from "../lib/flyerPages.ts";
+import BudgetBar from "../components/BudgetBar.tsx";
+import { planCost } from "../engine/cost.ts";
 import RecipeModal from "../components/RecipeModal.tsx";
 import type { Slot, Recipe } from "../engine/types.ts";
 
@@ -178,6 +180,7 @@ export default function MealPlan() {
   const [genBusy, setGenBusy] = useState(false);
   const [genMsg, setGenMsg] = useState("");
   const byId = useMemo(() => new Map(s.recipes.map((r) => [r.id, r])), [s.recipes]);
+  const cost = useMemo(() => planCost(s.plan, s.recipes, s.prices, s.deals), [s.plan, s.recipes, s.prices, s.deals]);
 
   // Flyers and the cross-store best-deals overview move together — reload both.
   const reloadFlyers = React.useCallback(async () => {
@@ -463,6 +466,7 @@ export default function MealPlan() {
           </div>
         </div>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
+        {s.plan.length > 0 && <BudgetBar cost={cost} />}
 
         {discoverOpen && (
           <div className="discover-panel">
@@ -660,7 +664,13 @@ export default function MealPlan() {
                       {r ? <>
                         <div className="recipe-name link"
                           onClick={(e) => { e.stopPropagation(); setOpen(r); setOpenServings(cookedServings(it)); }}>{r.name}</div>
-                        <div className="meta">{it?.is_leftover ? "leftovers" : `${r.total_time} min`}</div>
+                        <div className="meta">{it?.is_leftover ? "leftovers" : <>{r.total_time} min{(() => {
+                          const c = it ? cost.byItem.get(it) : undefined;
+                          return c && c.coverage >= 0.5
+                            ? <span className="cost-chip" title={`≈€${c.total.toFixed(2)} for ${it!.servings} servings · ${Math.round(c.coverage * 100)}% of ingredients priced`}>
+                                {" · "}{c.coverage < 0.8 ? "~" : ""}€{c.perServing.toFixed(2)}/serving</span>
+                            : null;
+                        })()}</>}</div>
                       </> : <div className="muted drop-hint">
                         {isActive ? "tap a recipe →" : "tap to select, or drop a recipe"}</div>}
                     </div>

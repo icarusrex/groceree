@@ -26,12 +26,12 @@ export const BROWSER = {
 // Decode letter+accent entities by composing the base letter with the combining
 // mark, plus numeric and the few structural ones.
 const MARKS: Record<string, string> = { acute: "\u0301", grave: "\u0300", circ: "\u0302", tilde: "\u0303", uml: "\u0308", cedil: "\u0327", ring: "\u030A" };
-const unescape = (s: string) => s
+export const unescape = (s: string) => s
   .replace(/&([A-Za-z])(acute|grave|circ|tilde|uml|cedil|ring);/g, (_, c, m) => c + MARKS[m])
   .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
   .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
   .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-  .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&")
+  .replace(/&nbsp;/g, " ").replace(/&euro;/g, "€").replace(/&amp;/g, "&")
   .normalize("NFC");
 
 // "HIPERS FOLHETO SEMANAL 39 24-09 A 30-09" → ISO dates (year from today, rolled
