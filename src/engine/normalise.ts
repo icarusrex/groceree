@@ -93,7 +93,9 @@ const DICT: { aliases: string[]; canon: Canon }[] = [
   { aliases: ["tofu", "silken tofu", "firm tofu"], canon: { name: "tofu", category: "pantry", sold: "weight", gramsPerCup: 250 } },
   { aliases: ["ground turkey", "turkey mince", "minced turkey"], canon: { name: "turkey mince", category: "meat", sold: "weight", gramsPerCup: 225 } },
   { aliases: ["salmon", "salmon fillet"], canon: { name: "salmon", category: "seafood", sold: "weight", gramsPerItem: 150 } },
-  { aliases: ["cod", "haddock", "white fish", "hake", "trout", "sea bass", "seabass", "sea bream", "bream", "tilapia", "pollock", "sole", "fish fillet"], canon: { name: "white fish", category: "seafood", sold: "weight", gramsPerItem: 150 } },
+  { aliases: ["salt cod", "bacalhau", "bacalao", "dried cod"], canon: { name: "salt cod", category: "seafood", sold: "weight", gramsPerItem: 150 } },
+  { aliases: ["turkey", "turkey breast", "sliced turkey", "deli turkey", "turkey slices"], canon: { name: "turkey breast", category: "meat", sold: "weight", gramsPerCup: 140, gramsPerItem: 30 } },
+  { aliases: ["cod", "haddock", "white fish", "hake", "halibut", "trout", "sea bass", "seabass", "sea bream", "bream", "tilapia", "pollock", "sole", "fish fillet"], canon: { name: "white fish", category: "seafood", sold: "weight", gramsPerItem: 150 } },
   { aliases: ["tuna"], canon: { name: "tuna", category: "seafood", sold: "weight" } },
   { aliases: ["prawn", "shrimp", "king prawn"], canon: { name: "prawns", category: "seafood", sold: "weight", gramsPerCup: 145 } },
   { aliases: ["sardine"], canon: { name: "sardines", category: "seafood", sold: "count", gramsPerItem: 40 } },
@@ -130,9 +132,11 @@ function meatCanon(raw: string): Canon | null {
   const has = (...w: string[]) => w.some((x) => n.includes(x));
   // sausage/cured/stock are handled elsewhere — don't claim them as a cut
   if (has("sausage", "chorizo", "chouriço", "chourico", "bacon", "pancetta", "broth", "stock", "bouillon")) return null;
-  if (has("beef")) {
+  const beefCut = has("flank", "sirloin", "brisket", "ribeye", "rib-eye", "rump steak", "skirt steak", "chuck")
+    || (has("steak") && !has("salmon", "tuna", "fish", "cauliflower", "cabbage", "mushroom", "portobello", "halibut", "cod"));
+  if (has("beef") || beefCut) {
     if (has("ground", "mince")) return { name: "beef mince", category: "meat", sold: "weight", gramsPerCup: 225 };
-    if (has("steak")) return { name: "beef steak", category: "meat", sold: "weight", gramsPerItem: 220 };
+    if (has("steak", "flank", "sirloin", "ribeye", "rib-eye", "skirt")) return { name: "beef steak", category: "meat", sold: "weight", gramsPerItem: 220 };
     if (has("rib")) return { name: "beef ribs", category: "meat", sold: "weight", gramsPerItem: 300 };
     if (has("stew", "chuck", "brisket", "shred", "pulled")) return { name: "beef stewing", category: "meat", sold: "weight", gramsPerCup: 225, gramsPerItem: 250 };
     return { name: "beef", category: "meat", sold: "weight", gramsPerCup: 225, gramsPerItem: 200 };
@@ -221,6 +225,8 @@ function normUnit(unit: string): string {
 export function toBuyItem(
   rawName: string, quantity: number | null, unit: string, fallbackCat: string,
 ): BuyItem {
+  // imported recipes carry typographic ligatures ("ﬂank steak") — fold them
+  rawName = rawName.normalize("NFKC");
   const lower = rawName.toLowerCase();
   // stock/broth is a pantry staple, not the meat it's named after
   if (/\b(broth|stock|bouillon)\b/.test(lower)) {

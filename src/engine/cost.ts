@@ -62,9 +62,10 @@ export function recipeCost(r: Recipe, prices: PriceBook, deals: Record<string, n
   let sidesCost = 0, sidesPriced = 0, sidesMissing = 0; // non-protein lines
   for (const ing of r.ingredients) {
     const b = toBuyItem(ing.name, ing.quantity != null ? ing.quantity * scale : null, ing.unit ?? "", ing.category);
+    if (/^(meat|fish|seafood)$/.test(ing.category ?? "")) proteinLines++; // incl. staple-sized (anchovies)
     if (!b.name || b.staple) continue;
     lines++;
-    if (/^(meat|fish|seafood)$/.test(b.category)) proteinLines++;
+    if (/^(meat|fish|seafood)$/.test(b.category) && !/^(meat|fish|seafood)$/.test(ing.category ?? "")) proteinLines++;
     const isProtein = /^(meat|fish|seafood)$/.test(b.category);
     const c = lineCost(b.name, b.quantity, b.unit, prices, deals);
     if (c != null) { total += c; priced++; if (!isProtein) { sidesCost += c; sidesPriced++; } }

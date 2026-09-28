@@ -1952,7 +1952,7 @@
       "Bake for 15 minutes, until both the fries and the broccoli are warmed through and slightly crisp.",
       "For the burgers:",
       "While the fries and broccoli are baking, preheat a grill to high heat.",
-      "Once the grill is at temperature, sear the burger patties for 4 to 5 minutes on each side, until they develop char marks and are medium to medium-well done. (Alternatively, you can cook the burgers in a skillet over medium-high heat for 4 to 5 minutes per side.) After ͆ipping, top the burgers with cheese and bacon.",
+      "Once the grill is at temperature, sear the burger patties for 4 to 5 minutes on each side, until they develop char marks and are medium to medium-well done. (Alternatively, you can cook the burgers in a skillet over medium-high heat for 4 to 5 minutes per side.) After flipping, top the burgers with cheese and bacon.",
       "Once cooked, transfer to a plate to rest.",
       "While the burgers are resting, slice the tomato(es) and avocado, if using.",
       "Plate the burgers, top with the tomato and avocado slices, and serve alongside the fries and broccoli!",
@@ -2089,7 +2089,7 @@
         "category": "pantry"
       },
       {
-        "name": "chopped fresh ͆at-leaf parsley (optional)",
+        "name": "chopped fresh flat-leaf parsley (optional)",
         "quantity": 2,
         "unit": "tablespoons",
         "unit_norm": "tbsp",
@@ -2427,7 +2427,7 @@
     "contains_dairy": true,
     "primary_protein": "turkey",
     "ease_score": 0.943,
-    "ingredient_count": 11,
+    "ingredient_count": 13,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -2506,6 +2506,20 @@
         "unit": "tablespoons",
         "unit_norm": "tbsp",
         "category": "dairy"
+      },
+      {
+        "name": "sliced turkey breast",
+        "quantity": 225,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "canned whole tomatoes",
+        "quantity": 800,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "pantry"
       }
     ],
     "instructions": [
@@ -2522,7 +2536,7 @@
       "For each sandwich, layer a slice of cheese, one-quarter of the turkey, and another slice of cheese between two slices of bread.",
       "Spread 1 tablespoon of butter on the outside of each slice of bread.",
       "Place two sandwiches in the skillet and cook for about 2 minutes, until the cheese is starting to melt and the bread is golden brown.",
-      "Carefully ͆ip the sandwiches and cook for an additional 2 minutes, until the cheese is fully melted and the bread is golden brown.",
+      "Carefully flip the sandwiches and cook for an additional 2 minutes, until the cheese is fully melted and the bread is golden brown.",
       "Repeat with the remaining bread, butter, cheese, and turkey to make two more sandwiches.",
       "While the second set of sandwiches is toasting, cut the remaining basil into ribbons: Stack the leaves, then roll them up and thinly slice them.",
       "Cut the sandwiches in half and serve alongside the hot tomato soup garnished with the sliced basil.",
@@ -2704,7 +2718,7 @@
         "category": "produce"
       },
       {
-        "name": "red pepper ͆akes",
+        "name": "red pepper flakes",
         "quantity": 0.5,
         "unit": "teaspoon",
         "unit_norm": "tsp",
@@ -2719,7 +2733,7 @@
       "Follow with the potatoes and then the cheese.",
       "Layer the pepperoni, mushrooms, black olives, and bell pepper on top of the cheese.",
       "Bake for 20 minutes, until the toppings are browned and the cheese is bubbly.",
-      "Garnish with the red pepper ͆akes and serve!"
+      "Garnish with the red pepper flakes and serve!"
     ],
     "source": "clean",
     "cost_tier": 2
@@ -2958,7 +2972,7 @@
       "Crack the eggs into the skillet and fry for about 4 minutes, or until done to your liking.",
       "Reheat the rice either by placing it in a medium-sized saucepan, covered, over low heat for 5 minutes or by microwaving it for about 2 minutes, until hot.",
       "To serve, divide the warmed rice, beef mixture, and pickled carrots evenly among ͅve bowls.",
-      "Top each bowl with a fried egg, some green onions, Sriracha mayo, sesame seeds, and a sprinkle of red pepper ͆akes, if using, and serve!"
+      "Top each bowl with a fried egg, some green onions, Sriracha mayo, sesame seeds, and a sprinkle of red pepper flakes, if using, and serve!"
     ],
     "source": "clean",
     "cost_tier": 2
@@ -3209,7 +3223,7 @@
     "contains_dairy": true,
     "primary_protein": "beef",
     "ease_score": 1,
-    "ingredient_count": 6,
+    "ingredient_count": 11,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -3253,6 +3267,41 @@
         "unit": "teaspoon",
         "unit_norm": "tsp",
         "category": "pantry"
+      },
+      {
+        "name": "potatoes, cut into wedges",
+        "quantity": 1000,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "produce"
+      },
+      {
+        "name": "cooked beef brisket, thinly sliced",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "green bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "red bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
       }
     ],
     "instructions": [
@@ -3285,9 +3334,9 @@
     "is_pescatarian": false,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "none",
+    "primary_protein": "beef",
     "ease_score": 0.943,
-    "ingredient_count": 11,
+    "ingredient_count": 14,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -3366,6 +3415,27 @@
         "unit": "clove",
         "unit_norm": "clove",
         "category": "produce"
+      },
+      {
+        "name": "potatoes, cut into wedges",
+        "quantity": 800,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "produce"
+      },
+      {
+        "name": "cooked beef brisket, thinly sliced",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "greek dressing",
+        "quantity": 0.33,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
       }
     ],
     "instructions": [
@@ -3404,7 +3474,7 @@
     "contains_dairy": false,
     "primary_protein": "chicken",
     "ease_score": 0.925,
-    "ingredient_count": 4,
+    "ingredient_count": 9,
     "is_one_pot": false,
     "ingredients": [
       {
@@ -3432,6 +3502,41 @@
         "name": "lemon",
         "quantity": 0.5,
         "unit": "small",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "cooked chicken breast, sliced",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "coconut aminos",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "fresh ginger, grated",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "honey",
+        "quantity": 1,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
         "unit_norm": "",
         "category": "produce"
       }
@@ -3800,7 +3905,7 @@
       "While the soup is heating, prepare the beef: Place the ghee in a large skillet over medium-high heat.",
       "Put the beef, spices, salt, and coconut aminos in a medium- sized bowl and toss to combine.",
       "Once the ghee is hot, add the seasoned beef to the pan, spreading it across the surface of the pan.",
-      "Cook for 3 to 4 minutes, until crisp, then ͆ip and cook for an additional 3 to 4 minutes, until browned and crisp on the other side.",
+      "Cook for 3 to 4 minutes, until crisp, then flip and cook for an additional 3 to 4 minutes, until browned and crisp on the other side.",
       "Serve the soup in bowls topped with the shredded beef and garnished with the cilantro."
     ],
     "source": "clean",
@@ -3999,7 +4104,7 @@
       "Stir to combine, then store in the refrigerator until ready to serve.",
       "Put the chicken in a large skillet over medium heat, then pour in half of the dressing; reserve the other half for serving.",
       "Toss to coat the chicken with the dressing.",
-      "Cook for 2 to 3 minutes, then ͆ip the chicken.",
+      "Cook for 2 to 3 minutes, then flip the chicken.",
       "Add the roasted peppers to the skillet and cook for an additional 2 to 3 minutes, until the peppers are warmed and the chicken is browned, then remove from the heat.",
       "While the peppers are warming, reheat the rice either by placing it in a medium- sized saucepan, covered, over low heat for 5 minutes or by microwaving it for about 2 minutes, until hot.",
       "Meanwhile, chop the parsley leaves and cut the tomato into four wedges.",
@@ -4040,7 +4145,7 @@
         "category": "dairy"
       },
       {
-        "name": "gluten-free ͆our blend, or 1 tablespoon arrowroot powder",
+        "name": "gluten-free flour blend, or 1 tablespoon arrowroot powder",
         "quantity": 2,
         "unit": "tablespoons",
         "unit_norm": "tbsp",
@@ -4099,7 +4204,7 @@
     "instructions": [
       "Preheat the oven to 350°F.",
       "Place the butter in a medium-sized saucepan over medium heat.",
-      "Once melted, add the ͆our and whisk until smooth.",
+      "Once melted, add the flour and whisk until smooth.",
       "Slowly pour in the broth, whisking constantly to smooth out any lumps, then whisk in the heavy cream, salt, and pepper.",
       "Bring the mixture to a boil, then stir in the chicken, peas, and cooked mushroom mixture.",
       "Simmer for 2 minutes to thicken the sauce.",
@@ -4232,7 +4337,7 @@
         "category": "pantry"
       },
       {
-        "name": "sprigs fresh ͆at-leaf parsley",
+        "name": "sprigs fresh flat-leaf parsley",
         "quantity": 8,
         "unit": "unit",
         "unit_norm": "",
@@ -4377,7 +4482,7 @@
         "category": "dairy"
       },
       {
-        "name": "sprigs fresh ͆at-leaf parsley",
+        "name": "sprigs fresh flat-leaf parsley",
         "quantity": 8,
         "unit": "unit",
         "unit_norm": "",
@@ -4393,7 +4498,7 @@
       "Add the remaining tablespoon of oil to the pan with the tomatoes and artichokes, then stir in the spinach and cook for about 1 minute, until the spinach is wilted.",
       "Mix in the beef.",
       "Add the lemon juice, salt, and seasonings and toss to combine.",
-      "Cook for 1 to 2 minutes to let the ͆avors combine.",
+      "Cook for 1 to 2 minutes to let the flavors combine.",
       "Meanwhile, chop the parsley.",
       "Garnish the mixture in the skillet with the olives, feta, and chopped parsley and serve!"
     ],
@@ -4640,7 +4745,7 @@
       "Add the wilted kale to the skillet and cook for 1 to 2 minutes, until warmed through.",
       "Remove from the pan and set aside.",
       "Add the remaining tablespoon of oil to the skillet and evenly spread the shredded pork over the pan.",
-      "Cook for 3 to 4 minutes, until crisp on the bottom, then ͆ip and cook for an additional 3 to 4 minutes, until crisp on the other side.",
+      "Cook for 3 to 4 minutes, until crisp on the bottom, then flip and cook for an additional 3 to 4 minutes, until crisp on the other side.",
       "Assemble the bowls with the crispy pork, plantains, and kale.",
       "Drizzle with the garlic sauce and serve!"
     ],
@@ -4666,7 +4771,7 @@
     "contains_dairy": true,
     "primary_protein": "chicken",
     "ease_score": 0.575,
-    "ingredient_count": 12,
+    "ingredient_count": 15,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -4691,7 +4796,7 @@
         "category": "produce"
       },
       {
-        "name": "gluten-free ͆our blend",
+        "name": "gluten-free flour blend",
         "quantity": 1,
         "unit": "tablespoon",
         "unit_norm": "tbsp",
@@ -4747,18 +4852,39 @@
         "category": "produce"
       },
       {
-        "name": "chopped fresh ͆at-leaf parsley",
+        "name": "chopped fresh flat-leaf parsley",
         "quantity": 1,
         "unit": "tablespoon",
         "unit_norm": "tbsp",
         "category": "pantry"
+      },
+      {
+        "name": "cooked shredded chicken breast",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "potatoes, for the mash",
+        "quantity": 700,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "produce"
+      },
+      {
+        "name": "parsnips, for the mash",
+        "quantity": 300,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "produce"
       }
     ],
     "instructions": [
       "Preheat the oven to 350°F.",
       "Melt the butter in a Dutch oven or other heavy-bottomed pot over medium heat, then add the onion and garlic.",
       "Sauté for 4 to 5 minutes, until the onion is translucent.",
-      "Sprinkle the ͆our over the onion mixture and whisk to combine.",
+      "Sprinkle the flour over the onion mixture and whisk to combine.",
       "Pour in the broth 1 cup at a time, whisking constantly, then add the cream, sage, thyme, salt, and pepper, continuing to whisk until the mixture is smooth.",
       "Stir in the chicken and the peas and carrots.",
       "Simmer for 5 minutes.",
@@ -4766,7 +4892,7 @@
       "It should have a spreadable consistency.",
       "Transfer the chicken mixture to a 4-quart casserole dish or deep-sided ovenproof sauté pan, then top with the potato-parsnip mash.",
       "Bake for 30 minutes, until browned and bubbly on top.",
-      "Remove from the oven and let cool slightly, then garnish with the parsley and serve! note: If using arrowroot powder instead of the gluten-free ͆our blend, skip Step 3 and pick up with Step 4.",
+      "Remove from the oven and let cool slightly, then garnish with the parsley and serve! note: If using arrowroot powder instead of the gluten-free flour blend, skip Step 3 and pick up with Step 4.",
       "When the broth begins to bubble in Step 5, whisk 2 teaspoons arrowroot powder with 2 tablespoons water to make a slurry, then pour the slurry into the chicken mixture, whisking constantly, and return it to a simmer.",
       "Continue to cook for 1 minute, until thickened.",
       "Buﬀalo"
@@ -4793,7 +4919,7 @@
     "contains_dairy": false,
     "primary_protein": "chicken",
     "ease_score": 0.943,
-    "ingredient_count": 6,
+    "ingredient_count": 10,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -4837,13 +4963,41 @@
         "unit": "tablespoon",
         "unit_norm": "tbsp",
         "category": "pantry"
+      },
+      {
+        "name": "cooked chicken breast, cubed",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "broccoli florets",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "roasted cashews",
+        "quantity": 0.5,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "coconut aminos",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
       }
     ],
     "instructions": [
       "Preheat a large wok or skillet over medium-high heat.",
       "Once hot, add 1 tablespoon of the avocado oil and swirl it around the pan.",
       "Add the bell pepper strips and cook for 2 to 3 minutes, stirring occasionally, until slightly browned.",
-      "Add the broccoli ͆orets and snow peas to the pan.",
+      "Add the broccoli florets and snow peas to the pan.",
       "Cook for 2 to 3 minutes, stirring occasionally, until the vegetables begin to soften.",
       "Add the remaining tablespoon of oil to the pan, then add the chicken, green onions, and toasted cashews.",
       "Cook for 1 to 2 minutes, until the chicken is warmed through, then pour the stir-fry sauce over the chicken mixture and toss to coat.",
@@ -4965,7 +5119,7 @@
     "contains_dairy": false,
     "primary_protein": "turkey",
     "ease_score": 0.693,
-    "ingredient_count": 9,
+    "ingredient_count": 10,
     "is_one_pot": false,
     "ingredients": [
       {
@@ -5030,6 +5184,13 @@
         "unit": "tablespoons",
         "unit_norm": "tbsp",
         "category": "produce"
+      },
+      {
+        "name": "cooked shredded turkey breast",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
       }
     ],
     "instructions": [
@@ -5217,7 +5378,7 @@
       "Bake for 15 minutes, until slightly browned and crisp on top.",
       "While the potatoes are cooking, place the oil in a large sauté pan over medium- high heat.",
       "Once hot, add the shredded pork, oregano, pepper, and remaining teaspoon of salt to the pan.",
-      "Cook for 3 to 4 minutes, until the pork is crisp, then ͆ip and cook for an additional 2 to 3 minutes, until it is browned and crisp on the other side.",
+      "Cook for 3 to 4 minutes, until the pork is crisp, then flip and cook for an additional 2 to 3 minutes, until it is browned and crisp on the other side.",
       "Remove the pork from the pan and set aside.",
       "Add the Brussels sprouts and cook, stirring occasionally, for 4 to 5 minutes, until heated through, then remove the pan from the heat.",
       "Assemble the bowls: Place two or three sweet potato rounds in each bowl and divide the pork and Brussels sprouts evenly among the bowls.",
@@ -5553,7 +5714,7 @@
     "contains_dairy": true,
     "primary_protein": "chicken",
     "ease_score": 0.812,
-    "ingredient_count": 13,
+    "ingredient_count": 14,
     "is_one_pot": false,
     "ingredients": [
       {
@@ -5646,6 +5807,13 @@
         "unit": "tablespoons",
         "unit_norm": "tbsp",
         "category": "produce"
+      },
+      {
+        "name": "chicken mince, rolled into small meatballs",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
       }
     ],
     "instructions": [
@@ -5873,7 +6041,7 @@
       "Once melted, add the cabbage and carrots.",
       "Cook for 4 to 5 minutes, until the vegetables are reduced in size and slightly browned.",
       "Add the ground beef, water chestnuts, green onions, ginger, salt, and pepper to the pan and cook for 3 to 4 minutes, until the beef is warmed through.",
-      "Pour the sauce over the beef mixture and cook for an additional 1 to 2 minutes to let the ͆avors meld, then remove from the heat.",
+      "Pour the sauce over the beef mixture and cook for an additional 1 to 2 minutes to let the flavors meld, then remove from the heat.",
       "Meanwhile, reheat the rice either by placing it in a medium-sized saucepan, covered, over low heat for 5 minutes or by microwaving it for about 2 minutes, until hot.",
       "Serve the beef mixture in the lettuce leaves, garnished with sesame seeds, with the rice on the side."
     ],
@@ -5983,7 +6151,7 @@
       "To make the jerk pork, place the shredded pork and Jerk Seasoning in a medium- sized bowl and mix to evenly coat the meat in the seasoning.",
       "Pour the olive oil into a large heavy skillet over medium-high heat.",
       "Once hot, add the seasoned pork.",
-      "Cook, undisturbed, for 2 to 3 minutes, then ͆ip and cook for an additional 2 to 3 minutes, until golden brown.",
+      "Cook, undisturbed, for 2 to 3 minutes, then flip and cook for an additional 2 to 3 minutes, until golden brown.",
       "Remove from the heat.",
       "Cut a slit in each sweet potato, then stuﬀ with the pork and top with the slaw.",
       "Serve!"
@@ -6054,7 +6222,7 @@
       "Once hot, add the garlic and cook for 30 seconds or until fragrant.",
       "Remove the garlic from the pan and set aside.",
       "Spread the pork evenly across the pan and sprinkle with the salt.",
-      "Cook for 2 to 3 minutes, until the pork starts to brown, then ͆ip and cook for an additional 1 to 2 minutes, until browned on the other side.",
+      "Cook for 2 to 3 minutes, until the pork starts to brown, then flip and cook for an additional 1 to 2 minutes, until browned on the other side.",
       "Pour the honey sauce and cooked garlic over the browned pork and stir to combine.",
       "Cook for 2 to 3 minutes, until the sauce bubbles and begins to reduce.",
       "Reheat the rice either by placing it in a medium-sized saucepan, covered, over low heat for 5 minutes or by microwaving it for about 2 minutes, until hot.",
@@ -6299,7 +6467,7 @@
     "instructions": [
       "To make the ͅlling, heat the oil in a large skillet over medium-high heat.",
       "Once hot, add the potatoes.",
-      "Fry for 3 to 4 minutes, then ͆ip and cook for an additional 3 minutes, until browned and crispy.",
+      "Fry for 3 to 4 minutes, then flip and cook for an additional 3 minutes, until browned and crispy.",
       "Remove the potatoes from the pan and set aside.",
       "Drain all but 1 tablespoon of oil from the pan, then add the pork, salt, spices, and vinegar.",
       "Cook, stirring occasionally, for 4 to 5 minutes, until the pork is crispy.",
@@ -6395,7 +6563,7 @@
         "category": "pantry"
       },
       {
-        "name": "red pepper ͆akes",
+        "name": "red pepper flakes",
         "quantity": 0.5,
         "unit": "teaspoon",
         "unit_norm": "tsp",
@@ -6440,7 +6608,7 @@
     "instructions": [
       "Heat the avocado oil in a large skillet over medium-high heat.",
       "Once hot, add the onion and garlic and sauté for 2 to 3 minutes, until the onion is translucent.",
-      "Stir in the ginger, then add the pork, coconut aminos, vinegar, sesame oil, red pepper ͆akes, and salt.",
+      "Stir in the ginger, then add the pork, coconut aminos, vinegar, sesame oil, red pepper flakes, and salt.",
       "Stir to combine and cook for 2 minutes, until the sauce begins to bubble.",
       "Add the cabbage, carrots, and green onions to the pan and toss to coat in the sauce.",
       "Cook for 3 to 4 minutes, stirring occasionally, until the cabbage and carrots are wilted, then serve!"
@@ -6467,27 +6635,27 @@
     "contains_dairy": true,
     "primary_protein": "beef",
     "ease_score": 0.943,
-    "ingredient_count": 7,
+    "ingredient_count": 9,
     "is_one_pot": true,
     "ingredients": [
       {
         "name": "salted butter, ghee, or oil of choice",
         "quantity": 2,
-        "unit": "tablespoons",
+        "unit": "tbsp",
         "unit_norm": "tbsp",
         "category": "dairy"
       },
       {
-        "name": "gluten-free ͆our blend, or 1 tablespoon arrowroot powder",
+        "name": "gluten-free flour blend, or 1 tablespoon arrowroot powder",
         "quantity": 2,
-        "unit": "tablespoons",
+        "unit": "tbsp",
         "unit_norm": "tbsp",
         "category": "pantry"
       },
       {
         "name": "chicken broth",
         "quantity": 2,
-        "unit": "cups",
+        "unit": "cup",
         "unit_norm": "cup",
         "category": "meat"
       },
@@ -6501,28 +6669,42 @@
       {
         "name": "coarse sea salt",
         "quantity": 0.25,
-        "unit": "teaspoon",
+        "unit": "tsp",
         "unit_norm": "tsp",
         "category": "pantry"
       },
       {
         "name": "ground black pepper",
         "quantity": 0.25,
-        "unit": "teaspoon",
+        "unit": "tsp",
         "unit_norm": "tsp",
         "category": "meat"
       },
       {
-        "name": "chopped fresh ͆at-leaf parsley",
+        "name": "chopped fresh flat-leaf parsley",
         "quantity": 2,
-        "unit": "tablespoons",
+        "unit": "tbsp",
         "unit_norm": "tbsp",
         "category": "pantry"
+      },
+      {
+        "name": "beef mince, rolled into meatballs",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "potatoes, for the mash",
+        "quantity": 900,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "produce"
       }
     ],
     "instructions": [
       "Melt the butter in a large skillet over medium heat.",
-      "Once melted, sprinkle in the ͆our and whisk until smooth.",
+      "Once melted, sprinkle in the flour and whisk until smooth.",
       "Pour in the chicken broth ½ cup at a time, whisking constantly to smooth out any lumps.",
       "Bring the mixture to a low boil, then reduce the heat to medium-low and whisk in the cream, salt, and pepper.",
       "Add the meatballs to the pan and stir to coat, then cover and cook for 5 minutes, until heated through.",
@@ -6644,7 +6826,7 @@
         "category": "meat"
       },
       {
-        "name": "chopped fresh ͆at-leaf parsley",
+        "name": "chopped fresh flat-leaf parsley",
         "quantity": 2,
         "unit": "tablespoons",
         "unit_norm": "tbsp",
@@ -6812,7 +6994,7 @@
         "category": "produce"
       },
       {
-        "name": "gluten-free ͆our blend or arrowroot powder",
+        "name": "gluten-free flour blend or arrowroot powder",
         "quantity": 2,
         "unit": "tablespoons",
         "unit_norm": "tbsp",
@@ -6878,7 +7060,7 @@
     "instructions": [
       "Melt the butter in a soup pot over medium heat, then add the onion, mushrooms, and garlic.",
       "Cook, stirring occasionally, for 4 to 5 minutes, until the onion and mushrooms are slightly browned.",
-      "Sprinkle the ͆our blend into the pot and whisk until it has been absorbed into the mushroom mixture.",
+      "Sprinkle the flour blend into the pot and whisk until it has been absorbed into the mushroom mixture.",
       "Pour in the broth 1 cup at a time, whisking constantly to smooth out any lumps.",
       "To the pot, add the cream, mustard, lemon juice, thyme, salt, pepper, and chicken.",
       "Give the soup a stir and cook for about 5 minutes, until the chicken is warmed through, then serve. note: If using arrowroot powder, complete Step 1, then add all of the chicken broth to the pot, cover, and bring to a boil over medium-high heat.",
@@ -6907,7 +7089,7 @@
     "contains_dairy": false,
     "primary_protein": "beef",
     "ease_score": 1,
-    "ingredient_count": 7,
+    "ingredient_count": 8,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -6958,6 +7140,13 @@
         "unit": "tablespoons",
         "unit_norm": "tbsp",
         "category": "produce"
+      },
+      {
+        "name": "cooked beef brisket",
+        "quantity": 680,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
       }
     ],
     "instructions": [
@@ -6965,7 +7154,7 @@
       "Toss to coat the meat in the seasonings.",
       "Heat the olive oil in a large skillet over medium-high heat.",
       "Once hot, add the seasoned brisket.",
-      "Cook for 2 to 3 minutes, then ͆ip each piece and cook for an additional 2 to 3 minutes, until browned on both sides.",
+      "Cook for 2 to 3 minutes, then flip each piece and cook for an additional 2 to 3 minutes, until browned on both sides.",
       "Meanwhile, reheat the rice either by placing it in a medium-sized saucepan, covered, over low heat for 5 minutes or by microwaving for about 2 minutes, until hot.",
       "Spoon the warmed rice into bowls and top with the brisket, pickles, onion slices, a drizzle of BBQ sauce, and a sprinkle of chopped cilantro.",
       "Enjoy!"
@@ -6992,7 +7181,7 @@
     "contains_dairy": false,
     "primary_protein": "beef",
     "ease_score": 0.71,
-    "ingredient_count": 16,
+    "ingredient_count": 17,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -7106,6 +7295,13 @@
         "unit": "unit",
         "unit_norm": "",
         "category": "produce"
+      },
+      {
+        "name": "cooked beef brisket",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
       }
     ],
     "instructions": [
@@ -7113,7 +7309,7 @@
       "Thinly slice the brisket and add it to the bowl with the seasonings.",
       "Toss the meat in the seasoning mixture until well coated.",
       "Heat the olive oil in a large skillet over medium-high heat.",
-      "Once hot, add the seasoned brisket and cook for 2 to 3 minutes, then ͆ip and cook for an additional 2 to 3 minutes, until browned on both sides.",
+      "Once hot, add the seasoned brisket and cook for 2 to 3 minutes, then flip and cook for an additional 2 to 3 minutes, until browned on both sides.",
       "Remove from the heat and set aside.",
       "While the brisket is cooking, make the slaw: Cut the apple into ¼-inch-thick matchsticks, to equal 1 cup.",
       "Place the mayonnaise, lemon juice, honey, salt, and pepper in a large bowl and whisk until smooth.",
@@ -7146,7 +7342,7 @@
     "contains_dairy": true,
     "primary_protein": "beef",
     "ease_score": 0.83,
-    "ingredient_count": 14,
+    "ingredient_count": 15,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -7227,7 +7423,7 @@
         "category": "pantry"
       },
       {
-        "name": "red pepper ͆akes",
+        "name": "red pepper flakes",
         "quantity": 0.25,
         "unit": "teaspoon",
         "unit_norm": "tsp",
@@ -7246,13 +7442,20 @@
         "unit": "unit",
         "unit_norm": "",
         "category": "produce"
+      },
+      {
+        "name": "cooked beef brisket",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
       }
     ],
     "instructions": [
       "In a small bowl, whisk the eggs.",
       "Place 1 teaspoon of the ghee in a small skillet over medium-high heat.",
       "Once melted, add the eggs and spread evenly across the pan.",
-      "Cook for 2 minutes, then ͆ip and cook for an additional minute, until fully heated through.",
+      "Cook for 2 minutes, then flip and cook for an additional minute, until fully heated through.",
       "Transfer the eggs to a cutting board and cut into ½-inch squares, then set aside.",
       "Cut the brisket into ½-inch cubes.",
       "Heat 1½ tablespoons of the ghee in a large sauté pan or wok over medium-high heat.",
@@ -7263,7 +7466,7 @@
       "Cook for 3 to 4 minutes, until the carrots and Brussels sprouts are slightly browned, then stir in ¼ cup of the green onions.",
       "Add the remaining 1½ tablespoons of ghee to the pan and stir it into the meat and vegetable mixture.",
       "Add the rice and toss to combine it with the rest of the ingredients.",
-      "Add the eggs, coconut aminos, lime juice, sesame oil, and red pepper ͆akes to the rice mixture and stir to combine.",
+      "Add the eggs, coconut aminos, lime juice, sesame oil, and red pepper flakes to the rice mixture and stir to combine.",
       "Add the salt, then taste for seasoning and add more salt, if needed.",
       "Let the rice cook, untouched, for 2 minutes.",
       "Then stir the rice, scraping any browned bits oﬀ of the bottom of the pan.",
@@ -7339,7 +7542,7 @@
         "category": "meat"
       },
       {
-        "name": "sprigs ͆at-leaf parsley",
+        "name": "sprigs flat-leaf parsley",
         "quantity": 8,
         "unit": "unit",
         "unit_norm": "",
@@ -8374,7 +8577,7 @@
     "instructions": [
       "Heat the olive oil in a large skillet over medium heat.",
       "Sprinkle the salmon ͅllets with the salt and pepper.",
-      "Sear the salmon on each side for 3 minutes, or until the ͅsh ͆akes at the thickest part.",
+      "Sear the salmon on each side for 3 minutes, or until the ͅsh flakes at the thickest part.",
       "Let rest for 5 minutes before serving."
     ],
     "source": "clean",
@@ -8719,7 +8922,7 @@
     "contains_dairy": true,
     "primary_protein": "turkey",
     "ease_score": 0.71,
-    "ingredient_count": 3,
+    "ingredient_count": 12,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -8742,6 +8945,69 @@
         "unit": "cup",
         "unit_norm": "cup",
         "category": "dairy"
+      },
+      {
+        "name": "ground turkey",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "green bell pepper",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "ground cumin",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "dried oregano",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "canned pinto beans, drained",
+        "quantity": 400,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "pantry"
+      },
+      {
+        "name": "corn tortillas, torn",
+        "quantity": 6,
+        "unit": "",
+        "unit_norm": "",
+        "category": "pantry"
+      },
+      {
+        "name": "fresh cilantro",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
       }
     ],
     "instructions": [
@@ -9194,7 +9460,7 @@
     "contains_dairy": false,
     "primary_protein": "beef",
     "ease_score": 0.75,
-    "ingredient_count": 6,
+    "ingredient_count": 11,
     "is_one_pot": false,
     "ingredients": [
       {
@@ -9238,6 +9504,41 @@
         "unit": "tbsp",
         "unit_norm": "tbsp",
         "category": "produce"
+      },
+      {
+        "name": "mango",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "lime",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "fresh cilantro",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "produce"
+      },
+      {
+        "name": "onion powder",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "chili powder",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
       }
     ],
     "instructions": [
@@ -9573,13 +9874,13 @@
     "servings": 4,
     "calories_per_serving": null,
     "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
+    "is_vegetarian": 0,
+    "is_pescatarian": 0,
     "is_dairy_free": true,
     "contains_dairy": false,
-    "primary_protein": "none",
+    "primary_protein": "turkey",
     "ease_score": 0.575,
-    "ingredient_count": 7,
+    "ingredient_count": 12,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -9629,6 +9930,41 @@
         "quantity": 2,
         "unit": "tbsp",
         "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "ground turkey",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "egg",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "dairy"
+      },
+      {
+        "name": "worcestershire sauce",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "grill seasoning",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
         "category": "pantry"
       }
     ],
@@ -10028,11 +10364,11 @@
     "is_gluten_free": false,
     "is_vegetarian": false,
     "is_pescatarian": false,
-    "is_dairy_free": true,
-    "contains_dairy": false,
-    "primary_protein": "chicken",
+    "is_dairy_free": 0,
+    "contains_dairy": 1,
+    "primary_protein": "none",
     "ease_score": 0.575,
-    "ingredient_count": 5,
+    "ingredient_count": 11,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -10069,6 +10405,48 @@
         "unit": "cup",
         "unit_norm": "cup",
         "category": "pantry"
+      },
+      {
+        "name": "yellow onion",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "carrot",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "celery stalk",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "milk",
+        "quantity": 2,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
+      },
+      {
+        "name": "cheddar cheese, shredded",
+        "quantity": 1,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "dairy"
       }
     ],
     "instructions": [
@@ -10192,7 +10570,7 @@
     "contains_dairy": false,
     "primary_protein": "beef",
     "ease_score": 0.575,
-    "ingredient_count": 7,
+    "ingredient_count": 14,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -10203,10 +10581,10 @@
         "category": "produce"
       },
       {
-        "name": "⅛ tsp red pepper flakes",
-        "quantity": null,
-        "unit": "",
-        "unit_norm": "",
+        "name": "red pepper flakes",
+        "quantity": 0.125,
+        "unit": "tsp",
+        "unit_norm": "tsp",
         "category": "produce"
       },
       {
@@ -10242,6 +10620,55 @@
         "quantity": 2,
         "unit": "cups",
         "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "beef mince",
+        "quantity": 225,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "yellow onion",
+        "quantity": 0.5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "green bell pepper",
+        "quantity": 0.5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "red bell pepper",
+        "quantity": 0.5,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "worcestershire sauce",
+        "quantity": 1,
+        "unit": "tsp",
+        "unit_norm": "tsp",
+        "category": "pantry"
+      },
+      {
+        "name": "bay leaf",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
         "category": "pantry"
       }
     ],
@@ -10388,13 +10815,13 @@
     "servings": 4,
     "calories_per_serving": null,
     "is_gluten_free": false,
-    "is_vegetarian": true,
-    "is_pescatarian": false,
+    "is_vegetarian": 0,
+    "is_pescatarian": 0,
     "is_dairy_free": false,
     "contains_dairy": true,
-    "primary_protein": "none",
+    "primary_protein": "turkey",
     "ease_score": 1,
-    "ingredient_count": 11,
+    "ingredient_count": 16,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -10473,6 +10900,41 @@
         "unit": "cup",
         "unit_norm": "cup",
         "category": "pantry"
+      },
+      {
+        "name": "ground turkey",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "garlic",
+        "quantity": 2,
+        "unit": "clove",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "butter lettuce",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
+      },
+      {
+        "name": "roasted peanuts, chopped",
+        "quantity": 0.25,
+        "unit": "cup",
+        "unit_norm": "cup",
+        "category": "pantry"
+      },
+      {
+        "name": "lime, cut into wedges",
+        "quantity": 1,
+        "unit": "",
+        "unit_norm": "",
+        "category": "produce"
       }
     ],
     "instructions": [
@@ -10504,7 +10966,7 @@
     "contains_dairy": false,
     "primary_protein": "chicken",
     "ease_score": 0.943,
-    "ingredient_count": 6,
+    "ingredient_count": 9,
     "is_one_pot": true,
     "ingredients": [
       {
@@ -10545,6 +11007,27 @@
         "quantity": 2,
         "unit": "tbsp",
         "unit_norm": "tbsp",
+        "category": "produce"
+      },
+      {
+        "name": "boneless chicken thighs",
+        "quantity": 450,
+        "unit": "g",
+        "unit_norm": "g",
+        "category": "meat"
+      },
+      {
+        "name": "apricot preserves",
+        "quantity": 2,
+        "unit": "tbsp",
+        "unit_norm": "tbsp",
+        "category": "pantry"
+      },
+      {
+        "name": "garlic",
+        "quantity": 1,
+        "unit": "clove",
+        "unit_norm": "",
         "category": "produce"
       }
     ],
