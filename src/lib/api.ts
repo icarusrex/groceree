@@ -37,8 +37,6 @@ export const api = {
     fetch("/api/generate-image", { method: "POST", body: JSON.stringify({ recipe_id, name, description }) }).then(j),
   flyers: () => fetch("/api/flyers").then(j),
   bestDeals: () => fetch("/api/best-deals").then(j),
-  dealPlan: (store_name: string, days: number) =>
-    fetch("/api/deal-plan", { method: "POST", body: JSON.stringify({ store_name, days }) }).then(j),
   delFlyer: (id: number) => fetch(`/api/flyers?id=${id}`, { method: "DELETE" }).then(j),
   flyerSources: () => fetch("/api/discover-flyers").then(j),
   discoverFlyers: (store_ids?: string[]) =>

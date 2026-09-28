@@ -1,5 +1,6 @@
-import { json, type Env } from "./_helpers.ts";
+import { json, uid, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
+import { dietRules, userDiet } from "./_diet.ts";
 
 // POST /api/remix-recipe { recipe, instruction }
 // Returns a modified recipe in the same shape the app uses.
@@ -8,8 +9,12 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { recipe, instruction } = await ctx.request.json<any>();
   if (!recipe || !instruction) return json({ error: "recipe and instruction required" }, 400);
 
+  const rules = dietRules(await userDiet(ctx.env.DB, uid(ctx)));
   const PROMPT = `You are a recipe editor. Modify the recipe below per the user's
-instruction. Keep it realistic and cookable. Return ONLY JSON, no prose, shaped:
+instruction. Keep it realistic and cookable.${rules.length ? `
+The result MUST also satisfy these household rules (they override the recipe):
+- ${rules.join("\n- ")}` : ""}
+Return ONLY JSON, no prose, shaped:
 {"name":"<dish name>","description":"<one line>",
  "ingredients":[{"name":"","quantity":<number|null>,"unit":"","category":"meat|seafood|dairy|produce|pantry|frozen"}],
  "instructions":["step", "..."],

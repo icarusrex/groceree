@@ -1,6 +1,6 @@
 // Shared domain types for the meal planner.
 
-export type Diet = "gluten_free" | "vegetarian" | "pescatarian" | "dairy_free";
+export type Diet = "gluten_free" | "vegetarian" | "pescatarian" | "dairy_free" | "egg_free" | "soy_free";
 export type Slot = "lunch" | "dinner";
 
 export interface Ingredient {
@@ -41,7 +41,7 @@ export interface Settings {
   leftover_strategy: "auto" | "off";
   plan_days: number;          // dinners to generate (4 or 7)
   selected_stores: string[];  // store ids to fetch flyers from; [] = all
-  country: "PT" | "CZ";       // which country's stores to show
+  country: "PT";              // Portugal only
   notion_parent_id?: string;  // Notion page the shopping list exports into
   monthly_food_budget?: number | null; // € per month; the plan and receipts compare against it
 }

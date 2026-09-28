@@ -62,20 +62,19 @@ premium item as a deal if the discount is 40%+.`;
 // explicit resolution rule fixes that at the source.
 function buildPrompt(): string {
   const today = new Date().toISOString().slice(0, 10);
-  return `You are reading a supermarket flyer from Portugal or the Czech
-Republic. Today's date is ${today}. Extract the discounted grocery items. ${COST_RULE}
-The flyer text may be Portuguese or Czech: put a plain-English item name in
+  return `You are reading a supermarket flyer from Portugal. Today's date is ${today}. Extract the discounted grocery items. ${COST_RULE}
+The flyer text is Portuguese: put a plain-English item name in
 "name" and the original-language text in "name_pt". Translate to the natural
 English CULINARY term a home cook would recognise, never a literal word-for-word
 translation - e.g. Portuguese "arroz agulha" is long-grain rice, NOT "needle
 rice" (agulha means needle, but that's not what the product is); "arroz
 carolino" is round/risotto-style rice; "leite meio-gordo" is semi-skimmed milk.
 When unsure, prefer the closest real English grocery-aisle name over a literal
-translation. Prices are numbers in the local currency (euros, or Kc in Czech
-flyers); return just the number with a dot decimal (29,90 becomes 29.9).
+translation. Prices are numbers in euros; return just the number with a dot
+decimal (29,90 becomes 29.9).
 Discounts appear several ways: a crossed-out original price next to a lower one
-("Desconto Direto" / "Poupe X EUR" / "Sleva"), or a flat percentage badge ("-15%",
-"15% de desconto", "com Cartao", "s Lidl Plus"). Whenever a reduction is shown,
+("Desconto Direto" / "Poupe X EUR"), or a flat percentage badge ("-15%",
+"15% de desconto", "com Cartao", "com Lidl Plus"). Whenever a reduction is shown,
 set normal_price to the original price and discount to the fraction off (0..1). If
 only a "% off" badge is shown with one price, treat that price as the sale price
 and set discount from the badge (normal_price may be null).
@@ -128,7 +127,7 @@ export async function geminiParse(
     body: JSON.stringify({
       contents: [{ role: "user", parts }],
       // Minimal thinking: this is straight OCR/extraction, not reasoning — thinking only added
-      // latency (dense Czech leaflet pages ballooned per-batch time to minutes)
+      // latency (dense leaflet pages ballooned per-batch time to minutes)
       // and output-token cost. Disabling it makes every flyer fetch much faster.
       generationConfig: {
         temperature: 0.1,
@@ -194,8 +193,7 @@ export async function persistFlyer(
 ): Promise<Record<string, number>> {
   const storeName = parsed.store || "unknown";
   const day = parsed.valid_from || new Date().toISOString().slice(0, 10);
-  // source is country-namespaced so the same store/day in two countries (Lidl PT
-  // vs Lidl CZ) doesn't collide on the replace-before-insert.
+  // source is country-namespaced (a legacy of Czech support; keeps existing rows valid)
   const source = `flyer:${country}:${storeId}:${day}`;
   const deals: Record<string, number> = {};
   const items = (parsed.items || []).filter((it) => it && it.name);

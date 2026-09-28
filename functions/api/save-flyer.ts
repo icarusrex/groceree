@@ -23,8 +23,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // Always persist under the canonical store name (the model may write "ALDI" vs
   // "Aldi", which would fork the store id and split its prices).
   const storeName = src?.name || body.store_name || "unknown";
-  // A known store carries its own country (lidl-cz is Czech no matter who fetches
-  // it); an unknown/generic flyer falls back to the fetching user's country.
+  // A known store carries its own country; an unknown flyer uses the user's.
   const country = src?.country ?? await userCountry(ctx.env.DB, user);
 
   const parsed: ParsedFlyer = {

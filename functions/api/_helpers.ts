@@ -14,13 +14,11 @@ export const json = (data: unknown, status = 200) =>
 export const uid = (ctx: { request: Request }) =>
   ctx.request.headers.get("Cf-Access-Authenticated-User-Email") || "me";
 
-// Flyers + prices are shared per COUNTRY (not per user) — everyone shopping in
-// Portugal sees the same Portuguese flyers; Czech is separate. The country comes
-// from the requesting user's own settings.
-export async function userCountry(db: D1Database, user: string): Promise<string> {
-  const row = await db.prepare("SELECT country FROM user_settings WHERE user_id=?")
-    .bind(user).first<{ country: string }>().catch(() => null);
-  return row?.country === "CZ" ? "CZ" : "PT";
+// Flyers + prices are shared per COUNTRY (not per user). Portugal is the only
+// country since the Czech stores were removed; the country column and this
+// helper stay so existing rows and queries keep their scoping unchanged.
+export async function userCountry(_db: D1Database, _user: string): Promise<string> {
+  return "PT";
 }
 
 export async function ensureSettings(db: D1Database, user: string) {

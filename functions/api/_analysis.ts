@@ -8,6 +8,7 @@
 //   - top_savings: biggest absolute € off per unit (supporting detail)
 //   - theme      : which category the discounts cluster on this week
 import { categorize, type FoodCat } from "./_flyer.ts";
+import { containsAllergen, excludedAllergens } from "../../src/engine/allergens.ts";
 
 export interface DealRow {
   item_name: string;
@@ -70,11 +71,14 @@ const DAIRY = /\bmilk\b|leite|cheese|queijo|yogurt|yoghurt|iogurte|\bbutter\b|ma
 // against both so dairy-free shoppers don't lose their legumes and plant milks.
 const NOT_DAIRY = /coconut|almond|\boat\b|\bsoy\b|soja|cashew|peanut|\bnut butter|butter ?bean|amendoim|body milk|leite (de )?coco/i;
 const GLUTEN = /\bbread\b|\bp[aã]o\b|\bpasta\b|\bmassa\b|spaghetti|esparguete|noodle|\bflour\b|farinha|cracker|biscuit|bolacha|\bcake\b|\bbolo\b|cereal|cereais|pastry|croissant|\bpizza\b|baguette|\bbun\b|couscous|cuscuz|barley|cevada|\brye\b|centeio|breadcrumb|panko|wheat|trigo|tosta|torrada|\bwrap\b|lasagn|gnocchi|massas/i;
-export type Diet = "gluten_free" | "vegetarian" | "pescatarian" | "dairy_free";
+export type Diet = "gluten_free" | "vegetarian" | "pescatarian" | "dairy_free" | "egg_free" | "soy_free";
 function violatesDiet(name: string, cat: FoodCat | null, diet: string[]): boolean {
   if (!diet.length) return false;
   if (diet.includes("dairy_free") && (cat === "dairy" || DAIRY.test(name)) && !NOT_DAIRY.test(name)) return true;
   if (diet.includes("gluten_free") && GLUTEN.test(name)) return true;
+  // the shared allergen scan (same rules the planner uses) catches egg, soy and
+  // anything the patterns above miss
+  for (const a of excludedAllergens(diet)) if (containsAllergen(name, a)) return true;
   if (diet.includes("vegetarian") && (cat === "meat" || cat === "fish")) return true;
   if (diet.includes("pescatarian") && cat === "meat") return true;
   return false;

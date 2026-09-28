@@ -10,10 +10,10 @@ import { toBuyItem } from "../../src/engine/normalise.ts";
 // promotional price point. Unlike flyer prices (self-reported, promo-only), a
 // receipt price is what actually left your pocket — same idea as the manual
 // staple basket, just captured automatically instead of typed in by hand.
-const PROMPT = `You are reading a supermarket receipt from Portugal or the Czech
-Republic (a photo of a printed till receipt). Extract:
+const PROMPT = `You are reading a supermarket receipt from Portugal (a photo of a
+printed till receipt). Extract:
 - the store name if printed - use the canonical chain name (e.g. "Continente",
-  "Pingo Doce", "Lidl", "Aldi", "Intermarche", "Auchan", "Billa", "Albert", "Tesco"),
+  "Pingo Doce", "Lidl", "Aldi", "Intermarche", "Auchan", "Mercadona", "Minipreço"),
   not the branch address or a store code.
 - the purchase date, if printed, as YYYY-MM-DD.
 - the TOTAL amount paid for the whole receipt (the final total line), as a number.

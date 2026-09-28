@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
 import type { Recipe } from "../engine/types.ts";
+import { dietConflicts, recipeAllergens, type Allergen } from "../engine/allergens.ts";
+
+// One-tap adaptations per allergen. Coconut aminos is the household's soy-sauce
+// swap — tamari is gluten-free but still soy, so never suggest it.
+const MAKE_FREE: Record<Allergen, { label: string; ask: string }> = {
+  gluten: { label: "🌾 Make gluten-free", ask: "Make this gluten-free. Swap only what's necessary (gluten-free pasta/flour/bread, coconut aminos instead of soy sauce — not tamari, cornflour or arrowroot to thicken). Keep everything else the same and note if a swap changes the method." },
+  dairy: { label: "🥛 Make dairy-free", ask: "Make this dairy-free with simple swaps (olive oil for butter, coconut milk/cream for cream, dairy-free yogurt), keeping it cookable. Lactose-free products still contain dairy — don't use them." },
+  egg: { label: "🥚 Make egg-free", ask: "Make this egg-free: flax or chia 'eggs' or aquafaba to bind, egg-free/vegan mayo instead of mayonnaise, and drop egg-only toppings. Keep it cookable." },
+  soy: { label: "🫘 Make soy-free", ask: "Make this soy-free: coconut aminos instead of soy sauce, tamari or teriyaki; no tofu, tempeh, miso or edamame; avoid sauces that contain soy." },
+};
 
 // pull "10 minutes" / "1 hour" durations out of a step → seconds
 function stepTimer(text: string): number | null {
@@ -67,6 +77,7 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
   const [img, setImg] = useState<string | null>((recipe as any).image_url || null);
 
   const view = draft || recipe;
+  const allergyHits = dietConflicts(view, s.settings.diet);
   const scale = cookFor && view.servings ? cookFor.servings / view.servings : 1;
   const leftovers = cookFor ? Math.max(0, cookFor.servings - cookFor.household) : 0;
 
@@ -147,6 +158,9 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
     <>
       {img && <img className="recipe-img" src={img} alt={view.name} />}
       <h2>{view.name}</h2>
+      {allergyHits.size > 0 && (
+        <div className="banner allergy">⚠️ Not safe for your allergies — {[...allergyHits].map(([a, line]) => `${a} (${line})`).join(", ")}.</div>
+      )}
       <p className="meta">{view.total_time} min · {cookFor && scale !== 1
           ? <>cook for {cookFor.servings}{leftovers ? ` (${cookFor.household} now + ${leftovers} leftovers)` : ""} · recipe serves {view.servings}</>
           : <>serves {view.servings}{leftovers ? ` (${cookFor!.household} now + ${leftovers} leftovers)` : ""}</>}
@@ -185,16 +199,10 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
       <div className="remix-box">
         <h3>Adapt this recipe</h3>
         <div className="chips" style={{ margin: "0 0 8px" }}>
-          {!view.is_gluten_free && (
-            <button className="chip" disabled={busy}
-              onClick={() => runRemix("Make this gluten-free. Swap only what's necessary (e.g. gluten-free pasta/flour, tamari instead of soy sauce, cornflour to thicken). Keep everything else the same and note if a swap changes the method.")}>
-              🌾 Make gluten-free</button>
-          )}
-          {!view.is_dairy_free && (
-            <button className="chip" disabled={busy}
-              onClick={() => runRemix("Make this dairy-free with simple swaps, keeping it cookable.")}>
-              🥛 Make dairy-free</button>
-          )}
+          {[...recipeAllergens(view).keys()].map((a) => (
+            <button key={a} className="chip" disabled={busy} onClick={() => runRemix(MAKE_FREE[a].ask)}>
+              {MAKE_FREE[a].label}</button>
+          ))}
           <button className="chip" disabled={busy}
             onClick={() => runRemix("Halve all quantities, keep the method.")}>½ Halve it</button>
         </div>

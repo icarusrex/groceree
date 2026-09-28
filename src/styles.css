@@ -218,17 +218,6 @@ h3 { font-size: 15px; margin: 18px 0 8px; }
   border-radius: 8px; padding: 9px 11px; margin-bottom: 4px; }
 .bd-best-head { font-size: 15px; font-weight: 600; }
 .bd-best-why { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.bd-cook { margin-top: 9px; }
-/* generated deal menu modal */
-.deal-menu { max-width: 640px; max-height: 86vh; overflow-y: auto; }
-.dm-recipe { border-top: 1px solid var(--line); padding: 11px 0; }
-.dm-title { font-weight: 600; font-size: 15px; }
-.dm-deals { font-size: 12px; color: var(--accent); margin-top: 3px; }
-.dm-sum { font-size: 13px; cursor: pointer; color: var(--muted); margin-top: 5px; }
-.dm-ings { margin: 6px 0; padding-left: 18px; font-size: 13px; }
-.dm-steps { margin: 6px 0 0; padding-left: 18px; font-size: 13px; line-height: 1.5; }
-.dm-actions { display: flex; align-items: center; gap: 10px; margin-top: 14px;
-  position: sticky; bottom: 0; background: #fff; padding-top: 10px; }
 .bd-row { display: grid; grid-template-columns: minmax(64px, auto) 1fr auto;
   gap: 10px; align-items: baseline; font-size: 13px; line-height: 1.7; }
 .bd-store { font-size: 11px; font-weight: 600; color: var(--muted);
@@ -330,7 +319,7 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 
 /* the signature card: white, dark border, rounded, soft shadow */
 .day, .recipe-rail, .shop-group, .pantry-row, .modal, .best-deals, .flyer-card,
-.compare-card, .trend-empty, .bk-index, .deal-menu {
+.compare-card, .trend-empty, .bk-index {
   border: 2px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -417,3 +406,5 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 .budget-track.over .budget-planned { background: repeating-linear-gradient(45deg, #f4b0a8 0 6px, #f9d2cd 6px 12px); }
 .budget-track.over .budget-spent { background: #c0392b; }
 .cost-chip { font-variant-numeric: tabular-nums; }
+.banner.allergy { background: #fdecea; border-color: #f5b7b1; color: #922b21; font-weight: 600; }
+.allergy-flag { font-size: 12px; font-weight: 600; color: #922b21; background: #fdecea; border-radius: 6px; padding: 2px 6px; margin-top: 4px; }

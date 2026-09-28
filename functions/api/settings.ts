@@ -32,7 +32,7 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
     JSON.stringify(b.exclude_cuisines ?? []),
     b.max_active_minutes ?? null, b.leftover_strategy ?? "auto",
     b.plan_days === 7 ? 7 : 4, JSON.stringify(b.selected_stores ?? []),
-    b.country === "CZ" ? "CZ" : "PT",
+    "PT",
     (b.notion_parent_id ?? "").trim() || null,
     Number(b.monthly_food_budget) > 0 ? Math.round(Number(b.monthly_food_budget)) : null, user,
   ).run();

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "./lib/api.ts";
-import { sizePlanForLeftovers } from "./engine/engine.ts";
+import { passesDiet, sizePlanForLeftovers } from "./engine/engine.ts";
 import { toBuyItem } from "./engine/normalise.ts";
 import { generateWithinBudget, weekBudget, type PriceBook } from "./engine/cost.ts";
 import type { Recipe, Settings, PlanItem, RecipeState } from "./engine/types.ts";
@@ -35,19 +35,10 @@ interface Store {
 const Ctx = createContext<Store>(null as any);
 export const useStore = () => useContext(Ctx);
 
-// Guess the country once from the browser timezone (Europe/Prague → CZ), so a
-// Czech user lands on Czech stores without hunting for the setting. They can
-// still change it in Settings, and once saved it sticks.
-const guessCountry = (): "PT" | "CZ" => {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    return /Prague|Czech/i.test(tz) ? "CZ" : "PT";
-  } catch { return "PT"; }
-};
 const DEFAULTS: Settings = {
   household_size: 2, diet: [], exclude_cuisines: [],
   max_active_minutes: null, leftover_strategy: "auto",
-  plan_days: 4, selected_stores: [], country: guessCountry(),
+  plan_days: 4, selected_stores: [], country: "PT",
 };
 
 function mondayOf(d = new Date()) {
@@ -165,7 +156,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       persist(plan.filter((p) => !(p.day_of_week === day && p.slot === slot)));
     },
     applyPlanChanges: (changes) => {
-      const known = new Set(recipes.map((r) => r.id));
+      const known = new Set(recipes.filter((r) => passesDiet(r, settings.diet)).map((r) => r.id));
       let next = [...plan];
       for (const c of changes) {
         if (!known.has(c.recipe_id)) continue;

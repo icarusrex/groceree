@@ -1,5 +1,7 @@
 import { json, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
+import { dietRules } from "./_diet.ts";
+import { dietConflicts } from "../../src/engine/allergens.ts";
 
 // POST /api/generate-recipe { prompt, servings, diet?, max_active_minutes?, country? }
 // Invents a recipe from a free-text prompt, in the same shape /api/recipes POST
@@ -13,12 +15,6 @@ import { geminiUrl } from "./_gemini.ts";
 // result is rescaled server-side rather than trusted - see normalise().
 
 const CATEGORIES = ["meat", "seafood", "dairy", "produce", "pantry", "frozen"];
-const DIET_RULES: Record<string, string> = {
-  gluten_free: "must be gluten free",
-  vegetarian: "must be vegetarian (no meat, no fish)",
-  pescatarian: "no meat other than fish/seafood",
-  dairy_free: "must be dairy free",
-};
 
 interface Ing { name: string; quantity: number | null; unit: string; category: string }
 
@@ -72,11 +68,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const maxMin = Number(body?.max_active_minutes) || null;
 
   const rules = [
-    ...diet.map((d) => DIET_RULES[d]).filter(Boolean),
+    ...dietRules(diet),
     maxMin ? `total time must be at most ${maxMin} minutes` : "",
-    body?.country === "CZ"
-      ? "use ingredients easily bought in a Czech supermarket"
-      : "use ingredients easily bought in a Portuguese supermarket",
+    "use ingredients easily bought in a Portuguese supermarket",
   ].filter(Boolean);
 
   const PROMPT = `You are a recipe writer. Invent ONE realistic, cookable dish from
@@ -112,6 +106,10 @@ REQUEST: ${prompt}`;
     const txt = data.candidates[0].content.parts[0].text.replace(/^```(json)?|```$/gm, "").trim();
     const rec = normalise(JSON.parse(txt), want);
     if (!rec.ingredients.length) return json({ error: "the model returned no usable ingredients — try rephrasing" }, 502);
+    // Allergies: never hand back a recipe that still contains one (it would go
+    // straight into a plan slot). Say which line, so a rephrase can avoid it.
+    const hits = dietConflicts(rec, diet);
+    if (hits.size) return json({ error: `The generated recipe still contains ${[...hits].map(([a, l]) => `${a} (${l})`).join(", ")} — try again or rephrase.` }, 422);
     return json(rec);
   } catch {
     return json({ error: "could not parse gemini output" }, 502);

@@ -14,6 +14,7 @@ import {
   ingredientSeasonScore,
 } from "../data/seasonality.pt.ts";
 import { recipeAffordability } from "../data/cost_tiers.ts";
+import { dietConflicts } from "./allergens.ts";
 import type {
   Recipe, Settings, RecipeState, PlanItem, GenerateInput, Diet, Slot,
 } from "./types.ts";
@@ -32,14 +33,17 @@ function mulberry32(seed: number) {
 }
 
 // ---- diet eligibility -------------------------------------------------------
-function passesDiet(r: Recipe, diet: Diet[]): boolean {
+// Gluten/dairy/egg/soy are allergies here: a recipe must pass BOTH its stored
+// flag (where there is one) and a scan of its actual ingredient lines — the
+// imported flags have been wrong before.
+export function passesDiet(r: Recipe, diet: Diet[]): boolean {
   for (const d of diet) {
     if (d === "gluten_free" && !r.is_gluten_free) return false;
     if (d === "vegetarian" && !r.is_vegetarian) return false;
     if (d === "pescatarian" && !(r.is_vegetarian || r.is_pescatarian)) return false;
     if (d === "dairy_free" && !r.is_dairy_free) return false;
   }
-  return true;
+  return dietConflicts(r, diet).size === 0;
 }
 
 export function eligibleRecipes(recipes: Recipe[], settings: Settings,

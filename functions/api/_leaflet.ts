@@ -11,12 +11,11 @@ const MANIFEST = "https://endpoints.leaflets.schwarz/v4/flyer";
 
 // The flyer "identifier" is the slug in the viewer URL, e.g.
 //   PT: https://www.lidl.pt/l/pt/folhetos/promocoes-a-partir-de-01-06/ar/0?lf=ABC
-//   CZ: https://www.lidl.cz/l/cs/letak/akcni-letak-od-pondeli-8-6-10-6-2026
 // It's the segment right after the country-specific flyer marker.
 export function leafletSlug(viewerUrl: string): string | null {
   try {
     const segs = new URL(viewerUrl).pathname.split("/").filter(Boolean);
-    for (const marker of ["folhetos", "letak", "letaky"]) {
+    for (const marker of ["folhetos"]) {
       const i = segs.lastIndexOf(marker);
       if (i >= 0 && segs[i + 1]) return segs[i + 1];
     }

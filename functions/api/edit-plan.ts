@@ -1,5 +1,7 @@
-import { json, type Env } from "./_helpers.ts";
+import { json, uid, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
+import { userDiet } from "./_diet.ts";
+import { dietConflicts } from "../../src/engine/allergens.ts";
 
 // POST /api/edit-plan { plan, instruction }
 // Natural-language editing of the whole week. The model picks replacement
@@ -11,12 +13,25 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!instruction?.trim()) return json({ error: "instruction required" }, 400);
 
   const { results } = await ctx.env.DB.prepare(
-    `SELECT id, name, primary_protein, cuisine, total_time,
+    `SELECT id, name, primary_protein, cuisine, total_time, ingredients,
             is_vegetarian, is_pescatarian, is_gluten_free, is_dairy_free
      FROM recipes`,
   ).all();
 
-  const catalog = (results as any[]).map((r) => {
+  // Only offer recipes that are safe for this household's allergies/diet — the
+  // model can't pick what it never sees (the app re-checks on apply too).
+  const diet = await userDiet(ctx.env.DB, uid(ctx));
+  const safe = (results as any[]).filter((r) => {
+    if (diet.includes("gluten_free") && !r.is_gluten_free) return false;
+    if (diet.includes("dairy_free") && !r.is_dairy_free) return false;
+    if (diet.includes("vegetarian") && !r.is_vegetarian) return false;
+    if (diet.includes("pescatarian") && !(r.is_vegetarian || r.is_pescatarian)) return false;
+    let ingredients: { name: string }[] = [];
+    try { ingredients = JSON.parse(r.ingredients || "[]"); } catch { return false; }
+    return dietConflicts({ ingredients }, diet).size === 0;
+  });
+
+  const catalog = safe.map((r) => {
     const tags = [
       r.is_vegetarian ? "veg" : "", r.is_pescatarian ? "pesc" : "",
       r.is_gluten_free ? "gf" : "", r.is_dairy_free ? "df" : "",
