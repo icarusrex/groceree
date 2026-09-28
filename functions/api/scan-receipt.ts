@@ -26,13 +26,19 @@ Republic (a photo of a printed till receipt). Extract:
   → price divided by the total pack weight/volume, basis "kg" (litres count as kg);
   several of the same item ("2 x 0,89") → the price of one, basis "un".
   Leave unit_price null when it can't be worked out.
+- for each line, "ingredient": the plain raw ingredient a recipe would call it, in English
+  ("chicken breast", "potato", "onion", "salmon") — or null when the line is a processed or
+  prepared product rather than the ingredient itself: crisps/chips ("BATATA FRITA" is crisps,
+  not potatoes), cold cuts and ham ("FIAMBRE DE PERU", sliced cooked chicken), ready meals,
+  snacks, sauces, desserts, drinks.
 Ignore non-food lines: carrier bags, bottle/can deposits and refunds, loyalty-card
 notes, and the subtotal/tax/total/payment/change lines at the bottom.
 Return ONLY JSON, no prose, shaped:
 {"store": "<name|null>", "date": "YYYY-MM-DD|null", "total": <number|null>,
  "items": [{"name": "<english grocery name>", "name_pt": "<original receipt text>",
             "price": <number>, "unit": "<e.g. kg|un|null>",
-            "unit_price": <number|null>, "unit_basis": "kg|un|null"}]}`;
+            "unit_price": <number|null>, "unit_basis": "kg|un|null",
+            "ingredient": "<plain english ingredient|null>"}]}`;
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
@@ -98,11 +104,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   ).bind(user, country, storeName, date, total, groceryTotal, items.length, source));
   // … and what was actually paid per kg / per piece, which overrides the shelf
   // price in the price book. Keyed by the same canonical names the recipes use;
-  // cupboard staples and anything without a unit price are skipped.
+  // cupboard staples, processed products (no plain "ingredient") and anything
+  // without a unit price are skipped.
   const paid = new Map<string, Priced>();
   for (const it of items) {
     if (typeof it.unit_price !== "number" || !(it.unit_price > 0)) continue;
-    const b = toBuyItem(it.name, null, "", "pantry");
+    if (typeof it.ingredient !== "string" || !it.ingredient.trim()) continue;
+    const b = toBuyItem(it.ingredient, null, "", "pantry");
     if (!b.name || b.staple) continue;
     const kg = it.unit_basis === "kg", un = it.unit_basis === "un";
     if (!kg && !un) continue;

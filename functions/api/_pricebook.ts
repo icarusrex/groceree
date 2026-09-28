@@ -15,6 +15,7 @@ import { BROWSER, unescape } from "./_sfcc.ts";
 const SEARCH = "https://www.auchan.pt/on/demandware.store/Sites-AuchanPT-Site/pt_PT/Search-UpdateGrid";
 export const SHELF_TTL_DAYS = 30;     // refresh shelf prices monthly
 export const RECEIPT_TTL_DAYS = 90;   // a paid price beats the shelf for 3 months
+export const NOT_FOUND_TTL_DAYS = 7;  // retry an ingredient the shop search missed
 
 interface Candidate { name: string; per_kg: number | null; per_item: number | null }
 
@@ -89,7 +90,7 @@ export async function priceFromShelf(apiKey: string, items: string[]): Promise<P
   const q = await gemini(apiKey, `For each grocery ingredient, give the Portuguese search term a shopper
 would type on a Portuguese supermarket website to find it in its plain, everyday form
 ("chicken breast" → "peito de frango", "tinned tomatoes" → "tomate pelado lata",
-"spring onion" → "cebolinho"). Return ONLY JSON: {"queries":["..."]} in the same order.
+"spring onion" → "cebola nova", "salt cod" → "bacalhau posta", "turkey mince" → "carne picada peru"). Return ONLY JSON: {"queries":["..."]} in the same order.
 ${JSON.stringify(items)}`);
   const queries: string[] = Array.isArray(q.queries) && q.queries.length === items.length ? q.queries : items;
   const results = await Promise.all(queries.map((s) => search(s).catch(() => [] as Candidate[])));
@@ -98,8 +99,9 @@ ${JSON.stringify(items)}`);
 you get numbered supermarket search results. List the numbers of the results that ARE that
 ingredient in its plain, everyday form: the thing itself, any ordinary size or brand. Exclude
 processed or different products (nuggets, ham, ready meals, snacks, sauces, baby food,
-seasoned/breaded versions), and premium variants (organic, free-range, gourmet) unless nothing
-else matches. An empty list is fine when nothing matches.
+seasoned/breaded versions), tiny snack or sample packs (under ~100 g, e.g. a 36 g dried-fish
+snack for "salt cod") unless the ingredient is a spice or herb, and premium variants (organic,
+free-range, gourmet) unless nothing else matches. An empty list is fine when nothing matches.
 Return ONLY JSON: {"matches":[[...numbers for item 1], [...for item 2], ...]}
 ${JSON.stringify(items.map((item, i) => ({ item, results: results[i].map((c, n) => `${n}: ${c.name}`) })))}`);
   const matches: number[][] = Array.isArray(pick.matches) ? pick.matches : [];
