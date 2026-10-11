@@ -1,3 +1,4 @@
+import { planDates } from "./planDates.ts";
 // The meal-plan engine. Pure functions, runs in node, the browser, or a Worker.
 //
 // Pipeline:
@@ -159,7 +160,7 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   const maxMin = input.settings.max_active_minutes;
   const autoLeftover = input.settings.leftover_strategy !== "off";
   const days = Math.max(1, Math.min(7, input.days ?? input.settings.plan_days ?? 4));
-  const ranked = scoreAll(input);
+  const ranked = scoreAll(input.start_date ? {...input,month:input.month ?? Number(input.start_date.slice(5,7))} : input);
 
   const used = new Set<string>();
   const usedFamilies = new Set<string>();
@@ -242,8 +243,11 @@ export function generatePlan(input: GenerateInput): PlanItem[] {
   }
 
   for (let day = 1; day <= days; day++) if (lunch[day]) items.push(lunch[day]!);
-  return sizePlanForLeftovers(items.sort((a, b) => a.day_of_week - b.day_of_week ||
-    (a.slot === "lunch" ? -1 : 1)), household);
+  items.sort((a,b)=>a.day_of_week-b.day_of_week || (a.slot==='lunch'?-1:1));
+  const dates = input.start_date ? planDates(input.start_date,days) : null;
+  const weekday = (relative:number) => dates ? dates[relative-1].day_of_week : relative;
+  return sizePlanForLeftovers(items.map(p=>({...p,day_of_week:weekday(p.day_of_week),
+    leftover_of:p.leftover_of ? {...p.leftover_of,day_of_week:weekday(p.leftover_of.day_of_week)} : null})),household);
 }
 
 // Derive each meal's servings from the plan's leftover structure. A meal that is

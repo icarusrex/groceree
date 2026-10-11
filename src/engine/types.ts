@@ -71,5 +71,6 @@ export interface GenerateInput {
   deals?: Record<string, number>; // ingredient name (lower) -> discount 0..1
   month?: number; // 1..12, defaults to current
   seed?: number; // for reproducible jitter
+  start_date?: string; // ISO date; omitted uses Monday ordering
   days?: number; // dinners to fill (defaults to settings.plan_days or 4)
 }

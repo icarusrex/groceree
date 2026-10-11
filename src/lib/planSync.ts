@@ -1,13 +1,16 @@
+import { todayInLisbon, weekOf } from "../engine/planDates.ts";
 import type { PlanItem } from "../engine/types.ts";
 
-export interface CloudPlan { items: PlanItem[]; revision: number }
-export interface PlanWrite {
+export interface PlanMetadata { start_date: string; plan_days: number }
+export interface CloudPlan extends PlanMetadata { items: PlanItem[]; revision: number; week_start: string }
+export interface PlanWrite extends PlanMetadata {
+  active: true;
   week_start: string;
   expected_revision: number | null;
   status: "saved";
   items: PlanItem[];
 }
-export interface PlanSnapshot {
+export interface PlanSnapshot extends PlanMetadata {
   week: string;
   items: PlanItem[];
   ready: boolean;
@@ -15,7 +18,7 @@ export interface PlanSnapshot {
   error: string;
 }
 interface Dependencies {
-  load: (week: string) => Promise<CloudPlan | null>;
+  load: () => Promise<CloudPlan | null>;
   save: (plan: PlanWrite) => Promise<{ revision: number }>;
   week: () => string;
   readLegacy: () => PlanItem[];
@@ -25,12 +28,7 @@ interface Dependencies {
 
 // Portugal is the app's planning calendar, regardless of a device's timezone.
 export function mondayOf(date = new Date()): string {
-  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Lisbon",
-    year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(date);
-  const part = (name: string) => parts.find((p) => p.type === name)!.value;
-  const monday = new Date(`${part("year")}-${part("month")}-${part("day")}T00:00:00Z`);
-  monday.setUTCDate(monday.getUTCDate() - (monday.getUTCDay() + 6) % 7);
-  return monday.toISOString().slice(0, 10);
+  return weekOf(todayInLisbon(date));
 }
 
 export function readLegacyPlan(storage: Pick<Storage, "getItem">): PlanItem[] {
@@ -66,7 +64,7 @@ export class PlanSync {
 
   constructor(deps: Dependencies) {
     this.deps = deps;
-    this.snapshot = { week: deps.week(), items: [], ready: false, phase: "loading", error: "" };
+    this.snapshot = { week: deps.week(), start_date: deps.week(), plan_days: 4, items: [], ready: false, phase: "loading", error: "" };
   }
   private publish(patch: Partial<PlanSnapshot>) {
     this.snapshot = { ...this.snapshot, ...patch };
@@ -80,23 +78,23 @@ export class PlanSync {
     if (this.refreshing || this.pending || (!discardLocal && this.edits !== this.savedEdits)) return;
     this.refreshing = true;
     const initial = !this.hydrated, edit = this.edits, week = this.deps.week();
-    // A returning tab must not let Monday edits land in the previous week while
-    // the new week's request is still in flight.
-    if (week !== this.snapshot.week || discardLocal)
+    // Explicit conflict recovery blocks edits while loading the saved plan.
+    if (discardLocal)
       this.publish({ ready: false, phase: "loading", error: "" });
     try {
-      let plan = await this.deps.load(week);
+      let plan = await this.deps.load();
       if (initial && plan === null) {
         const legacy = this.deps.readLegacy();
         if (legacy.length) {
           this.publish({ items: legacy, phase: "saving" });
           try {
-            const result = await this.deps.save({ week_start: week, expected_revision: null,
+            const metadata = { start_date: week, plan_days: legacy.some(p=>p.day_of_week>=5) ? 7 : 4 };
+            const result = await this.deps.save({ active:true, ...metadata, week_start: week, expected_revision: null,
               status: "saved", items: legacy });
-            plan = { items: legacy, revision: result.revision };
+            plan = { ...metadata, week_start: week, items: legacy, revision: result.revision };
           } catch (error: any) {
             if (error.status !== 409) throw error;
-            plan = await this.deps.load(week);
+            plan = await this.deps.load();
             if (!plan) throw new Error("Could not load the newer cloud plan.");
           }
         }
@@ -106,7 +104,8 @@ export class PlanSync {
       this.hydrated = true;
       this.cloudLoadRequested = false;
       this.savedEdits = this.edits;
-      this.publish({ week, items: plan?.items ?? [], ready: true,
+      this.publish({ week: plan?.week_start ?? week, start_date: plan?.start_date ?? week,
+        plan_days: plan?.plan_days ?? 4, items: plan?.items ?? [], ready: true,
         phase: plan ? "saved" : "empty", error: "" });
       // Do not re-import an old browser plan after a later week is cleared.
       if (initial && plan) this.clearLegacy();
@@ -117,10 +116,10 @@ export class PlanSync {
     } finally { this.refreshing = false; }
   }
 
-  change(items: PlanItem[]): void {
+  change(items: PlanItem[], metadata?: PlanMetadata): void {
     if (!this.snapshot.ready || this.snapshot.phase === "conflict") return;
     this.edits++;
-    this.publish({ items });
+    this.publish({ items, ...(metadata ? {...metadata,week:weekOf(metadata.start_date)} : {}) });
     void this.save().catch(() => {}); // failure remains visible in the snapshot
   }
 
@@ -138,10 +137,10 @@ export class PlanSync {
 
   private async flush(): Promise<void> {
     while (this.savedEdits !== this.edits) {
-      const edit = this.edits, items = this.snapshot.items, week = this.snapshot.week;
+      const edit = this.edits, { items, week, start_date, plan_days } = this.snapshot;
       this.publish({ phase: "saving", error: "" });
       try {
-        const result = await this.deps.save({ week_start: week, expected_revision: this.revision,
+        const result = await this.deps.save({ active:true, start_date, plan_days, week_start: week, expected_revision: this.revision,
           status: "saved", items });
         this.revision = result.revision;
         this.savedEdits = edit;

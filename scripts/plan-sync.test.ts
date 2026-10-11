@@ -10,13 +10,13 @@ function cloud() {
   const plans = new Map<string, any>();
   let fail = false;
   return { plans, setFail: (value: boolean) => { fail = value; },
-    load: async (week: string) => { if (fail) throw new Error('offline'); return structuredClone(plans.get(week) ?? null); },
+    load: async () => { if (fail) throw new Error('offline'); return structuredClone([...plans.values()].at(-1) ?? null); },
     save: async (body: any) => {
       if (fail) throw new Error('offline');
-      const current = plans.get(body.week_start);
+      const current = [...plans.values()].at(-1);
       if ((current?.revision ?? null) !== body.expected_revision) throw Object.assign(new Error('conflict'), { status: 409 });
       const revision = (current?.revision ?? 0) + 1;
-      plans.set(body.week_start, { items: structuredClone(body.items), revision }); return { revision };
+      plans.delete(body.week_start); plans.set(body.week_start, { items: structuredClone(body.items), revision, week_start:body.week_start, start_date:body.start_date, plan_days:body.plan_days }); return { revision };
     },
   };
 }
@@ -93,12 +93,12 @@ test('late background loads cannot erase edits made while loading', async () => 
   sync.change([item]); await sync.save(); wait.resolve(null); await refresh;
   assert.deepEqual(sync.snapshot.items, [item]);
 });
-test('week rollover does not copy the previous week or import legacy storage again', async () => {
-  const api = cloud(); let activeWeek = week;
-  const sync = session(api, { week: () => activeWeek, readLegacy: () => [item] });
-  await sync.refresh(); activeWeek = '2026-10-12'; await sync.refresh();
-  assert.equal(sync.snapshot.week, '2026-10-12'); assert.deepEqual(sync.snapshot.items, []);
-  assert.deepEqual(api.plans.get(week).items, [item]); assert.equal(api.plans.has(activeWeek), false);
+test('Monday rollover keeps the saved Sunday plan', async () => {
+  const api=cloud();let activeWeek=week;const sync=session(api,{week:()=>activeWeek});
+  await sync.refresh();sync.change([{...item,day_of_week:7}],{start_date:'2026-10-11',plan_days:4});await sync.save();
+  activeWeek='2026-10-12';await sync.refresh();
+  assert.equal(sync.snapshot.start_date,'2026-10-11');assert.equal(sync.snapshot.week,week);
+  assert.equal(sync.snapshot.items[0].day_of_week,7);
 });
 test('all devices use the Lisbon calendar at the Sunday/Monday boundary', () => {
   assert.equal(mondayOf(new Date('2026-10-11T23:30:00Z')), '2026-10-12');
@@ -112,26 +112,18 @@ test('corrupt or unavailable legacy storage cannot crash the app', () => {
   assert.deepEqual(readLegacyPlan({ getItem: () => JSON.stringify([item]) }), [item]);
 });
 
-test('editing pauses while a returning device loads a different week', async () => {
-  const api = cloud(), next = deferred<any>(); let activeWeek = week;
-  const sync = session(api, { week: () => activeWeek, load: (w: string) => w === week ? api.load(w) : next.promise });
-  await sync.refresh(); sync.change([item]); await sync.save();
-  activeWeek = '2026-10-12'; const refresh = sync.refresh();
-  assert.equal(sync.snapshot.ready, false);
-  sync.change([{ ...item, recipe_id: 'wrong-week' }]);
-  next.resolve(null); await refresh;
-  assert.equal(sync.snapshot.week, '2026-10-12'); assert.deepEqual(sync.snapshot.items, []);
-  assert.equal(api.plans.get(week).items[0].recipe_id, 'chicken');
+test('queued replacement carries its own metadata with its items',async()=>{
+ const api=cloud(),wait=deferred<void>();let calls=0;
+ const sync=session(api,{save:async(b:any)=>{if(++calls===1)await wait.promise;return api.save(b);}});
+ await sync.refresh();sync.change([{...item,day_of_week:7}],{start_date:'2026-10-11',plan_days:4});
+ sync.change([{...item,day_of_week:4,recipe_id:'fish'}],{start_date:'2026-10-15',plan_days:4});
+ wait.resolve();await sync.save();const tablet=session(api);await tablet.refresh();
+ assert.equal(tablet.snapshot.start_date,'2026-10-15');assert.equal(tablet.snapshot.items[0].recipe_id,'fish');
 });
-
-test('a failed explicit cloud load resumes after a conflict and week rollover', async () => {
-  const api = cloud(); let activeWeek = week;
-  const a = session(api), b = session(api, { week: () => activeWeek });
-  await a.refresh(); await b.refresh(); a.change([item]); await a.save();
-  b.change([{ ...item, recipe_id: 'stale' }]); await assert.rejects(b.save());
-  activeWeek = '2026-10-12'; api.setFail(true); await b.refresh(true);
-  assert.equal(b.snapshot.ready, false); assert.equal(b.snapshot.phase, 'error');
-  api.setFail(false); await b.retry();
-  assert.equal(b.snapshot.ready, true); assert.equal(b.snapshot.week, '2026-10-12');
-  assert.deepEqual(b.snapshot.items, []);
+test('a failed explicit cloud load resumes after conflict across different weeks',async()=>{
+ const api=cloud(),a=session(api),b=session(api);await a.refresh();await b.refresh();
+ a.change([{...item,day_of_week:4}],{start_date:'2026-10-15',plan_days:4});await a.save();
+ b.change([item]);await assert.rejects(b.save());api.setFail(true);await b.refresh(true);
+ assert.equal(b.snapshot.ready,false);api.setFail(false);await b.retry();
+ assert.equal(b.snapshot.start_date,'2026-10-15');assert.equal(b.snapshot.ready,true);
 });

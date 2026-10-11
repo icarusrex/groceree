@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { planDates } from "./engine/planDates.ts";
 import { api } from "./lib/api.ts";
 import { PlanSync, mondayOf, readLegacyPlan, type PlanSnapshot } from "./lib/planSync.ts";
 import { passesDiet, sizePlanForLeftovers } from "./engine/engine.ts";
@@ -17,7 +18,7 @@ interface Store {
   loadCloudPlan: () => Promise<void>;
   deals: Record<string, number>;
   loading: boolean;
-  generate: (days?: number) => void;
+  generate: (days?: number, startDate?: string) => void;
   setSettings: (s: Settings) => void;
   signal: (id: string, sig: string) => void;
   addPantry: (t: string) => void;
@@ -50,7 +51,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettingsState] = useState<Settings>(DEFAULTS);
   const [states, setStates] = useState<Record<string, RecipeState>>({});
   const [pantry, setPantry] = useState<any[]>([]);
-  const [planSync, setPlanSync] = useState<PlanSnapshot>({ week: mondayOf(), items: [],
+  const [planSync, setPlanSync] = useState<PlanSnapshot>({ week: mondayOf(), start_date:mondayOf(), plan_days:4, items: [],
     ready: false, phase: "loading", error: "" });
   const [sync] = useState(() => new PlanSync({ load: api.plan, save: api.savePlan, week: mondayOf,
     readLegacy: () => { try { return readLegacyPlan(localStorage); } catch { return []; } },
@@ -143,13 +144,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     loadCloudPlan: () => sync.refresh(true),
     // With a budget set, pick the best-liked of many candidate weeks that fits
     // the week's target (month carry-over included); otherwise a normal plan.
-    generate: (days?: number) => {
+    generate: (days?: number, startDate = sync.snapshot.start_date) => {
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
       const planDays = days ?? settings.plan_days ?? 4;
       const target = settings.monthly_food_budget
         ? weekBudget(settings.monthly_food_budget, spend?.month.spent ?? 0, planDays).planTarget : null;
-      persist(generateWithinBudget({ recipes, settings, states, pantry: pantryNames, deals,
-        days, seed: Math.floor(Math.random() * 1e9) }, prices, target).plan);
+      const generated=generateWithinBudget({recipes,settings,states,pantry:pantryNames,deals,
+        start_date:startDate,days:planDays,seed:Math.floor(Math.random()*1e9)},prices,target).plan;
+      sync.change(sizePlanForLeftovers(generated,settings.household_size),{start_date:startDate,plan_days:planDays});
     },
     setSettings: (s) => { setSettingsState(s); api.saveSettings(s); },
     signal: (id, sig) => {
@@ -175,6 +177,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return sync.save();
     },
     assignSlot: (day, slot, recipeId) => {
+      if(!planDates(sync.snapshot.start_date,sync.snapshot.plan_days).some(p=>p.day_of_week===day))return;
       const next = sync.snapshot.items.filter((p) => !(p.day_of_week === day && p.slot === slot));
       next.push({ day_of_week: day, slot: slot as any, recipe_id: recipeId,
         is_leftover: false, leftover_of: null, servings: settings.household_size });
@@ -187,12 +190,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const known = new Set(recipes.filter((r) => passesDiet(r, settings.diet)).map((r) => r.id));
       let next = [...sync.snapshot.items];
       for (const c of changes) {
-        if (!known.has(c.recipe_id)) continue;
+        if (!known.has(c.recipe_id) || !["lunch","dinner"].includes(c.slot) || !planDates(sync.snapshot.start_date,sync.snapshot.plan_days).some(p=>p.day_of_week===c.day_of_week)) continue;
         next = next.filter((p) => !(p.day_of_week === c.day_of_week && p.slot === c.slot));
         next.push({ day_of_week: c.day_of_week, slot: c.slot as any, recipe_id: c.recipe_id,
           is_leftover: false, leftover_of: null, servings: settings.household_size });
       }
-      next.sort((a, b) => a.day_of_week - b.day_of_week || (a.slot === "lunch" ? -1 : 1));
+      const order=planDates(sync.snapshot.start_date,sync.snapshot.plan_days).map(p=>p.day_of_week);
+      next.sort((a,b)=>order.indexOf(a.day_of_week)-order.indexOf(b.day_of_week)||(a.slot==="lunch"?-1:1));
       persist(next);
     },
     // After a remix is saved as a new recipe, point every plan slot that used the

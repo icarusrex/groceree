@@ -18,3 +18,16 @@ test('all start weekdays and year/month/leap/DST boundaries retain exact duratio
   assert.equal(todayInLisbon(new Date('2026-10-11T23:30Z')),'2026-10-12');
   for(const date of ['2026-02-30','2026-13-01','bad','2026-1-1']) assert.equal(validDate(date),false);
 });
+import { readFileSync } from 'node:fs';
+import { generatePlan, buildShoppingList } from '../src/engine/engine.ts';
+const recipes=JSON.parse(readFileSync('seed/recipes.seed.json','utf8'));
+const settings:any={household_size:2,diet:[],exclude_cuisines:[],max_active_minutes:null,leftover_strategy:'auto',plan_days:4};
+test('Sunday engine maps meals and leftovers in chronological order with correct shopping quantities',()=>{
+ for(let seed=1;seed<=12;seed++) {
+ const monday=generatePlan({recipes,settings,seed,days:4,month:10});
+ const sunday=generatePlan({recipes,settings,seed,days:4,month:10,start_date:'2026-10-11'});
+ assert.deepEqual(sunday.map(p=>p.day_of_week),monday.map(p=>p.day_of_week===1?7:p.day_of_week-1));
+ for(const p of sunday)if(p.leftover_of)assert.equal(p.leftover_of.day_of_week,p.day_of_week===1?7:p.day_of_week-1);
+ assert.deepEqual(buildShoppingList(sunday,recipes,2),buildShoppingList(monday,recipes,2));
+ }
+});

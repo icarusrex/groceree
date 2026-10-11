@@ -20,7 +20,7 @@ export const api = {
   addPantry: (raw_text: string, source = "manual") =>
     fetch("/api/pantry", { method: "POST", body: JSON.stringify({ raw_text, source }) }).then(j),
   delPantry: (id: number) => fetch(`/api/pantry?id=${id}`, { method: "DELETE" }).then(j),
-  plan: (week: string) => fetch(`/api/plan?week=${encodeURIComponent(week)}`,
+  plan: () => fetch("/api/plan?active=1",
     { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(planJson),
   savePlan: (p: import("./planSync.ts").PlanWrite) => fetch("/api/plan", {
     method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(p),
