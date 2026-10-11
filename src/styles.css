@@ -411,3 +411,6 @@ h1 { text-shadow: 0 1px 0 rgba(0,0,0,.06); }
 /* Cloud plan status stays visible on every tab. */
 .plan-sync { margin-bottom: 12px; }
 .plan-sync .btn { margin-left: 12px; }
+
+.plan-start { display:flex; flex-direction:column; gap:3px; font-size:12px; color:var(--muted); }
+.plan-start input { min-height:36px; width:150px; }

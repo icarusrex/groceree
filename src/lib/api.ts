@@ -38,8 +38,8 @@ export const api = {
     fetch("/api/scale-method", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
   remix: (recipe: any, instruction: string) =>
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
-  editPlan: (plan: any[], instruction: string) =>
-    fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction }) }).then(j),
+  editPlan: (plan: any[], instruction: string, range: {start_date:string;plan_days:number}) =>
+    fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction, ...range }) }).then(j),
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
   prices: () => fetch("/api/prices").then(j),

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { planDates } from "../engine/planDates.ts";
 import { useStore } from "../store.tsx";
 import { buildShoppingList, tidyAmount } from "../engine/engine.ts";
 import { dealsByItem, lineCost } from "../engine/cost.ts";
@@ -49,7 +50,7 @@ export default function Shop() {
   // Markdown checklist, one "## category" per group — ticks off in Obsidian (and
   // reads fine pasted into Keep / a chat).
   const markdown = () => {
-    const lines = [`# Shopping list`, ``, `_${new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })} · ${s.settings.household_size} people_`];
+    const lines = [`# Shopping list`, ``, `_${s.planSync.start_date} to ${planDates(s.planSync.start_date,s.planSync.plan_days).at(-1)!.date} · ${s.settings.household_size} people_`];
     for (const g of exportGroups()) {
       lines.push("", `## ${g.category}`);
       for (const i of g.items) lines.push(`- [ ] ${i.name}${i.amount ? ` — ${i.amount}` : ""}`);
@@ -80,6 +81,7 @@ export default function Shop() {
   return (
     <div>
       <h1>Shopping List</h1>
+      <p className="muted small">For {s.planSync.start_date} to {planDates(s.planSync.start_date,s.planSync.plan_days).at(-1)!.date}</p>
       <p className="muted">{done}/{buy.length} picked · scaled to {s.settings.household_size} people · leftovers excluded
         {estTotal > 0 && <> · <b>≈€{Math.round(estTotal)}</b> to go{estMissing ? ` (${estMissing} item${estMissing > 1 ? "s" : ""} not priced yet)` : ""}</>}</p>
       <div className="shop-actions">

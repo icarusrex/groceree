@@ -62,48 +62,50 @@ Tests use Node 24+ (native TypeScript support and SQLite): `npm test`.
 Run `npm run test:engine` for the existing planner smoke test and `npx tsc --noEmit`
 to check types.
 
-## Weekly plan sync
-Settings already persist in D1. The current week's meal plan now loads from D1,
-and generation, manual edits, AI edits, recipe replacements and slot removal all
-save automatically. A status above the tabs shows saving, saved, and failures.
-The Save button still waits for cloud acknowledgement; the shopping list derives
-from the same plan. Leftover links and cooked portions survive a cloud round trip.
+## Meal plan sync and dates
+Settings and the active meal plan persist in D1. Generation, manual and AI edits,
+recipe replacements and slot removal save automatically. The cloud status shows
+saving, saved, errors and conflicts. Save waits for acknowledgement.
 
-The week uses Monday in the **Europe/Lisbon** calendar on every device. Plans from
-earlier weeks remain in D1. The app refreshes on focus, when becoming visible,
-and every minute while visible. A new week starts empty rather than copying the
-previous week. A failed load blocks editing until Retry succeeds.
+Choose four or seven consecutive days and any start date. The default is Monday
+in Europe/Lisbon; **Start from today** selects today's Lisbon date. Press
+**Generate plan** to replace the plan with those dates. Changing controls alone
+does not change the saved grid or shopping list. Each saved date appears even
+when its meal slots are empty. Sunday starts continue through Monday correctly.
+The active plan stays visible until replaced, including after its end date.
 
-On the first successful load, an old browser `localStorage.plan` is imported only
-when that week's cloud plan does not exist. An existing cloud plan wins, including
-an intentionally empty plan. The old key is removed after acknowledgement. Open
-the app on the device holding the old plan first if it has never been saved.
+The app checks for cloud changes on focus, visibility and every visible minute.
+An old browser localStorage.plan imports once only if no active cloud plan exists.
+Existing cloud plans win, including deliberately empty ones. Open the device
+holding the old browser plan first if it has never been saved.
 
-Writes are ordered within a device and checked against the cloud revision. If
-another device saves first, the stale device shows a conflict instead of
-overwriting it. **Load cloud plan** discards that device's unsaved edits and loads
-the newer week. Network failures keep edits in memory for **Retry** (and retry
-when connectivity returns); keep the tab open until the cloud confirms the save.
+Writes include the date range and a per-user active revision, so stale devices
+cannot overwrite newer plans even across different calendar weeks. **Load cloud
+plan** discards unsaved local edits. **Retry** saves failed edits when connected;
+keep the tab open until saving succeeds. Older calendar-week records remain in
+D1; replacing a plan within the same start week updates that record.
 
-The existing `user_id` scoping is preserved. For single-user use, the Cloudflare
-Access allowlist should contain only your email, and every device must sign in as
-that same email. Adding other users later requires an explicit Access policy
-change; there is no registration or user switching in the app. Protect the Pages
-hostname as well as the custom domain if it is publicly reachable.
+Existing user_id scoping remains. Single-user access uses the same Cloudflare
+Access email on every device. No registration or user switching is introduced.
+
+Shopping lists cover the full saved date range. Share on supported phones can
+send a copy to Google Keep; desktop Copy can be pasted there. Keep checkmarks do
+not sync back. The Groceree cloud plan remains the source for shopping quantities.
 
 ### Upgrade an existing database before deployment
-The new revision column is additive. Apply this once to an **existing** database:
+Apply each missing migration once, in order. These are additive and retain
+existing plans, settings and recipes. Do not apply them to a fresh database
+created from the current schema.sql, which already includes these changes.
 
 ```bash
 npx wrangler d1 execute groceree --remote --file=./migrations/0001_plan_revision.sql
-# use --local instead for an existing development database
+npx wrangler d1 execute groceree --remote --file=./migrations/0002_active_plan_dates.sql
+# Use --local for an existing development database.
 ```
 
-Fresh databases get the column from `schema.sql`; do not apply the migration to
-them again. No reseed is needed for the upgrade. Existing plans, settings and
-recipes stay in place. Older saved leftover links are recovered when a matching
-previous-day dinner exists. SQLite's existing `leftover_of` column accepts the
-JSON link without a table rebuild.
+The second migration sets legacy start dates to their week Monday and infers
+four/seven days from occupied slots (empty plans use user settings). Each user's
+latest saved calendar week becomes active. No reseed or table rebuild is needed.
 
 ## 5. Deploy
 ```bash

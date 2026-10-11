@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import { planDates, todayInLisbon, validDate } from "../engine/planDates.ts";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
 import { uploadedPages } from "../lib/flyerPages.ts";
@@ -89,6 +90,17 @@ function FlyerAnalysis({ a }: { a: Analysis }) {
 
 export default function MealPlan() {
   const s = useStore();
+  const [startDate,setStartDate]=useState(s.planSync.start_date);
+  const [duration,setDuration]=useState(4);
+  const currentPlan=useRef(s.planSync);
+  currentPlan.current=s.planSync;
+  useEffect(()=>{
+    if(s.planSync.ready) {
+      setStartDate(s.planSync.start_date);
+      setDuration(s.planSync.phase==='empty' ? s.settings.plan_days : s.planSync.plan_days);
+    }
+  },[s.planSync.ready,s.planSync.start_date,s.planSync.plan_days]);
+  useEffect(()=>{setActiveSlot(null);},[s.planSync.start_date,s.planSync.plan_days]);
   const [search, setSearch] = useState("");
   const [protein, setProtein] = useState("");
   const [flyerMsg, setFlyerMsg] = useState("");
@@ -183,6 +195,7 @@ export default function MealPlan() {
   const generateRecipe = async () => {
     const p = genPrompt.trim();
     if (!p) return;
+    const targetPlan=currentPlan.current;
     setGenBusy(true);
     setGenMsg("Writing a recipe…");
     try {
@@ -199,7 +212,7 @@ export default function MealPlan() {
       await s.refreshRecipes();
       setGenPrompt("");
       const people = `${s.settings.household_size} ${s.settings.household_size === 1 ? "person" : "people"}`;
-      if (activeSlot) {
+      if (activeSlot && currentPlan.current.items===targetPlan.items && currentPlan.current.start_date===targetPlan.start_date) {
         s.assignSlot(activeSlot.day, activeSlot.slot, saved.id);
         setGenMsg(`“${rec.name}” · ${rec.ingredients.length} ingredients for ${people} · placed in ${DAYS[activeSlot.day - 1]} ${activeSlot.slot}.`);
         setActiveSlot(null);
@@ -221,14 +234,16 @@ export default function MealPlan() {
 
   const runEdit = async () => {
     if (!editInstr.trim()) return;
-    setEditBusy(true); setEditMsg("Editing your week…");
+    const targetPlan=currentPlan.current;
+    setEditBusy(true); setEditMsg("Editing your plan…");
     const planNamed = s.plan.map((p) => ({
       day_of_week: p.day_of_week, slot: p.slot, is_leftover: p.is_leftover,
       recipe_id: p.recipe_id, recipe_name: p.recipe_id ? byId.get(p.recipe_id)?.name : null,
     }));
     try {
-      const res = await api.editPlan(planNamed, editInstr.trim());
-      if (res.error) setEditMsg(res.error);
+      const res = await api.editPlan(planNamed, editInstr.trim(), {start_date:targetPlan.start_date,plan_days:targetPlan.plan_days});
+      if(currentPlan.current.items!==targetPlan.items || currentPlan.current.start_date!==targetPlan.start_date) setEditMsg("The plan changed while this edit was being prepared. Run it again.");
+      else if (res.error) setEditMsg(res.error);
       else if (!res.changes?.length) setEditMsg("No changes suggested — try rephrasing.");
       else { s.applyPlanChanges(res.changes); setEditMsg(`Updated ${res.changes.length} meal${res.changes.length > 1 ? "s" : ""}.`); setEditInstr(""); }
     } catch { setEditMsg("Edit failed (Gemini key set?)."); }
@@ -401,15 +416,19 @@ export default function MealPlan() {
             </label>
             <div className="seg" title="How many days to plan">
               {[4, 7].map((d) => (
-                <button key={d} className={s.settings.plan_days === d ? "seg-btn on" : "seg-btn"}
-                  onClick={() => s.setSettings({ ...s.settings, plan_days: d })}>{d} days</button>
+                <button key={d} className={duration === d ? "seg-btn on" : "seg-btn"}
+                  onClick={() => {setDuration(d);s.setSettings({ ...s.settings, plan_days:d });}}>{d} days</button>
               ))}
             </div>
-            <button className="btn" disabled={!canEditPlan} onClick={() => s.generate()}>Generate plan</button>
+            <label className="plan-start">Start date
+              <input type="date" value={startDate} onChange={e=>setStartDate(e.target.value)} />
+            </label>
+            <button className="btn ghost" onClick={()=>setStartDate(todayInLisbon())}>Start from today</button>
+            <button className="btn" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {setActiveSlot(null);s.generate(duration,startDate);}}>Generate plan</button>
             <button className="btn dark" disabled={!s.planSync.ready || s.planSync.phase === "conflict"} onClick={doSave}>Save</button>
           </div>
         </div>
-        <p className="muted small">Week of {fmtDay(s.planSync.week)}</p>
+        <p className="muted small">Plan: {fmtRange(s.planSync.start_date,planDates(s.planSync.start_date,s.planSync.plan_days).at(-1)!.date)} · {s.planSync.plan_days} days</p>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
         {s.plan.length > 0 && <BudgetBar cost={cost} />}
 
@@ -493,7 +512,7 @@ export default function MealPlan() {
                     const wf = flyers.find((f) => f.store_name === compare.winner);
                     return wf ? (
                       <button className="btn small dark" disabled={!canEditPlan} onClick={() => {
-                        s.setDeals(wf.deals); s.generate();
+                        s.setDeals(wf.deals); s.generate(duration,startDate);
                         setFlyerMsg(`Plan generated favouring ${wf.store_name} deals.`);
                       }}>Plan from {compare.winner}</button>
                     ) : null;
@@ -546,7 +565,7 @@ export default function MealPlan() {
                       <div className="flyer-track muted small">Prices tracked · no current discounts</div>)}
                   <div className="flyer-actions">
                     <button className="btn small" disabled={!canEditPlan} onClick={() => {
-                      s.setDeals(f.deals); s.generate();
+                      s.setDeals(f.deals); s.generate(duration,startDate);
                       setFlyerMsg(`Plan generated favouring ${f.store_name} deals.`);
                     }}>Plan from this</button>
                     <button className="icon" title="remove"
@@ -570,13 +589,11 @@ export default function MealPlan() {
         {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or tap a slot then a recipe
           (drag works on desktop). Optimises for cost, Portugal seasonality, ease, your pantry, and favourites.</p>}
 
-        {s.plan.length > 0 && DAYS.slice(0,
-          Math.max(s.settings.plan_days, ...s.plan.map((p) => p.day_of_week))
-        ).map((d, i) => {
-          const day = i + 1;
+        {planDates(s.planSync.start_date,s.planSync.plan_days).map(({date,day_of_week:day}) => {
+          const d=DAYS[day-1];
           return (
-            <div className="day" key={day}>
-              <div className="day-label">{d}</div>
+            <div className="day" key={date}>
+              <div className="day-label">{d} {fmtDay(date)}</div>
               <div className="slots">
                 {(["lunch", "dinner"] as Slot[]).map((slot) => {
                   const it = cell(day, slot);

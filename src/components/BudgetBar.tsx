@@ -10,7 +10,7 @@ const eur = (n: number) => `€${n < 10 ? n.toFixed(2) : Math.round(n)}`;
 export default function BudgetBar({ cost }: { cost: PlanCost }) {
   const s = useStore();
   const monthly = s.settings.monthly_food_budget;
-  const planDays = new Set(s.plan.map((p) => p.day_of_week)).size || s.settings.plan_days;
+  const planDays = s.planSync.plan_days;
   const priced = cost.coverage >= 0.5;
   const planned = priced ? cost.total : null;
   const pricing = s.pricing && <span> · pricing ingredients {s.pricing.done}/{s.pricing.total}…</span>;
