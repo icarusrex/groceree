@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { planDates, validDate } from "./engine/planDates.ts";
 import { api } from "./lib/api.ts";
+import { PlanSync, mondayOf, readLegacyPlan, type PlanSnapshot } from "./lib/planSync.ts";
 import { passesDiet, sizePlanForLeftovers } from "./engine/engine.ts";
 import { toBuyItem } from "./engine/normalise.ts";
 import { generateWithinBudget, weekBudget, type PriceBook } from "./engine/cost.ts";
@@ -11,9 +13,12 @@ interface Store {
   states: Record<string, RecipeState>;
   pantry: any[];
   plan: PlanItem[];
+  planSync: PlanSnapshot;
+  retryPlan: () => Promise<void>;
+  loadCloudPlan: () => Promise<void>;
   deals: Record<string, number>;
   loading: boolean;
-  generate: (days?: number) => void;
+  generate: (days?: number, startDate?: string) => void;
   setSettings: (s: Settings) => void;
   signal: (id: string, sig: string) => void;
   addPantry: (t: string) => void;
@@ -41,18 +46,22 @@ const DEFAULTS: Settings = {
   plan_days: 4, selected_stores: [], country: "PT",
 };
 
-function mondayOf(d = new Date()) {
-  const x = new Date(d); const day = (x.getDay() + 6) % 7;
-  x.setDate(x.getDate() - day); return x.toISOString().slice(0, 10);
-}
-
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [settings, setSettingsState] = useState<Settings>(DEFAULTS);
   const [states, setStates] = useState<Record<string, RecipeState>>({});
   const [pantry, setPantry] = useState<any[]>([]);
-  const [plan, setPlan] = useState<PlanItem[]>(
-    () => JSON.parse(localStorage.getItem("plan") || "[]"));
+  const [planSync, setPlanSync] = useState<PlanSnapshot>({ week: mondayOf(), start_date:mondayOf(), plan_days:4, items: [],
+    ready: false, phase: "loading", error: "" });
+  const [sync] = useState(() => new PlanSync({ load: api.plan, save: api.savePlan, week: mondayOf,
+    readLegacy: async () => {
+      let legacy:PlanItem[];try{legacy=readLegacyPlan(localStorage);}catch{return [];}
+      if(!legacy.length)return [];
+      const known=new Set((await api.recipes()).map((r:Recipe)=>r.id));
+      return legacy.filter(p=>p.recipe_id===null || known.has(p.recipe_id));
+    },
+    clearLegacy: () => localStorage.removeItem("plan"), changed: setPlanSync }));
+  const plan = planSync.items;
   const [deals, setDeals] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [prices, setPrices] = useState<PriceBook>({});
@@ -69,6 +78,31 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false));
     refreshSpend();
   }, []);
+
+  useEffect(() => {
+    void sync.refresh();
+    const refresh = () => { if (document.visibilityState === "visible") void sync.refresh(); };
+    const online = () => {
+      if (sync.snapshot.phase === "error")
+        void sync.retry().then(() => sync.refresh()).catch(() => {});
+      else refresh();
+    };
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (sync.unsaved) { event.preventDefault(); event.returnValue = ""; }
+    };
+    window.addEventListener("focus", refresh);
+    window.addEventListener("online", online);
+    window.addEventListener("beforeunload", beforeUnload);
+    document.addEventListener("visibilitychange", refresh);
+    const interval = window.setInterval(refresh, 60000);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("online", online);
+      window.removeEventListener("beforeunload", beforeUnload);
+      document.removeEventListener("visibilitychange", refresh);
+      window.clearInterval(interval);
+    };
+  }, [sync]);
 
   // Price book: load it, then quietly fill whatever the recipes need that it
   // lacks — a few ingredients per request (Auchan search + Gemini), in the
@@ -107,19 +141,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return () => { live = false; };
   }, [recipes.length]);
 
-  const persist = (p: PlanItem[]) => { setPlan(p); localStorage.setItem("plan", JSON.stringify(p)); };
+  const persist = (p: PlanItem[]) => sync.change(sizePlanForLeftovers(p, settings.household_size));
 
   const store: Store = {
-    recipes, settings, states, pantry, plan, deals, loading, prices, pricing, spend, refreshSpend,
+    recipes, settings, states, pantry, plan, planSync, deals, loading, prices, pricing, spend, refreshSpend,
+    retryPlan: () => sync.retry(),
+    loadCloudPlan: () => sync.refresh(true),
     // With a budget set, pick the best-liked of many candidate weeks that fits
     // the week's target (month carry-over included); otherwise a normal plan.
-    generate: (days?: number) => {
+    generate: (days?: number, startDate = sync.snapshot.start_date) => {
+      if(!validDate(startDate))return;
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
       const planDays = days ?? settings.plan_days ?? 4;
       const target = settings.monthly_food_budget
         ? weekBudget(settings.monthly_food_budget, spend?.month.spent ?? 0, planDays).planTarget : null;
-      persist(generateWithinBudget({ recipes, settings, states, pantry: pantryNames, deals,
-        days, seed: Math.floor(Math.random() * 1e9) }, prices, target).plan);
+      const generated=generateWithinBudget({recipes,settings,states,pantry:pantryNames,deals,
+        start_date:startDate,days:planDays,seed:Math.floor(Math.random()*1e9)},prices,target).plan;
+      sync.change(sizePlanForLeftovers(generated,settings.household_size),{start_date:startDate,plan_days:planDays});
     },
     setSettings: (s) => { setSettingsState(s); api.saveSettings(s); },
     signal: (id, sig) => {
@@ -140,31 +178,31 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     savePlan: () => {
       // Re-derive leftover sizing from the (possibly edited) plan before saving,
       // so dinners reused as lunch are cooked/shopped for every meal they feed.
-      const sized = sizePlanForLeftovers(plan, settings.household_size);
+      const sized = sizePlanForLeftovers(sync.snapshot.items, settings.household_size);
       persist(sized);
-      const items = sized.map((p) => ({ day_of_week: p.day_of_week, slot: p.slot,
-        recipe_id: p.recipe_id, is_leftover: p.is_leftover, servings: p.servings }));
-      return api.savePlan({ week_start: mondayOf(), status: "saved", items });
+      return sync.save();
     },
     assignSlot: (day, slot, recipeId) => {
-      const next = plan.filter((p) => !(p.day_of_week === day && p.slot === slot));
+      if(!planDates(sync.snapshot.start_date,sync.snapshot.plan_days).some(p=>p.day_of_week===day))return;
+      const next = sync.snapshot.items.filter((p) => !(p.day_of_week === day && p.slot === slot));
       next.push({ day_of_week: day, slot: slot as any, recipe_id: recipeId,
         is_leftover: false, leftover_of: null, servings: settings.household_size });
       persist(next);
     },
     clearSlot: (day, slot) => {
-      persist(plan.filter((p) => !(p.day_of_week === day && p.slot === slot)));
+      persist(sync.snapshot.items.filter((p) => !(p.day_of_week === day && p.slot === slot)));
     },
     applyPlanChanges: (changes) => {
       const known = new Set(recipes.filter((r) => passesDiet(r, settings.diet)).map((r) => r.id));
-      let next = [...plan];
+      let next = [...sync.snapshot.items];
       for (const c of changes) {
-        if (!known.has(c.recipe_id)) continue;
+        if (!known.has(c.recipe_id) || !["lunch","dinner"].includes(c.slot) || !planDates(sync.snapshot.start_date,sync.snapshot.plan_days).some(p=>p.day_of_week===c.day_of_week)) continue;
         next = next.filter((p) => !(p.day_of_week === c.day_of_week && p.slot === c.slot));
         next.push({ day_of_week: c.day_of_week, slot: c.slot as any, recipe_id: c.recipe_id,
           is_leftover: false, leftover_of: null, servings: settings.household_size });
       }
-      next.sort((a, b) => a.day_of_week - b.day_of_week || (a.slot === "lunch" ? -1 : 1));
+      const order=planDates(sync.snapshot.start_date,sync.snapshot.plan_days).map(p=>p.day_of_week);
+      next.sort((a,b)=>order.indexOf(a.day_of_week)-order.indexOf(b.day_of_week)||(a.slot==="lunch"?-1:1));
       persist(next);
     },
     // After a remix is saved as a new recipe, point every plan slot that used the
@@ -172,7 +210,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     // reflect the swap (e.g. the fennel-free version) instead of the original.
     replacePlanRecipe: (oldId, newId) => {
       if (!oldId || !newId || oldId === newId) return;
-      persist(plan.map((p) => (p.recipe_id === oldId ? { ...p, recipe_id: newId } : p)));
+      persist(sync.snapshot.items.map((p) => (p.recipe_id === oldId ? { ...p, recipe_id: newId } : p)));
     },
     refreshRecipes: () => api.recipes().then(setRecipes),
   };

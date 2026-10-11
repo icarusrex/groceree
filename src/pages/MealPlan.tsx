@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import { planDates, todayInLisbon, validDate } from "../engine/planDates.ts";
 import { useStore } from "../store.tsx";
 import { api } from "../lib/api.ts";
 import { uploadedPages } from "../lib/flyerPages.ts";
@@ -89,6 +90,17 @@ function FlyerAnalysis({ a }: { a: Analysis }) {
 
 export default function MealPlan() {
   const s = useStore();
+  const [startDate,setStartDate]=useState(s.planSync.start_date);
+  const [duration,setDuration]=useState(4);
+  const currentPlan=useRef(s.planSync);
+  currentPlan.current=s.planSync;
+  useEffect(()=>{
+    if(s.planSync.ready) {
+      setStartDate(s.planSync.start_date);
+      setDuration(s.planSync.phase==='empty' ? s.settings.plan_days : s.planSync.plan_days);
+    }
+  },[s.planSync.ready,s.planSync.start_date,s.planSync.plan_days]);
+  useEffect(()=>{setActiveSlot(null);},[s.planSync.start_date,s.planSync.plan_days]);
   const [search, setSearch] = useState("");
   const [protein, setProtein] = useState("");
   const [flyerMsg, setFlyerMsg] = useState("");
@@ -133,7 +145,8 @@ export default function MealPlan() {
   React.useEffect(() => { reloadFlyers(); }, [reloadFlyers]);
   React.useEffect(() => { api.flyerSources().then((r) => setSources(r.sources || [])).catch(() => {}); }, []);
 
-  if (s.loading) return <p>Loading recipes…</p>;
+  if (s.loading || !s.planSync.ready) return <p>Loading your meal planner…</p>;
+  const canEditPlan = s.planSync.phase !== "conflict";
 
   // store selection: settings.selected_stores is [] when "all"; resolve to the
   // full id list for the checkboxes, and normalise back to [] when all are on.
@@ -160,6 +173,7 @@ export default function MealPlan() {
 
   const onDrop = (day: number, slot: Slot, e: React.DragEvent) => {
     e.preventDefault();
+    if (!canEditPlan) return;
     const id = e.dataTransfer.getData("recipe");
     if (id) s.assignSlot(day, slot, id);
     setActiveSlot(null);
@@ -167,7 +181,7 @@ export default function MealPlan() {
 
   // tablet-friendly: tap a slot to target it, then tap a recipe to place it
   const toggleSlot = (day: number, slot: Slot) =>
-    setActiveSlot((cur) => (cur && cur.day === day && cur.slot === slot ? null : { day, slot }));
+    canEditPlan && setActiveSlot((cur) => (cur && cur.day === day && cur.slot === slot ? null : { day, slot }));
 
   const pickRecipe = (r: Recipe) => {
     if (activeSlot) { s.assignSlot(activeSlot.day, activeSlot.slot, r.id); setActiveSlot(null); }
@@ -181,6 +195,7 @@ export default function MealPlan() {
   const generateRecipe = async () => {
     const p = genPrompt.trim();
     if (!p) return;
+    const targetPlan=currentPlan.current;
     setGenBusy(true);
     setGenMsg("Writing a recipe…");
     try {
@@ -197,9 +212,9 @@ export default function MealPlan() {
       await s.refreshRecipes();
       setGenPrompt("");
       const people = `${s.settings.household_size} ${s.settings.household_size === 1 ? "person" : "people"}`;
-      if (activeSlot) {
+      if (activeSlot && currentPlan.current.items===targetPlan.items && currentPlan.current.start_date===targetPlan.start_date) {
         s.assignSlot(activeSlot.day, activeSlot.slot, saved.id);
-        setGenMsg(`“${rec.name}” — ${rec.ingredients.length} ingredients for ${people} — placed in ${DAYS[activeSlot.day - 1]} ${activeSlot.slot}. Save the plan to keep it.`);
+        setGenMsg(`“${rec.name}” · ${rec.ingredients.length} ingredients for ${people} · placed in ${DAYS[activeSlot.day - 1]} ${activeSlot.slot}.`);
         setActiveSlot(null);
       } else {
         setGenMsg(`“${rec.name}” — ${rec.ingredients.length} ingredients for ${people} — added to your recipes.`);
@@ -212,23 +227,25 @@ export default function MealPlan() {
 
   const doSave = async () => {
     setSaveMsg("Saving…");
-    try { await s.savePlan(); setSaveMsg("Plan saved ✓ — shopping list is on the Shop tab."); }
+    try { await s.savePlan(); setSaveMsg("Plan saved to cloud ✓ · shopping list is on the Shop tab."); }
     catch { setSaveMsg("Save failed."); }
     setTimeout(() => setSaveMsg(""), 4000);
   };
 
   const runEdit = async () => {
     if (!editInstr.trim()) return;
-    setEditBusy(true); setEditMsg("Editing your week…");
+    const targetPlan=currentPlan.current;
+    setEditBusy(true); setEditMsg("Editing your plan…");
     const planNamed = s.plan.map((p) => ({
       day_of_week: p.day_of_week, slot: p.slot, is_leftover: p.is_leftover,
       recipe_id: p.recipe_id, recipe_name: p.recipe_id ? byId.get(p.recipe_id)?.name : null,
     }));
     try {
-      const res = await api.editPlan(planNamed, editInstr.trim());
-      if (res.error) setEditMsg(res.error);
+      const res = await api.editPlan(planNamed, editInstr.trim(), {start_date:targetPlan.start_date,plan_days:targetPlan.plan_days});
+      if(currentPlan.current.items!==targetPlan.items || currentPlan.current.start_date!==targetPlan.start_date) setEditMsg("The plan changed while this edit was being prepared. Run it again.");
+      else if (res.error) setEditMsg(res.error);
       else if (!res.changes?.length) setEditMsg("No changes suggested — try rephrasing.");
-      else { s.applyPlanChanges(res.changes); setEditMsg(`Updated ${res.changes.length} meal${res.changes.length > 1 ? "s" : ""}. Save to keep it.`); setEditInstr(""); }
+      else { s.applyPlanChanges(res.changes); setEditMsg(`Updated ${res.changes.length} meal${res.changes.length > 1 ? "s" : ""}.`); setEditInstr(""); }
     } catch { setEditMsg("Edit failed (Gemini key set?)."); }
     setEditBusy(false);
   };
@@ -399,14 +416,19 @@ export default function MealPlan() {
             </label>
             <div className="seg" title="How many days to plan">
               {[4, 7].map((d) => (
-                <button key={d} className={s.settings.plan_days === d ? "seg-btn on" : "seg-btn"}
-                  onClick={() => s.setSettings({ ...s.settings, plan_days: d })}>{d} days</button>
+                <button key={d} disabled={!canEditPlan} className={duration === d ? "seg-btn on" : "seg-btn"}
+                  onClick={() => {setDuration(d);s.setSettings({ ...s.settings, plan_days:d });}}>{d} days</button>
               ))}
             </div>
-            <button className="btn" onClick={() => s.generate()}>Generate plan</button>
-            <button className="btn dark" onClick={doSave}>Save</button>
+            <label className="plan-start">Start date
+              <input type="date" disabled={!canEditPlan} value={startDate} onChange={e=>setStartDate(e.target.value)} />
+            </label>
+            <button className="btn ghost" disabled={!canEditPlan} onClick={()=>setStartDate(todayInLisbon())}>Start from today</button>
+            <button className="btn" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {setActiveSlot(null);s.generate(duration,startDate);}}>Generate plan</button>
+            <button className="btn dark" disabled={!s.planSync.ready || s.planSync.phase === "conflict"} onClick={doSave}>Save</button>
           </div>
         </div>
+        <p className="muted small">Plan: {fmtRange(s.planSync.start_date,planDates(s.planSync.start_date,s.planSync.plan_days).at(-1)!.date)} · {s.planSync.plan_days} days</p>
         {flyerMsg && <div className="banner">{flyerMsg}</div>}
         {s.plan.length > 0 && <BudgetBar cost={cost} />}
 
@@ -489,8 +511,8 @@ export default function MealPlan() {
                   {(() => {
                     const wf = flyers.find((f) => f.store_name === compare.winner);
                     return wf ? (
-                      <button className="btn small dark" onClick={() => {
-                        s.setDeals(wf.deals); s.generate();
+                      <button className="btn small dark" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {
+                        s.setDeals(wf.deals); s.generate(duration,startDate);
                         setFlyerMsg(`Plan generated favouring ${wf.store_name} deals.`);
                       }}>Plan from {compare.winner}</button>
                     ) : null;
@@ -542,8 +564,8 @@ export default function MealPlan() {
                     : status === "active" &&
                       <div className="flyer-track muted small">Prices tracked · no current discounts</div>)}
                   <div className="flyer-actions">
-                    <button className="btn small" onClick={() => {
-                      s.setDeals(f.deals); s.generate();
+                    <button className="btn small" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {
+                      s.setDeals(f.deals); s.generate(duration,startDate);
                       setFlyerMsg(`Plan generated favouring ${f.store_name} deals.`);
                     }}>Plan from this</button>
                     <button className="icon" title="remove"
@@ -558,8 +580,8 @@ export default function MealPlan() {
           <div className="ai-edit">
             <input placeholder='Edit the week with AI: "make Tuesday vegetarian", "cheaper week", "more fish"…'
               value={editInstr} onChange={(e) => setEditInstr(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") runEdit(); }} disabled={editBusy} />
-            <button className="btn" disabled={editBusy} onClick={runEdit}>{editBusy ? "…" : "Edit with AI"}</button>
+              onKeyDown={(e) => { if (e.key === "Enter") runEdit(); }} disabled={editBusy || !canEditPlan} />
+            <button className="btn" disabled={editBusy || !canEditPlan} onClick={runEdit}>{editBusy ? "…" : "Edit with AI"}</button>
           </div>
         )}
         {editMsg && <div className="banner">{editMsg}</div>}
@@ -567,13 +589,11 @@ export default function MealPlan() {
         {!s.plan.length && <p className="muted">No plan yet — hit “Generate plan”, or tap a slot then a recipe
           (drag works on desktop). Optimises for cost, Portugal seasonality, ease, your pantry, and favourites.</p>}
 
-        {s.plan.length > 0 && DAYS.slice(0,
-          Math.max(s.settings.plan_days, ...s.plan.map((p) => p.day_of_week))
-        ).map((d, i) => {
-          const day = i + 1;
+        {planDates(s.planSync.start_date,s.planSync.plan_days).map(({date,day_of_week:day}) => {
+          const d=DAYS[day-1];
           return (
-            <div className="day" key={day}>
-              <div className="day-label">{d}</div>
+            <div className="day" key={date}>
+              <div className="day-label">{d} {fmtDay(date)}</div>
               <div className="slots">
                 {(["lunch", "dinner"] as Slot[]).map((slot) => {
                   const it = cell(day, slot);
@@ -590,7 +610,7 @@ export default function MealPlan() {
                         {r && <span className="slot-actions">
                           <button title="favourite" className={s.states[r.id]?.is_favorite ? "icon on" : "icon"}
                             onClick={(e) => { e.stopPropagation(); s.signal(r.id, s.states[r.id]?.is_favorite ? "unfavorite" : "favorite"); }}>★</button>
-                          <button title="remove" className="icon"
+                          <button title="remove" className="icon" disabled={!canEditPlan}
                             onClick={(e) => { e.stopPropagation(); s.clearSlot(day, slot); setActiveSlot({ day, slot }); }}>✕</button>
                         </span>}
                       </div>
@@ -621,7 +641,7 @@ export default function MealPlan() {
 
         {s.plan.length > 0 && (
           <div className="plan-save-row">
-            <button className="btn dark" onClick={doSave}>Save plan & build shopping list</button>
+            <button className="btn dark" disabled={!canEditPlan} onClick={doSave}>Save plan & build shopping list</button>
             {saveMsg && <span className="muted small">{saveMsg}</span>}
           </div>
         )}

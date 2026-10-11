@@ -1,3 +1,4 @@
+import { planDates, validDate } from "../../src/engine/planDates.ts";
 import { json, uid, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
 import { userDiet } from "./_diet.ts";
@@ -9,7 +10,10 @@ import { dietConflicts } from "../../src/engine/allergens.ts";
 // returned slot changes. We never invent recipes here — only re-slot real ones.
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!ctx.env.GEMINI_API_KEY) return json({ error: "GEMINI_API_KEY not set" }, 500);
-  const { plan, instruction } = await ctx.request.json<any>();
+  const { plan, instruction, start_date, plan_days } = await ctx.request.json<any>();
+  if(!validDate(start_date) || ![4,7].includes(plan_days) || !Array.isArray(plan)) return json({error:"Invalid plan date range."},400);
+  const dates=planDates(start_date,plan_days);
+  const allowed=new Set(dates.map(d=>d.day_of_week));
   if (!instruction?.trim()) return json({ error: "instruction required" }, 400);
 
   const { results } = await ctx.env.DB.prepare(
@@ -40,10 +44,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   }).join("\n");
 
   const current = (plan || []).map((p: any) =>
-    `${p.day_of_week} ${p.slot}: ${p.recipe_name || "(empty)"}${p.is_leftover ? " [leftover]" : ""}`).join("\n");
+    `${dates.find(d=>d.day_of_week===p.day_of_week)?.date} (${p.day_of_week}) ${p.slot}: ${p.recipe_name || "(empty)"}${p.is_leftover ? " [leftover]" : ""}`).join("\n");
 
   const PROMPT = `You edit a family's weekly meal plan. Days are 1=Mon..7=Sun, slots are
 "lunch" and "dinner".
+The plan covers ${start_date} to ${dates.at(-1)!.date}. Allowed days:
+${dates.map(d=>`${d.date}: weekday ${d.day_of_week}`).join("\n")}
+Only change slots within that date range. Today in the plan means the stated dates, not a Monday-based week.
 
 CURRENT PLAN:
 ${current || "(empty)"}
@@ -76,8 +83,7 @@ Return [] if nothing should change. No prose.`;
     const txt = data.candidates[0].content.parts[0].text.replace(/^```(json)?|```$/gm, "").trim();
     const changes = JSON.parse(txt);
     const valid = Array.isArray(changes)
-      ? changes.filter((c: any) => c && c.recipe_id && c.day_of_week >= 1 &&
-          c.day_of_week <= 7 && (c.slot === "lunch" || c.slot === "dinner"))
+      ? changes.filter((c: any) => c && c.recipe_id && Number.isInteger(c.day_of_week) && allowed.has(c.day_of_week) && safe.some(r=>r.id===c.recipe_id) && (c.slot === "lunch" || c.slot === "dinner"))
       : [];
     return json({ changes: valid });
   } catch {

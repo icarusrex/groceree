@@ -7,6 +7,7 @@ import Settings from "./pages/Settings.tsx";
 import PriceTrends from "./components/PriceTrends.tsx";
 import BasketTracker from "./components/BasketTracker.tsx";
 import ReceiptScan from "./components/ReceiptScan.tsx";
+import PlanSyncStatus from "./components/PlanSyncStatus.tsx";
 
 type View = "plan" | "shop" | "pantry" | "prices" | "settings";
 
@@ -35,6 +36,7 @@ export default function App() {
           <div className="version">v{__APP_VERSION__}</div>
         </aside>
         <main className="content">
+          <PlanSyncStatus />
           {view === "plan" && <MealPlan />}
           {view === "shop" && <Shop />}
           {view === "pantry" && <Pantry />}

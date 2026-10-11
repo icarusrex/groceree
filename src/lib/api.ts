@@ -1,4 +1,14 @@
 const j = (r: Response): Promise<any> => r.json() as Promise<any>;
+// Plan reads/writes must fail on HTTP errors, including stale-revision conflicts.
+const planJson = async (r: Response): Promise<any> => {
+  if (!r.ok) {
+    const body = await r.json().catch(() => null) as any;
+    throw Object.assign(new Error(body?.error || "Could not sync your cloud plan."), { status: r.status });
+  }
+  const body = await r.json() as any;
+  if (body?.error) throw new Error(body.error);
+  return body;
+};
 export const api = {
   recipes: () => fetch("/api/recipes").then(j),
   settings: () => fetch("/api/settings").then(j),
@@ -10,7 +20,12 @@ export const api = {
   addPantry: (raw_text: string, source = "manual") =>
     fetch("/api/pantry", { method: "POST", body: JSON.stringify({ raw_text, source }) }).then(j),
   delPantry: (id: number) => fetch(`/api/pantry?id=${id}`, { method: "DELETE" }).then(j),
-  savePlan: (p: any) => fetch("/api/plan", { method: "POST", body: JSON.stringify(p) }).then(j),
+  plan: () => fetch("/api/plan?active=1",
+    { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(planJson),
+  savePlan: (p: import("./planSync.ts").PlanWrite) => fetch("/api/plan", {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(p),
+    signal: AbortSignal.timeout(15000),
+  }).then(planJson),
   parseFlyer: (images: any[]) =>
     fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
   scanPantry: (images: any[]) =>
@@ -23,8 +38,8 @@ export const api = {
     fetch("/api/scale-method", { method: "POST", body: JSON.stringify(p), signal: AbortSignal.timeout(60000) }).then(j),
   remix: (recipe: any, instruction: string) =>
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
-  editPlan: (plan: any[], instruction: string) =>
-    fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction }) }).then(j),
+  editPlan: (plan: any[], instruction: string, range: {start_date:string;plan_days:number}) =>
+    fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction, ...range }) }).then(j),
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
   prices: () => fetch("/api/prices").then(j),

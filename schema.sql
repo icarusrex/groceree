@@ -99,9 +99,18 @@ CREATE TABLE IF NOT EXISTS meal_plans (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id    TEXT NOT NULL DEFAULT 'me',
   week_start TEXT NOT NULL,
+  start_date TEXT,
+  plan_days INTEGER NOT NULL DEFAULT 4,
   status     TEXT NOT NULL DEFAULT 'draft',
+  revision   INTEGER NOT NULL DEFAULT 1,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE (user_id, week_start)
+);
+
+CREATE TABLE IF NOT EXISTS active_meal_plans (
+  user_id TEXT PRIMARY KEY,
+  plan_id INTEGER REFERENCES meal_plans(id),
+  revision INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS meal_plan_items (
@@ -111,7 +120,7 @@ CREATE TABLE IF NOT EXISTS meal_plan_items (
   slot        TEXT NOT NULL,       -- lunch | dinner
   recipe_id   TEXT,
   is_leftover INTEGER NOT NULL DEFAULT 0,
-  leftover_of INTEGER,
+  leftover_of TEXT,                -- JSON {day_of_week,slot}; also works in existing SQLite INTEGER columns
   servings    INTEGER,
   position    INTEGER NOT NULL DEFAULT 0,
   UNIQUE (plan_id, day_of_week, slot)

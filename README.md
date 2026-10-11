@@ -58,6 +58,55 @@ npm run dev        # UI only (fast), API calls need the line below
 npm run preview    # full stack: builds, serves app + Functions + local D1
 ```
 
+Tests use Node 24+ (native TypeScript support and SQLite): `npm test`.
+Run `npm run test:engine` for the existing planner smoke test and `npx tsc --noEmit`
+to check types.
+
+## Meal plan sync and dates
+Settings and the active meal plan persist in D1. Generation, manual and AI edits,
+recipe replacements and slot removal save automatically. The cloud status shows
+saving, saved, errors and conflicts. Save waits for acknowledgement.
+
+Choose four or seven consecutive days and any start date. The default is Monday
+in Europe/Lisbon; **Start from today** selects today's Lisbon date. Press
+**Generate plan** to replace the plan with those dates. Changing controls alone
+does not change the saved grid or shopping list. Each saved date appears even
+when its meal slots are empty. Sunday starts continue through Monday correctly.
+The active plan stays visible until replaced, including after its end date.
+
+The app checks for cloud changes on focus, visibility and every visible minute.
+An old browser localStorage.plan imports once only if no active cloud plan exists.
+Existing cloud plans win, including deliberately empty ones. Open the device
+holding the old browser plan first if it has never been saved.
+
+Writes include the date range and a per-user active revision, so stale devices
+cannot overwrite newer plans even across different calendar weeks. **Load cloud
+plan** discards unsaved local edits. **Retry** saves failed edits when connected;
+keep the tab open until saving succeeds. Older calendar-week records remain in
+D1; replacing a plan within the same start week updates that record.
+
+Existing user_id scoping remains. Single-user access uses the same Cloudflare
+Access email on every device. No registration or user switching is introduced.
+
+Shopping lists cover the full saved date range. Share on supported phones can
+send a copy to Google Keep; desktop Copy can be pasted there. Keep checkmarks do
+not sync back. The Groceree cloud plan remains the source for shopping quantities.
+
+### Upgrade an existing database before deployment
+Apply each missing migration once, in order. These are additive and retain
+existing plans, settings and recipes. Do not apply them to a fresh database
+created from the current schema.sql, which already includes these changes.
+
+```bash
+npx wrangler d1 execute groceree --remote --file=./migrations/0001_plan_revision.sql
+npx wrangler d1 execute groceree --remote --file=./migrations/0002_active_plan_dates.sql
+# Use --local for an existing development database.
+```
+
+The second migration sets legacy start dates to their week Monday and infers
+four/seven days from occupied slots (empty plans use user settings). Each user's
+latest saved calendar week becomes active. No reseed or table rebuild is needed.
+
 ## 5. Deploy
 ```bash
 npm run deploy     # vite build, then wrangler pages deploy dist
