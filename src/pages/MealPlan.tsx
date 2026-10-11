@@ -416,14 +416,14 @@ export default function MealPlan() {
             </label>
             <div className="seg" title="How many days to plan">
               {[4, 7].map((d) => (
-                <button key={d} className={duration === d ? "seg-btn on" : "seg-btn"}
+                <button key={d} disabled={!canEditPlan} className={duration === d ? "seg-btn on" : "seg-btn"}
                   onClick={() => {setDuration(d);s.setSettings({ ...s.settings, plan_days:d });}}>{d} days</button>
               ))}
             </div>
             <label className="plan-start">Start date
-              <input type="date" value={startDate} onChange={e=>setStartDate(e.target.value)} />
+              <input type="date" disabled={!canEditPlan} value={startDate} onChange={e=>setStartDate(e.target.value)} />
             </label>
-            <button className="btn ghost" onClick={()=>setStartDate(todayInLisbon())}>Start from today</button>
+            <button className="btn ghost" disabled={!canEditPlan} onClick={()=>setStartDate(todayInLisbon())}>Start from today</button>
             <button className="btn" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {setActiveSlot(null);s.generate(duration,startDate);}}>Generate plan</button>
             <button className="btn dark" disabled={!s.planSync.ready || s.planSync.phase === "conflict"} onClick={doSave}>Save</button>
           </div>
@@ -511,7 +511,7 @@ export default function MealPlan() {
                   {(() => {
                     const wf = flyers.find((f) => f.store_name === compare.winner);
                     return wf ? (
-                      <button className="btn small dark" disabled={!canEditPlan} onClick={() => {
+                      <button className="btn small dark" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {
                         s.setDeals(wf.deals); s.generate(duration,startDate);
                         setFlyerMsg(`Plan generated favouring ${wf.store_name} deals.`);
                       }}>Plan from {compare.winner}</button>
@@ -564,7 +564,7 @@ export default function MealPlan() {
                     : status === "active" &&
                       <div className="flyer-track muted small">Prices tracked · no current discounts</div>)}
                   <div className="flyer-actions">
-                    <button className="btn small" disabled={!canEditPlan} onClick={() => {
+                    <button className="btn small" disabled={!canEditPlan || !validDate(startDate)} onClick={() => {
                       s.setDeals(f.deals); s.generate(duration,startDate);
                       setFlyerMsg(`Plan generated favouring ${f.store_name} deals.`);
                     }}>Plan from this</button>

@@ -21,7 +21,8 @@ export const onRequestGet: PagesFunction<Env> = async ctx => {
     let source=null;try{source=JSON.parse(item.leftover_of);}catch{}
     const previous=item.day_of_week===1?7:item.day_of_week-1;
     if(item.is_leftover && !validSlot(source) && items.results.some((p:any)=>p.day_of_week===previous && p.slot==='dinner' && p.recipe_id===item.recipe_id && !p.is_leftover && (order.get(previous)??99)<(order.get(item.day_of_week)??-1))) source={day_of_week:previous,slot:'dinner'};
-    return {day_of_week:item.day_of_week,slot:item.slot,recipe_id:item.recipe_id,is_leftover:!!item.is_leftover,leftover_of:validSlot(source)?source:null,servings:item.servings};
+    const parent=validSlot(source) && item.recipe_id && items.results.find((p:any)=>p.day_of_week===source.day_of_week && p.slot===source.slot && !p.is_leftover && p.recipe_id===item.recipe_id && (order.get(p.day_of_week)??99)<(order.get(item.day_of_week)??-1));
+    return {day_of_week:item.day_of_week,slot:item.slot,recipe_id:item.recipe_id,is_leftover:!!item.is_leftover && !!parent,leftover_of:item.is_leftover && parent?source:null,servings:item.servings};
   }).sort((a:any,b:any)=>(order.get(a.day_of_week)??99)-(order.get(b.day_of_week)??99)||(a.slot==='lunch'?-1:1))});
 };
 
@@ -32,7 +33,7 @@ export const onRequestPost: PagesFunction<Env> = async ctx => {
   const dates=planDates(b.start_date,b.plan_days), order=new Map(dates.map((d,i)=>[d.day_of_week,i])), seen=new Set<string>();
   for(const item of b.items){
     const key=`${item?.day_of_week}:${item?.slot}`;
-    if(!validSlot(item) || !order.has(item.day_of_week) || seen.has(key) || typeof item.is_leftover!=='boolean' || (item.recipe_id!==null && (typeof item.recipe_id!=='string'||!item.recipe_id.trim())) || !Number.isSafeInteger(item.servings)||item.servings<1 || (item.leftover_of!=null && (!item.is_leftover||!validSlot(item.leftover_of)))) return json({error:'Invalid meal slot.'},400);
+    if(!validSlot(item) || !order.has(item.day_of_week) || seen.has(key) || typeof item.is_leftover!=='boolean' || (item.recipe_id!==null && (typeof item.recipe_id!=='string'||!item.recipe_id.trim())) || !Number.isSafeInteger(item.servings)||item.servings<1 || (item.is_leftover && (!item.recipe_id || !validSlot(item.leftover_of))) || (!item.is_leftover && item.leftover_of!=null)) return json({error:'Invalid meal slot.'},400);
     seen.add(key);
     if(item.leftover_of){
       const source=b.items.find((p:any)=>p.day_of_week===item.leftover_of.day_of_week && p.slot===item.leftover_of.slot);
@@ -40,6 +41,11 @@ export const onRequestPost: PagesFunction<Env> = async ctx => {
     }
   }
   const db=ctx.env.DB,user=uid(ctx),revision=b.expected_revision??0;
+  const ids=[...new Set<string>(b.items.map((p:any)=>p.recipe_id).filter(Boolean))];
+  if(ids.length){
+    const known=await db.prepare(`SELECT id FROM recipes WHERE id IN (${ids.map(()=>'?').join(',')})`).bind(...ids).all();
+    if(known.results.length!==ids.length) return json({error:'A recipe in this plan no longer exists. Reload your recipes.'},400);
+  }
   const guard='EXISTS(SELECT 1 FROM active_meal_plans WHERE user_id=? AND revision=?)';
   const target='SELECT id FROM meal_plans WHERE user_id=? AND week_start=?';
   const statements:D1PreparedStatement[]=[

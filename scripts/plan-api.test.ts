@@ -7,6 +7,7 @@ import { onRequestGet, onRequestPost } from '../functions/api/plan.ts';
 function database() {
   const sql = new DatabaseSync(':memory:');
   sql.exec(readFileSync('schema.sql', 'utf8'));
+  for(const id of ['chicken','fish','stale-tablet','local','fail','stale'])sql.prepare('INSERT INTO recipes(id,name) VALUES(?,?)').run(id,id);
   const db = {
     prepare(query: string) {
       let args: any[] = [];
@@ -168,5 +169,26 @@ test('migration selects each users latest plan and keeps empty plans with settin
  const active=await activeRead(db);assert.equal(active.id,2);assert.equal(active.plan_days,7);assert.deepEqual(active.items,[]);
  assert.equal(sql.prepare("SELECT plan_days FROM meal_plans WHERE id=3").get()!.plan_days,4);
  assert.equal(sql.prepare('SELECT count(*) n FROM meal_plan_items').get()!.n,2);
+ }finally{sql.close();}
+});
+test('unknown recipes and source-less leftovers cannot become saved plans',async()=>{
+ const {db,sql}=database();try{
+ assert.equal((await save(db,[{...dinner,recipe_id:'missing-catalog-recipe'}])).status,400);
+ assert.equal((await save(db,[{...lunch,leftover_of:null}])).status,400);
+ assert.equal(await activeRead(db),null);
+ }finally{sql.close();}
+});
+test('Sunday dinner and Monday leftovers survive the active cloud round trip',async()=>{
+ const {db,sql}=database();try{
+ const sunday={...dinner,day_of_week:7},monday={...lunch,day_of_week:1,leftover_of:{day_of_week:7,slot:'dinner'}};
+ assert.equal((await datedSave(db,'2026-10-11',week,null,[sunday,monday])).status,200);
+ assert.deepEqual((await activeRead(db)).items,[sunday,monday]);
+ }finally{sql.close();}
+});
+test('legacy cloud leftovers with missing sources are cooked and included in shopping',async()=>{
+ const {db,sql}=database();try{
+ await save(db,[dinner]);
+ sql.prepare("UPDATE meal_plan_items SET is_leftover=1,leftover_of=? WHERE plan_id=1").run(JSON.stringify({day_of_week:7,slot:'dinner'}));
+ const loaded=await activeRead(db);assert.equal(loaded.items[0].is_leftover,false);assert.equal(loaded.items[0].leftover_of,null);
  }finally{sql.close();}
 });

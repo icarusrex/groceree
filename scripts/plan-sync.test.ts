@@ -127,3 +127,17 @@ test('a failed explicit cloud load resumes after conflict across different weeks
  assert.equal(b.snapshot.ready,false);api.setFail(false);await b.retry();
  assert.equal(b.snapshot.start_date,'2026-10-15');assert.equal(b.snapshot.ready,true);
 });
+test('invalid replacement metadata cannot dirty or block a loaded session',async()=>{
+ const sync=session(cloud());await sync.refresh();const before=sync.snapshot;
+ assert.throws(()=>sync.change([item],{start_date:'',plan_days:4}));
+ assert.equal(sync.unsaved,false);assert.deepEqual(sync.snapshot,before);
+ assert.throws(()=>sync.change([item],{start_date:week,plan_days:5}));
+ assert.equal(sync.unsaved,false);
+});
+test('legacy source-less and orphaned leftovers normalize before import',async()=>{
+ const legacy=readLegacyPlan({getItem:()=>JSON.stringify([
+ {...item,servings:4}, {...item,day_of_week:2,slot:'lunch',is_leftover:true},
+ {...item,day_of_week:3,slot:'lunch',is_leftover:true,recipe_id:'fish'}])});
+ assert.deepEqual(legacy[1].leftover_of,{day_of_week:1,slot:'dinner'});
+ assert.equal(legacy[2].is_leftover,false);assert.equal(legacy[2].leftover_of,null);
+});

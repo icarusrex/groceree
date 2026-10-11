@@ -10,12 +10,18 @@ const OBSIDIAN_NOTE = "04-personal/Meal Plan/Shopping list";
 
 export default function Shop() {
   const s = useStore();
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [picked,setPicked]=useState<{listKey:string;items:Record<string,boolean>}>({listKey:"",items:{}});
   const [exportMsg, setExportMsg] = useState<string | null>(null);
   const list = useMemo(
     () => buildShoppingList(s.plan, s.recipes, s.settings.household_size,
       s.pantry.map((p: any) => p.name || p.raw_text)),
     [s.plan, s.recipes, s.settings.household_size, s.pantry]);
+
+  // Repeated reads of identical data keep checks; changed dates/quantities start a new list.
+  const listKey=JSON.stringify([s.planSync.start_date,s.planSync.plan_days,
+    list.map(i=>[i.name,i.unit,i.quantity,i.category]).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))]);
+  const checked=picked.listKey===listKey ? picked.items : {};
+  const setChecked=(items:Record<string,boolean>)=>setPicked({listKey,items});
 
   if (!s.plan.length) return <div><h1>Shopping List</h1><p className="muted">Generate a meal plan first.</p></div>;
 

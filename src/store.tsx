@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { planDates } from "./engine/planDates.ts";
+import { planDates, validDate } from "./engine/planDates.ts";
 import { api } from "./lib/api.ts";
 import { PlanSync, mondayOf, readLegacyPlan, type PlanSnapshot } from "./lib/planSync.ts";
 import { passesDiet, sizePlanForLeftovers } from "./engine/engine.ts";
@@ -54,7 +54,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [planSync, setPlanSync] = useState<PlanSnapshot>({ week: mondayOf(), start_date:mondayOf(), plan_days:4, items: [],
     ready: false, phase: "loading", error: "" });
   const [sync] = useState(() => new PlanSync({ load: api.plan, save: api.savePlan, week: mondayOf,
-    readLegacy: () => { try { return readLegacyPlan(localStorage); } catch { return []; } },
+    readLegacy: async () => {
+      let legacy:PlanItem[];try{legacy=readLegacyPlan(localStorage);}catch{return [];}
+      if(!legacy.length)return [];
+      const known=new Set((await api.recipes()).map((r:Recipe)=>r.id));
+      return legacy.filter(p=>p.recipe_id===null || known.has(p.recipe_id));
+    },
     clearLegacy: () => localStorage.removeItem("plan"), changed: setPlanSync }));
   const plan = planSync.items;
   const [deals, setDeals] = useState<Record<string, number>>({});
@@ -145,6 +150,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     // With a budget set, pick the best-liked of many candidate weeks that fits
     // the week's target (month carry-over included); otherwise a normal plan.
     generate: (days?: number, startDate = sync.snapshot.start_date) => {
+      if(!validDate(startDate))return;
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
       const planDays = days ?? settings.plan_days ?? 4;
       const target = settings.monthly_food_budget

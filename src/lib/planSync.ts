@@ -1,4 +1,4 @@
-import { todayInLisbon, weekOf } from "../engine/planDates.ts";
+import { todayInLisbon, weekOf, validDate } from "../engine/planDates.ts";
 import type { PlanItem } from "../engine/types.ts";
 
 export interface PlanMetadata { start_date: string; plan_days: number }
@@ -21,7 +21,7 @@ interface Dependencies {
   load: () => Promise<CloudPlan | null>;
   save: (plan: PlanWrite) => Promise<{ revision: number }>;
   week: () => string;
-  readLegacy: () => PlanItem[];
+  readLegacy: () => PlanItem[] | Promise<PlanItem[]>;
   clearLegacy: () => void;
   changed: (snapshot: PlanSnapshot) => void;
 }
@@ -43,6 +43,15 @@ export function readLegacyPlan(storage: Pick<Storage, "getItem">): PlanItem[] {
           typeof item.is_leftover !== "boolean" || !Number.isSafeInteger(item.servings) || item.servings < 1 ||
           (item.recipe_id !== null && (typeof item.recipe_id !== "string" || !item.recipe_id.trim()))) return [];
       slots.add(key);
+    }
+    // Old browser saves sometimes omitted links; recover next-day dinners.
+    for(const item of value) {
+      if(!item.is_leftover) {item.leftover_of=null;continue;}
+      const source=item.leftover_of;
+      let parent=source && value.find(p=>p.day_of_week===source.day_of_week && p.slot===source.slot && !p.is_leftover && p.recipe_id===item.recipe_id && p.recipe_id && p.day_of_week<item.day_of_week);
+      if(!parent) parent=value.find(p=>p.day_of_week===item.day_of_week-1 && p.slot==='dinner' && !p.is_leftover && p.recipe_id===item.recipe_id && p.recipe_id);
+      if(parent) item.leftover_of={day_of_week:parent.day_of_week,slot:parent.slot};
+      else {item.is_leftover=false;item.leftover_of=null;}
     }
     return value;
   } catch { return []; }
@@ -84,7 +93,7 @@ export class PlanSync {
     try {
       let plan = await this.deps.load();
       if (initial && plan === null) {
-        const legacy = this.deps.readLegacy();
+        const legacy = await this.deps.readLegacy();
         if (legacy.length) {
           this.publish({ items: legacy, phase: "saving" });
           try {
@@ -118,8 +127,10 @@ export class PlanSync {
 
   change(items: PlanItem[], metadata?: PlanMetadata): void {
     if (!this.snapshot.ready || this.snapshot.phase === "conflict") return;
+    if(metadata && (!validDate(metadata.start_date) || ![4,7].includes(metadata.plan_days))) throw new Error('Invalid plan date range.');
+    const week=metadata ? weekOf(metadata.start_date) : this.snapshot.week;
     this.edits++;
-    this.publish({ items, ...(metadata ? {...metadata,week:weekOf(metadata.start_date)} : {}) });
+    this.publish({items,...(metadata ? {...metadata,week} : {})});
     void this.save().catch(() => {}); // failure remains visible in the snapshot
   }
 
