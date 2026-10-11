@@ -58,6 +58,53 @@ npm run dev        # UI only (fast), API calls need the line below
 npm run preview    # full stack: builds, serves app + Functions + local D1
 ```
 
+Tests use Node 24+ (native TypeScript support and SQLite): `npm test`.
+Run `npm run test:engine` for the existing planner smoke test and `npx tsc --noEmit`
+to check types.
+
+## Weekly plan sync
+Settings already persist in D1. The current week's meal plan now loads from D1,
+and generation, manual edits, AI edits, recipe replacements and slot removal all
+save automatically. A status above the tabs shows saving, saved, and failures.
+The Save button still waits for cloud acknowledgement; the shopping list derives
+from the same plan. Leftover links and cooked portions survive a cloud round trip.
+
+The week uses Monday in the **Europe/Lisbon** calendar on every device. Plans from
+earlier weeks remain in D1. The app refreshes on focus, when becoming visible,
+and every minute while visible. A new week starts empty rather than copying the
+previous week. A failed load blocks editing until Retry succeeds.
+
+On the first successful load, an old browser `localStorage.plan` is imported only
+when that week's cloud plan does not exist. An existing cloud plan wins, including
+an intentionally empty plan. The old key is removed after acknowledgement. Open
+the app on the device holding the old plan first if it has never been saved.
+
+Writes are ordered within a device and checked against the cloud revision. If
+another device saves first, the stale device shows a conflict instead of
+overwriting it. **Load cloud plan** discards that device's unsaved edits and loads
+the newer week. Network failures keep edits in memory for **Retry** (and retry
+when connectivity returns); keep the tab open until the cloud confirms the save.
+
+The existing `user_id` scoping is preserved. For single-user use, the Cloudflare
+Access allowlist should contain only your email, and every device must sign in as
+that same email. Adding other users later requires an explicit Access policy
+change; there is no registration or user switching in the app. Protect the Pages
+hostname as well as the custom domain if it is publicly reachable.
+
+### Upgrade an existing database before deployment
+The new revision column is additive. Apply this once to an **existing** database:
+
+```bash
+npx wrangler d1 execute groceree --remote --file=./migrations/0001_plan_revision.sql
+# use --local instead for an existing development database
+```
+
+Fresh databases get the column from `schema.sql`; do not apply the migration to
+them again. No reseed is needed for the upgrade. Existing plans, settings and
+recipes stay in place. Older saved leftover links are recovered when a matching
+previous-day dinner exists. SQLite's existing `leftover_of` column accepts the
+JSON link without a table rebuild.
+
 ## 5. Deploy
 ```bash
 npm run deploy     # vite build, then wrangler pages deploy dist

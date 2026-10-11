@@ -1,4 +1,14 @@
 const j = (r: Response): Promise<any> => r.json() as Promise<any>;
+// Plan reads/writes must fail on HTTP errors, including stale-revision conflicts.
+const planJson = async (r: Response): Promise<any> => {
+  if (!r.ok) {
+    const body = await r.json().catch(() => null) as any;
+    throw Object.assign(new Error(body?.error || "Could not sync your cloud plan."), { status: r.status });
+  }
+  const body = await r.json() as any;
+  if (body?.error) throw new Error(body.error);
+  return body;
+};
 export const api = {
   recipes: () => fetch("/api/recipes").then(j),
   settings: () => fetch("/api/settings").then(j),
@@ -10,7 +20,12 @@ export const api = {
   addPantry: (raw_text: string, source = "manual") =>
     fetch("/api/pantry", { method: "POST", body: JSON.stringify({ raw_text, source }) }).then(j),
   delPantry: (id: number) => fetch(`/api/pantry?id=${id}`, { method: "DELETE" }).then(j),
-  savePlan: (p: any) => fetch("/api/plan", { method: "POST", body: JSON.stringify(p) }).then(j),
+  plan: (week: string) => fetch(`/api/plan?week=${encodeURIComponent(week)}`,
+    { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(planJson),
+  savePlan: (p: import("./planSync.ts").PlanWrite) => fetch("/api/plan", {
+    method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(p),
+    signal: AbortSignal.timeout(15000),
+  }).then(planJson),
   parseFlyer: (images: any[]) =>
     fetch("/api/parse-flyer", { method: "POST", body: JSON.stringify({ images }) }).then(j),
   scanPantry: (images: any[]) =>

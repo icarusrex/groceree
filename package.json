@@ -1,9 +1,11 @@
 {
   "name": "groceree",
   "private": true,
-  "version": "0.23.0",
+  "version": "0.24.0",
   "type": "module",
   "scripts": {
+    "test": "node --test scripts/*.test.ts",
+    "test:engine": "node scripts/test_engine.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "npm run build && wrangler pages dev dist",
