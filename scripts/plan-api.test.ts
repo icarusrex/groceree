@@ -46,7 +46,7 @@ function context(db: any, body?: any, email = 'aron@example.com') {
   }) } as any;
 }
 const save = (db: any, items: any[], revision: number | null = null, email?: string) =>
-  onRequestPost(context(db, { week_start: week, expected_revision: revision, items }, email));
+  onRequestPost(context(db, { active:true, start_date:week, plan_days:4, week_start: week, expected_revision: revision, items }, email));
 
 test('cloud round trip preserves leftover links, booleans and servings', async () => {
   const { db, sql } = database();
@@ -117,10 +117,11 @@ test('a failed replacement rolls back the entire week', async () => {
 test('the existing database upgrades without losing plans or old leftover portions', async () => {
   const { db, sql } = database();
   try {
-    sql.exec('ALTER TABLE meal_plans DROP COLUMN revision');
+    sql.exec('DROP TABLE active_meal_plans; ALTER TABLE meal_plans DROP COLUMN revision; ALTER TABLE meal_plans DROP COLUMN start_date; ALTER TABLE meal_plans DROP COLUMN plan_days');
     sql.exec("INSERT INTO meal_plans(id,user_id,week_start,status) VALUES(1,'aron@example.com','2026-10-05','saved')");
     sql.exec("INSERT INTO meal_plan_items(plan_id,day_of_week,slot,recipe_id,is_leftover,servings) VALUES(1,1,'dinner','chicken',0,4),(1,2,'lunch','chicken',1,2)");
     sql.exec(readFileSync('migrations/0001_plan_revision.sql', 'utf8'));
+    sql.exec(readFileSync('migrations/0002_active_plan_dates.sql', 'utf8'));
     const result = await (await onRequestGet(context(db))).json();
     assert.equal(result.revision, 1); assert.equal(result.items[0].servings, 4);
     assert.deepEqual(result.items[1].leftover_of, { day_of_week: 1, slot: 'dinner' });
@@ -134,4 +135,38 @@ test('a client without a revision must reload before writing', async () => {
     assert.equal(response.status, 428);
     assert.equal(await (await onRequestGet(context(db))).json(), null);
   } finally { sql.close(); }
+});
+
+const activeRead = async (db: any) => (await onRequestGet({ ...context(db), request: new Request('https://groceree.test/api/plan?active=1', {headers:{'Cf-Access-Authenticated-User-Email':'aron@example.com'}}) })).json();
+const datedSave = (db:any, start:string, weekStart:string, revision:number|null, items:any[]=[]) => onRequestPost(context(db,{active:true,start_date:start,plan_days:4,week_start:weekStart,expected_revision:revision,items}));
+test('active plan preserves Sunday dates and stale cross-week writes change nothing', async()=>{
+ const {db,sql}=database();try{
+   assert.equal((await datedSave(db,'2026-10-11',week,null,[{...dinner,day_of_week:7}])).status,200);
+   const sun=await activeRead(db); assert.equal(sun.start_date,'2026-10-11');assert.equal(sun.plan_days,4);
+   assert.equal((await datedSave(db,'2026-10-15','2026-10-12',1)).status,200);
+   assert.equal((await datedSave(db,'2026-10-22','2026-10-19',1)).status,409);
+   assert.equal(sql.prepare("SELECT count(*) AS n FROM meal_plans WHERE week_start='2026-10-19'").get()!.n,0);
+   const active=await activeRead(db);assert.equal(active.start_date,'2026-10-15');assert.equal(active.revision,2);
+   assert.equal((await datedSave(db,'2026-10-11',week,1,[{...dinner,day_of_week:7,recipe_id:'stale'}])).status,409);
+   assert.equal(sql.prepare('SELECT recipe_id FROM meal_plan_items').get()!.recipe_id,'chicken');
+ }finally{sql.close();}
+});
+test('invalid date, mismatched week and slots outside the four-day range are rejected',async()=>{
+ const {db,sql}=database();try{
+ for(const [start,w,items] of [['2026-02-30','2026-02-23',[]],['2026-10-11','2026-10-12',[]],['2026-10-11',week,[{...dinner,day_of_week:4}]]] as any[]) {
+ assert.equal((await datedSave(db,start,w,null,items)).status,400);
+ }assert.equal(await activeRead(db),null);
+ }finally{sql.close();}
+});
+test('migration selects each users latest plan and keeps empty plans with settings duration', async()=>{
+ const {db,sql}=database();try{
+ sql.exec("DROP TABLE active_meal_plans; ALTER TABLE meal_plans DROP COLUMN start_date; ALTER TABLE meal_plans DROP COLUMN plan_days;");
+ sql.exec("INSERT INTO user_settings(user_id,plan_days) VALUES('aron@example.com',7);");
+ sql.exec("INSERT INTO meal_plans(id,user_id,week_start) VALUES(1,'aron@example.com','2026-10-05'),(2,'aron@example.com','2026-10-12'),(3,'other','2026-10-05');");
+ sql.exec("INSERT INTO meal_plan_items(plan_id,day_of_week,slot,recipe_id,is_leftover,servings) VALUES(1,5,'dinner','fish',0,2),(3,1,'dinner','chicken',0,2);");
+ sql.exec(readFileSync('migrations/0002_active_plan_dates.sql','utf8'));
+ const active=await activeRead(db);assert.equal(active.id,2);assert.equal(active.plan_days,7);assert.deepEqual(active.items,[]);
+ assert.equal(sql.prepare("SELECT plan_days FROM meal_plans WHERE id=3").get()!.plan_days,4);
+ assert.equal(sql.prepare('SELECT count(*) n FROM meal_plan_items').get()!.n,2);
+ }finally{sql.close();}
 });
