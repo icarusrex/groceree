@@ -223,8 +223,11 @@ function normUnit(unit: string): string {
 
 // Convert one recipe ingredient into a raw buy-item.
 export function toBuyItem(
-  rawName: string, quantity: number | null, unit: string, fallbackCat: string,
+  rawName: string, quantity: number | null, unit: string, fallbackCat?: string | null,
 ): BuyItem {
+  // Some imported recipes have ingredients with no category; without a default the
+  // shopping list's category sort threw and the Shop tab rendered nothing.
+  fallbackCat = fallbackCat || "other";
   // imported recipes carry typographic ligatures ("ﬂank steak") — fold them
   rawName = rawName.normalize("NFKC");
   const lower = rawName.toLowerCase();
