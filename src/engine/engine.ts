@@ -15,7 +15,7 @@ import {
   ingredientSeasonScore,
 } from "../data/seasonality.pt.ts";
 import { recipeAffordability } from "../data/cost_tiers.ts";
-import { dietConflicts } from "./allergens.ts";
+import { dietConflicts, withAllergies } from "./allergens.ts";
 import type {
   Recipe, Settings, RecipeState, PlanItem, GenerateInput, Diet, Slot,
 } from "./types.ts";
@@ -38,7 +38,7 @@ function mulberry32(seed: number) {
 // flag (where there is one) and a scan of its actual ingredient lines — the
 // imported flags have been wrong before.
 export function passesDiet(r: Recipe, diet: Diet[]): boolean {
-  for (const d of diet) {
+  for (const d of withAllergies(diet)) {
     if (d === "gluten_free" && !r.is_gluten_free) return false;
     if (d === "vegetarian" && !r.is_vegetarian) return false;
     if (d === "pescatarian" && !(r.is_vegetarian || r.is_pescatarian)) return false;
@@ -297,7 +297,7 @@ import { toBuyItem } from "./normalise.ts";
 export function buildShoppingList(plan: PlanItem[], recipes: Recipe[],
                                   household: number, pantry: string[] = []): ShoppingItem[] {
   const byId = new Map(recipes.map((r) => [r.id, r]));
-  const pantryKeys = pantry.map((p) => toBuyItem(p, null, "", "pantry").name).filter(Boolean);
+  const pantryKeys = new Set(pantry.map((p) => toBuyItem(p, null, "", "pantry").name).filter(Boolean));
   const agg = new Map<string, ShoppingItem>();
   for (const item of plan) {
     if (item.is_leftover || !item.recipe_id) continue;
@@ -309,7 +309,8 @@ export function buildShoppingList(plan: PlanItem[], recipes: Recipe[],
                             ing.unit ?? "", ing.category);
       if (!buy.name) continue;
       // pantry exclusion: already have it → skip
-      if (pantryKeys.some((p) => buy.name.includes(p) || p.includes(buy.name))) continue;
+      // exact canonical match: "milk" in the pantry must not hide coconut milk
+      if (pantryKeys.has(buy.name)) continue;
       // dedup: staples merge on name; weight(g/kg) merge as weight; counts merge as counts
       const isWeight = buy.unit === "g" || buy.unit === "kg";
       const key = buy.staple ? buy.name : `${buy.name}|${isWeight ? "w" : buy.unit}`;

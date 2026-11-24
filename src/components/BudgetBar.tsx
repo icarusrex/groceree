@@ -24,10 +24,10 @@ export default function BudgetBar({ cost }: { cost: PlanCost }) {
     );
   }
 
-  const wb = weekBudget(monthly, s.spend?.month.spent ?? 0, planDays);
   const spent = s.spend?.week.spent ?? 0;
+  const wb = weekBudget(monthly, s.spend?.month.spent ?? 0, planDays, new Date(), spent);
   const projected = Math.max(spent, planned ?? 0);
-  const pct = (x: number) => `${Math.min(100, (x / wb.weekly) * 100)}%`;
+  const pct = (x: number) => `${wb.weekly > 0 ? Math.min(100, (x / wb.weekly) * 100) : x > 0 ? 100 : 0}%`;
   const over = projected > wb.weekly;
   return (
     <div className="budget">

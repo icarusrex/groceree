@@ -3,6 +3,7 @@ import { planDates, validDate } from "./engine/planDates.ts";
 import { api } from "./lib/api.ts";
 import { PlanSync, mondayOf, readLegacyPlan, type PlanSnapshot } from "./lib/planSync.ts";
 import { passesDiet, sizePlanForLeftovers } from "./engine/engine.ts";
+import { HOUSEHOLD_ALLERGIES } from "./engine/allergens.ts";
 import { toBuyItem } from "./engine/normalise.ts";
 import { generateWithinBudget, weekBudget, type PriceBook } from "./engine/cost.ts";
 import type { Recipe, Settings, PlanItem, RecipeState } from "./engine/types.ts";
@@ -41,7 +42,7 @@ const Ctx = createContext<Store>(null as any);
 export const useStore = () => useContext(Ctx);
 
 const DEFAULTS: Settings = {
-  household_size: 2, diet: [], exclude_cuisines: [],
+  household_size: 2, diet: [...HOUSEHOLD_ALLERGIES], exclude_cuisines: [],
   max_active_minutes: null, leftover_strategy: "auto",
   plan_days: 4, selected_stores: [], country: "PT",
 };
@@ -154,7 +155,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       const pantryNames = pantry.map((x) => x.name || x.raw_text);
       const planDays = days ?? settings.plan_days ?? 4;
       const target = settings.monthly_food_budget
-        ? weekBudget(settings.monthly_food_budget, spend?.month.spent ?? 0, planDays).planTarget : null;
+        ? weekBudget(settings.monthly_food_budget, spend?.month.spent ?? 0, planDays, new Date(), spend?.week.spent ?? 0).planTarget : null;
       const generated=generateWithinBudget({recipes,settings,states,pantry:pantryNames,deals,
         start_date:startDate,days:planDays,seed:Math.floor(Math.random()*1e9)},prices,target).plan;
       sync.change(sizePlanForLeftovers(generated,settings.household_size),{start_date:startDate,plan_days:planDays});
@@ -183,6 +184,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return sync.save();
     },
     assignSlot: (day, slot, recipeId) => {
+      const r = recipes.find((x) => x.id === recipeId);
+      // allergies: never into the plan (a just-saved recipe may not be in this
+      // render's list yet; the server already refused anything unsafe)
+      if (r && !passesDiet(r, settings.diet)) return;
       if(!planDates(sync.snapshot.start_date,sync.snapshot.plan_days).some(p=>p.day_of_week===day))return;
       const next = sync.snapshot.items.filter((p) => !(p.day_of_week === day && p.slot === slot));
       next.push({ day_of_week: day, slot: slot as any, recipe_id: recipeId,

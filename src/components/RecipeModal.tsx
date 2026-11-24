@@ -165,13 +165,11 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
           ? <>cook for {cookFor.servings}{leftovers ? ` (${cookFor.household} now + ${leftovers} leftovers)` : ""} · recipe serves {view.servings}</>
           : <>serves {view.servings}{leftovers ? ` (${cookFor!.household} now + ${leftovers} leftovers)` : ""}</>}
         {view.primary_protein ? ` · ${view.primary_protein === "none" ? "veg" : view.primary_protein}` : ""}
-        {draft ? " · remixed (unsaved)" : ""}</p>
+        {draft ? " · remixed (unsaved)" : ""}
+        {!draft && (view as any).source_url ? <> · <a href={(view as any).source_url} target="_blank" rel="noreferrer">original ↗</a></> : null}</p>
 
       <div className="actions" style={{ margin: "10px 0", flexWrap: "wrap" }}>
         <button className="btn" disabled={busy} onClick={genImage}>{img ? "Regenerate image" : "🖼 Generate image"}</button>
-        {img && !draft && <button className="btn ghost" disabled={busy} onClick={async () => {
-          setBusy(true); await api.createRecipe({ ...view, image_url: img }); s.refreshRecipes();
-          setBusy(false); setMsg("Saved with image."); }}>Save image</button>}
       </div>
 
       <div className="cook-cols">
@@ -214,7 +212,7 @@ export default function RecipeModal({ recipe, onClose, cookFor }:
         </div>
         {busy && <div className="remix-progress"><div className="bar" /></div>}
         {msg && <p className="muted small">{msg}</p>}
-        {draft && <button className="btn dark" disabled={busy} onClick={save}>Save as new recipe</button>}
+        {draft && <button className="btn dark" disabled={busy || allergyHits.size > 0} onClick={save}>Save as new recipe</button>}
       </div>
     </>
   );

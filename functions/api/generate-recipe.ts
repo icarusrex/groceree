@@ -1,6 +1,6 @@
-import { json, type Env } from "./_helpers.ts";
+import { json, uid, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
-import { dietRules } from "./_diet.ts";
+import { dietRules, userDiet } from "./_diet.ts";
 import { dietConflicts } from "../../src/engine/allergens.ts";
 
 // POST /api/generate-recipe { prompt, servings, diet?, max_active_minutes?, country? }
@@ -64,7 +64,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // 4.5 in production), which would otherwise ask the model to cook "for
   // exactly 4.5 people" and scale every quantity off that.
   const want = Math.max(1, Math.min(20, Math.round(Number(body?.servings) || 4)));
-  const diet: string[] = Array.isArray(body?.diet) ? body.diet : [];
+  const diet = await userDiet(ctx.env.DB, uid(ctx)); // allergies come from the server, never the request
   const maxMin = Number(body?.max_active_minutes) || null;
 
   const rules = [

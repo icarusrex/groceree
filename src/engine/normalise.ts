@@ -7,6 +7,8 @@
 // No AI: a curated dictionary + rules. Covers the produce/meat/staples that
 // actually appear in the recipe DB.
 
+import { containsAllergen, ALLERGENS } from "./allergens.ts";
+
 export interface BuyItem {
   name: string;        // clean raw ingredient, e.g. "carrot"
   display: string;     // Title Case for UI, e.g. "Carrots"
@@ -46,10 +48,7 @@ const DICT: { aliases: string[]; canon: Canon }[] = [
   { aliases: ["sweet potato"], canon: { name: "sweet potato", category: "produce", sold: "weight", gramsPerItem: 200 } },
   { aliases: ["tomato", "plum tomato", "cherry tomato"], canon: { name: "tomato", category: "produce", sold: "weight", gramsPerCup: 180, gramsPerItem: 120, gramsPerCan: 400 } },
   { aliases: ["mushroom"], canon: { name: "mushroom", category: "produce", sold: "weight", gramsPerCup: 70 } },
-  { aliases: ["broccoli", "tenderstem broccoli", "broccolini"], canon: { name: "broccoli", category: "produce", sold: "weight", gramsPerCup: 90 } },
   { aliases: ["spinach", "baby spinach"], canon: { name: "spinach", category: "produce", sold: "weight", gramsPerCup: 30 } },
-  { aliases: ["kale"], canon: { name: "kale", category: "produce", sold: "weight", gramsPerCup: 67 } },
-  { aliases: ["celery"], canon: { name: "celery", category: "produce", sold: "weight", gramsPerCup: 100 } },
   { aliases: ["green bean", "string bean"], canon: { name: "green bean", category: "produce", sold: "weight", gramsPerCup: 110 } },
   { aliases: ["courgette", "zucchini"], canon: { name: "courgette", category: "produce", sold: "weight", gramsPerItem: 200 } },
   { aliases: ["parsnip"], canon: { name: "parsnip", category: "produce", sold: "weight", gramsPerItem: 130 } },
@@ -85,7 +84,7 @@ const DICT: { aliases: string[]; canon: Canon }[] = [
   { aliases: ["cucumber"], canon: { name: "cucumber", category: "produce", sold: "count", gramsPerCup: 120, gramsPerItem: 300 } },
   { aliases: ["kale", "cavolo nero", "lacinato"], canon: { name: "kale", category: "produce", sold: "weight", gramsPerCup: 67, gramsPerItem: 200 } },
   { aliases: ["lettuce", "romaine", "butter lettuce", "iceberg", "little gem"], canon: { name: "lettuce", category: "produce", sold: "count", gramsPerCup: 50, gramsPerItem: 300 } },
-  { aliases: ["broccoli", "broccolini", "tenderstem"], canon: { name: "broccoli", category: "produce", sold: "weight", gramsPerCup: 90, gramsPerItem: 350 } },
+  { aliases: ["broccoli", "tenderstem broccoli", "broccolini", "tenderstem"], canon: { name: "broccoli", category: "produce", sold: "weight", gramsPerCup: 90, gramsPerItem: 350 } },
   { aliases: ["aubergine", "eggplant"], canon: { name: "aubergine", category: "produce", sold: "count", gramsPerCup: 80, gramsPerItem: 300 } },
   { aliases: ["fennel", "fennel bulb"], canon: { name: "fennel", category: "produce", sold: "count", gramsPerItem: 250 } },
   { aliases: ["jalapeno", "jalapeño"], canon: { name: "chilli", category: "produce", sold: "count", gramsPerItem: 15 } },
@@ -236,8 +235,20 @@ export function toBuyItem(
     return { name: "stock", display: "Stock", quantity: null, unit: "", category: "pantry", staple: true };
   }
 
+  // "tamari or coconut aminos", "butter or ghee or olive oil": buy the
+  // allergen-free alternative, not whichever happens to be named first.
+  const alts = rawName.split(/\s+or\s+/i);
+  const unsafe = (t: string) => ALLERGENS.some((a) => containsAllergen(t, a));
+  if (alts.length > 1 && unsafe(alts[0])) {
+    const safe = alts.find((t) => !unsafe(t));
+    if (safe) rawName = safe;
+  }
+
   const core = stripToCore(rawName);
-  const canon = meatCanon(rawName) ?? lookup(core) ?? lookup(stripToCore(rawName, false));
+  let canon = meatCanon(rawName) ?? lookup(core) ?? lookup(stripToCore(rawName, false));
+  // Keep the safe qualifier: "gluten-free pasta" must not shop as "Pasta",
+  // nor "corn tortillas" as "Bread" or "oat milk" as "Milk".
+  if (canon && unsafe(canon.name) && !unsafe(rawName) && core) canon = { ...canon, name: core };
   const u = normUnit(unit);
 
   if (!canon) {

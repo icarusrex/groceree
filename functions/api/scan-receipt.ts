@@ -80,7 +80,11 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const country = await userCountry(ctx.env.DB, user);
   const storeName = parsed.store || "Unknown store";
   const storeId = storeIdOf(storeName);
-  const date = parsed.date || new Date().toISOString().slice(0, 10);
+  // A misread date ("24/11/2026", 2062) would sort above every real one and pin
+  // that price in the price book; only a plausible past ISO date is kept.
+  const today = new Date().toISOString().slice(0, 10);
+  const d = typeof parsed.date === "string" ? parsed.date : "";
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= today && d >= "2020-01-01" ? d : today;
   // Namespaced per scan (not per store/day like flyers): receipts accumulate,
   // they don't replace each other. Two trips to the same store on the same day
   // are two separate price points, not a correction of one another.

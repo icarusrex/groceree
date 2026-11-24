@@ -197,8 +197,21 @@ export default function MealPlan() {
     if (!p) return;
     const targetPlan=currentPlan.current;
     setGenBusy(true);
-    setGenMsg("Writing a recipe…");
+    const isLink = /^https?:\/\//i.test(p);
+    setGenMsg(isLink ? "Reading the recipe…" : "Writing a recipe…");
     try {
+      if (isLink) {
+        const res = await api.importRecipe(p);
+        if (!res.ok) { setGenMsg(res.error || "Import failed."); setGenBusy(false); return; }
+        await s.refreshRecipes();
+        setGenPrompt("");
+        if (activeSlot && currentPlan.current.items===targetPlan.items && currentPlan.current.start_date===targetPlan.start_date) {
+          s.assignSlot(activeSlot.day, activeSlot.slot, res.id);
+          setGenMsg(`“${res.name}” imported · placed in ${DAYS[activeSlot.day - 1]} ${activeSlot.slot}.`);
+          setActiveSlot(null);
+        } else setGenMsg(`“${res.name}” imported to your recipes.`);
+        setGenBusy(false); return;
+      }
       const rec = await api.generateRecipe({
         prompt: p,
         servings: s.settings.household_size,
@@ -663,12 +676,12 @@ export default function MealPlan() {
           ))}
         </div>
         <div className="gen-box">
-          <input placeholder={activeSlot ? "…or describe a dish to invent" : "Describe a dish to invent…"}
+          <input placeholder={activeSlot ? "…or describe a dish, or paste a recipe link" : "Describe a dish or paste a recipe link…"}
             value={genPrompt} disabled={genBusy}
             onChange={(e) => setGenPrompt(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") generateRecipe(); }} />
           <button className="btn" disabled={genBusy || !genPrompt.trim()} onClick={generateRecipe}>
-            {genBusy ? "…" : "✨ Prompt"}
+            {genBusy ? "…" : /^https?:\/\//i.test(genPrompt.trim()) ? "🔗 Import" : "✨ Prompt"}
           </button>
         </div>
         {genBusy && <div className="remix-progress"><div className="bar" /></div>}

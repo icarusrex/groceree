@@ -17,7 +17,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!instruction?.trim()) return json({ error: "instruction required" }, 400);
 
   const { results } = await ctx.env.DB.prepare(
-    `SELECT id, name, primary_protein, cuisine, total_time, ingredients,
+    `SELECT id, name, primary_protein, cuisine, total_time, ingredients, instructions, description,
             is_vegetarian, is_pescatarian, is_gluten_free, is_dairy_free
      FROM recipes`,
   ).all();
@@ -30,9 +30,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     if (diet.includes("dairy_free") && !r.is_dairy_free) return false;
     if (diet.includes("vegetarian") && !r.is_vegetarian) return false;
     if (diet.includes("pescatarian") && !(r.is_vegetarian || r.is_pescatarian)) return false;
-    let ingredients: { name: string }[] = [];
-    try { ingredients = JSON.parse(r.ingredients || "[]"); } catch { return false; }
-    return dietConflicts({ ingredients }, diet).size === 0;
+    let ingredients: { name: string }[] = [], instructions: string[] = [];
+    try { ingredients = JSON.parse(r.ingredients || "[]"); instructions = JSON.parse(r.instructions || "[]"); } catch { return false; }
+    return dietConflicts({ ingredients, instructions, description: r.description }, diet).size === 0;
   });
 
   const catalog = safe.map((r) => {

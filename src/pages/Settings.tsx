@@ -1,6 +1,9 @@
 import React from "react";
 import { useStore } from "../store.tsx";
 import type { Diet } from "../engine/types.ts";
+import { HOUSEHOLD_ALLERGIES } from "../engine/allergens.ts";
+
+const LOCKED = new Set<string>(HOUSEHOLD_ALLERGIES);
 
 const DIETS: Diet[] = ["gluten_free", "dairy_free", "egg_free", "soy_free", "vegetarian", "pescatarian"];
 
@@ -8,6 +11,7 @@ export default function Settings() {
   const s = useStore();
   const set = (patch: any) => s.setSettings({ ...s.settings, ...patch });
   const toggleDiet = (d: Diet) => {
+    if (LOCKED.has(d)) return; // household allergies are always on
     const has = s.settings.diet.includes(d);
     set({ diet: has ? s.settings.diet.filter((x) => x !== d) : [...s.settings.diet, d] });
   };
@@ -24,8 +28,9 @@ export default function Settings() {
         <span>Diet limitations</span>
         <div className="chips">
           {DIETS.map((d) => (
-            <button key={d} className={s.settings.diet.includes(d) ? "chip on" : "chip"}
-              onClick={() => toggleDiet(d)}>{d.replace("_", " ")}</button>
+            <button key={d} className={s.settings.diet.includes(d) || LOCKED.has(d) ? "chip on" : "chip"}
+              disabled={LOCKED.has(d)} title={LOCKED.has(d) ? "Allergy: always on" : undefined}
+              onClick={() => toggleDiet(d)}>{LOCKED.has(d) ? "🔒 " : ""}{d.replace("_", " ")}</button>
           ))}
         </div>
       </div>

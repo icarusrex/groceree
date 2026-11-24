@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { onRequestPost } from '../functions/api/edit-plan.ts';
 test('AI receives actual Sunday dates and only returns safe slots inside the range', async()=>{
  const original=globalThis.fetch;let prompt='';
- const safe={id:'fish',name:'Fish',ingredients:'[]',primary_protein:'fish',total_time:20};
+ const safe={id:'fish',name:'Fish',ingredients:'[]',is_gluten_free:1,is_dairy_free:1,primary_protein:'fish',total_time:20};
  const db:any={prepare:()=>({bind(){return this;},first:async()=>({diet:'[]'}),all:async()=>({results:[safe]})})};
  globalThis.fetch=async (_url,options)=>{
   prompt=JSON.parse(options!.body as string).contents[0].parts[0].text;

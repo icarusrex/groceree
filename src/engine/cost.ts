@@ -102,6 +102,10 @@ export function planCost(plan: PlanItem[], recipes: Recipe[], prices: PriceBook,
     byItem.set(item, c);
     total += c.total; covSum += c.coverage; n++;
   }
+  // A meal whose protein has no price costs 0 above; charge it the average
+  // priced meal so the budget never prefers (or under-reports) unpriceable weeks.
+  const unpriced = [...byItem.values()].filter((c) => c.coverage === 0).length;
+  if (unpriced && n > unpriced) total += unpriced * total / (n - unpriced);
   return { total, coverage: n ? covSum / n : 0, byItem };
 }
 
@@ -113,15 +117,20 @@ export interface WeekBudget {
   weeksLeft: number;
 }
 
-// monthSpent: grocery spend from this month's receipts. Weeks left counts this
-// one, so the last days of a month still get a sensible allowance.
-export function weekBudget(monthly: number, monthSpent: number, planDays: number, today = new Date()): WeekBudget {
+// monthSpent: grocery spend from this month's receipts; weekSpent: the part of
+// it from this week. The allowance is set by what was spent BEFORE this week,
+// so this week's own receipts fill the bar instead of also shrinking it.
+// Weeks left counts this one, so the last days of a month still get a sensible
+// allowance.
+export function weekBudget(monthly: number, monthSpent: number, planDays: number, today = new Date(),
+                           weekSpent = 0): WeekBudget {
   const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   const daysLeft = daysInMonth - today.getDate() + 1;
   const weeksLeft = Math.max(1, daysLeft / 7);
+  const before = Math.max(0, monthSpent - weekSpent);
   const monthLeft = Math.max(0, monthly - monthSpent);
-  // no receipts yet → the plain average week; otherwise spread what's left
-  const weekly = monthSpent > 0 ? monthLeft / weeksLeft : monthly * 12 / 52;
+  // no receipts before this week → the plain average week; otherwise spread what's left
+  const weekly = before > 0 ? Math.max(0, monthly - before) / weeksLeft : monthly * 12 / 52;
   return { weekly, planTarget: weekly * Math.min(7, planDays) / 7 * PLANNED_MEALS_SHARE, monthLeft, weeksLeft };
 }
 

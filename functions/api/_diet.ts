@@ -17,7 +17,10 @@ export function dietRules(diet: string[]): string[] {
   return rules;
 }
 
+import { withAllergies } from "../../src/engine/allergens.ts";
+
+// The household allergies are always included, whatever the settings row says.
 export async function userDiet(db: D1Database, user: string): Promise<string[]> {
   const row = await db.prepare("SELECT diet FROM user_settings WHERE user_id=?").bind(user).first<{ diet: string }>();
-  try { return JSON.parse(row?.diet || "[]"); } catch { return []; }
+  try { return withAllergies(JSON.parse(row?.diet || "[]")); } catch { return withAllergies([]); }
 }

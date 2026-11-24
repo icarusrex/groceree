@@ -1,6 +1,7 @@
 import { json, uid, type Env } from "./_helpers.ts";
 import { geminiUrl } from "./_gemini.ts";
 import { dietRules, userDiet } from "./_diet.ts";
+import { dietConflicts } from "../../src/engine/allergens.ts";
 
 // POST /api/remix-recipe { recipe, instruction }
 // Returns a modified recipe in the same shape the app uses.
@@ -9,7 +10,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const { recipe, instruction } = await ctx.request.json<any>();
   if (!recipe || !instruction) return json({ error: "recipe and instruction required" }, 400);
 
-  const rules = dietRules(await userDiet(ctx.env.DB, uid(ctx)));
+  const diet = await userDiet(ctx.env.DB, uid(ctx));
+  const rules = dietRules(diet);
   const PROMPT = `You are a recipe editor. Modify the recipe below per the user's
 instruction. Keep it realistic and cookable.${rules.length ? `
 The result MUST also satisfy these household rules (they override the recipe):
@@ -45,7 +47,11 @@ ${JSON.stringify({
   const data = await gres.json<any>();
   try {
     const txt = data.candidates[0].content.parts[0].text.replace(/^```(json)?|```$/gm, "").trim();
-    return json(JSON.parse(txt));
+    const rec = JSON.parse(txt);
+    const hits = dietConflicts({ ingredients: Array.isArray(rec?.ingredients) ? rec.ingredients : [],
+      instructions: Array.isArray(rec?.instructions) ? rec.instructions : [], description: rec?.description }, diet);
+    if (hits.size) return json({ error: `The adapted recipe contains ${[...hits].map(([a, l]) => `${a} (${l})`).join(", ")} — try a different instruction.` }, 422);
+    return json(rec);
   } catch {
     return json({ error: "could not parse gemini output" }, 502);
   }

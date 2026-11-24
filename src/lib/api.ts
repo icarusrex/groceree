@@ -40,6 +40,8 @@ export const api = {
     fetch("/api/remix-recipe", { method: "POST", body: JSON.stringify({ recipe, instruction }) }).then(j),
   editPlan: (plan: any[], instruction: string, range: {start_date:string;plan_days:number}) =>
     fetch("/api/edit-plan", { method: "POST", body: JSON.stringify({ plan, instruction, ...range }) }).then(j),
+  importRecipe: (url: string) =>
+    fetch("/api/import-recipe", { method: "POST", body: JSON.stringify({ url }), signal: AbortSignal.timeout(30000) }).then(j),
   createRecipe: (recipe: any) =>
     fetch("/api/recipes", { method: "POST", body: JSON.stringify(recipe) }).then(j),
   prices: () => fetch("/api/prices").then(j),

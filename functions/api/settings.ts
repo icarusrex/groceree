@@ -1,8 +1,9 @@
 import { json, uid, ensureSettings, type Env } from "./_helpers.ts";
+import { withAllergies } from "../../src/engine/allergens.ts";
 
 const shape = (r: any) => ({
   household_size: r.household_size,
-  diet: JSON.parse(r.diet || "[]"),
+  diet: withAllergies(JSON.parse(r.diet || "[]")),
   exclude_cuisines: JSON.parse(r.exclude_cuisines || "[]"),
   max_active_minutes: r.max_active_minutes,
   leftover_strategy: r.leftover_strategy,
@@ -28,7 +29,7 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
      country=?, notion_parent_id=?, monthly_food_budget=?, updated_at=datetime('now')
      WHERE user_id=?`,
   ).bind(
-    Math.max(1, Math.round(Number(b.household_size) || 2)), JSON.stringify(b.diet ?? []),
+    Math.max(1, Math.round(Number(b.household_size) || 2)), JSON.stringify(withAllergies(Array.isArray(b.diet) ? b.diet : [])),
     JSON.stringify(b.exclude_cuisines ?? []),
     b.max_active_minutes ?? null, b.leftover_strategy ?? "auto",
     b.plan_days === 7 ? 7 : 4, JSON.stringify(b.selected_stores ?? []),
