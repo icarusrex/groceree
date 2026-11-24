@@ -96,8 +96,11 @@ export function recipeFromLd(ld: any, url: string) {
       return { ...p, category: b.category === "other" ? "pantry" : b.category };
     });
   if (!ingredients.length) return null;
-  const text = ingredients.map((i: any) => i.name).join(" ");
-  const protein = PROTEIN.find(([, re]) => re.test(text))?.[0] ?? "none";
+  // The main protein is the first ingredient line naming one, ignoring broths,
+  // sauces and fats ("fish sauce" in a chicken curry, "bacon fat" for frying).
+  const lines = ingredients.map((i: any) => i.name).filter((n: string) => !/\b(broth|stock|sauce|fat|lard|gelatin|collagen|bouillon)\b/i.test(n));
+  let protein = "none";
+  for (const n of lines) { const hit = PROTEIN.find(([, re]) => re.test(n)); if (hit) { protein = hit[0]; break; } }
   const yieldN = Number(String(first(ld.recipeYield)).match(/\d+/)?.[0]);
   return {
     name: decode(String(ld.name || "Imported recipe")).slice(0, 120),
