@@ -174,12 +174,17 @@ export function gramsPerItemOf(name: string): number | undefined {
   return DICT.find((e) => e.canon.name === name)?.canon.gramsPerItem;
 }
 
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const wordMatch = (text: string, alias: string) =>
+  new RegExp(`(^|[^\\p{L}])${esc(alias)}(e?s)?($|[^\\p{L}])`, "u").test(text);
+
 function lookup(core: string): Canon | null {
   // longest-alias-first match so "chicken thigh" beats "chicken"
   let best: { canon: Canon; len: number } | null = null;
   for (const e of DICT) {
     for (const a of e.aliases) {
-      if (core.includes(a) && (!best || a.length > best.len)) best = { canon: e.canon, len: a.length };
+      // whole words only: "butter" must not match "butternut squash"
+      if (wordMatch(core, a) && (!best || a.length > best.len)) best = { canon: e.canon, len: a.length };
     }
   }
   return best?.canon ?? null;

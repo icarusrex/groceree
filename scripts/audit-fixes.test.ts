@@ -68,3 +68,10 @@ test("an unpriced meal costs the average priced meal, not zero", () => {
   const one = planCost([plan[0]], recipes, prices).total;
   assert.ok(one > 0); assert.ok(Math.abs(planCost(plan, recipes, prices).total - 2 * one) < 0.01);
 });
+
+test("dictionary matches whole words: butternut isn't butter, pears aren't peas", () => {
+  assert.equal(toBuyItem("butternut squash", 1, "lb", "produce").category, "produce");
+  assert.notEqual(toBuyItem("Anjou pears", 2, "").name, "frozen peas");
+  assert.notEqual(toBuyItem("lemongrass", 1, "").name, "lemon");
+  assert.equal(toBuyItem("2 tomatoes", 2, "").name, "tomato");
+});
